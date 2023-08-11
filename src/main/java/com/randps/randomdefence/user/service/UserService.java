@@ -1,5 +1,9 @@
 package com.randps.randomdefence.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.randps.randomdefence.component.parser.BojParserImpl;
+import com.randps.randomdefence.component.parser.SolvedacParserImpl;
 import com.randps.randomdefence.component.query.Query;
 import com.randps.randomdefence.component.query.SolvedacQueryImpl;
 import com.randps.randomdefence.user.domain.User;
@@ -15,6 +19,8 @@ import javax.transaction.Transactional;
 public class UserService {
     private final UserRepository userRepository;
 
+    private final SolvedacParserImpl solvedacParser;
+
     @Transactional
     public User save(String bojHandle, String notionId, Long manager) {
         if (!(manager == 0 || manager == 1)) {
@@ -24,6 +30,7 @@ public class UserService {
                 .bojHandle(bojHandle)
                 .notionId(notionId)
                 .manager(manager==1?true:false)
+                .warning(0)
                 .build();
 
         userRepository.save(user);
@@ -38,25 +45,22 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    @Transactional
-    public String makeQuery(String bojHandle) {
-        Query query = new SolvedacQueryImpl();
-
-        query.setDomain("https://solved.ac/api/v3/user/show");
-        query.setParam("handle", bojHandle);
-
-        return query.getQuery();
-    }
-
     //TODO: jsoup으로 백준 or solved 프로필 파싱
     @Transactional
-    public UserInfoResponse getInfo(String bojHandle) {
+    public UserInfoResponse getInfo(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        Query query = new SolvedacQueryImpl();
 
-        query.setDomain("https://solved.ac/api/v3/search/problem");
-        query.setParam("handle", bojHandle);
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        solvedacParser.crawlingUserInfo(bojHandle);
+//        solvedacParser.getSolvedStreak();
 
         return new UserInfoResponse();
+    }
+
+    @Transactional
+    public JsonNode getInfoRaw(String bojHandle) throws JsonProcessingException {
+        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        return solvedacParser.crawlingUserInfo(bojHandle);
     }
 }

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 @Service
 public class RecommendationService {
 
-    private final BojParserImpl bojParserImpl;
+    private final BojParserImpl bojParser;
 
     @Transactional
     public String makeQuery(String userId, String start, String end) {
@@ -46,11 +46,11 @@ public class RecommendationService {
         RecommendationResponse recommendationResponse = RecommendationResponse.builder()
                 .problemId(recommendationProblem.path("problemId").asInt())
                 .titleKo(recommendationProblem.path("titleKo").asText())
-                .titles(makeSubJson(recommendationProblem.path("titles")))
+                .titles(makeSubJsonTitle(recommendationProblem.path("titles")))
                 .isSolvable(recommendationProblem.path("isSolvable").asBoolean())
                 .isPartial(recommendationProblem.path("isPartial").asBoolean())
                 .acceptedUserCount(recommendationProblem.path("acceptedUserCount").asInt())
-                .level(bojParserImpl.convertDifficulty(recommendationProblem.path("level").asInt()))
+                .level(bojParser.convertDifficulty(recommendationProblem.path("level").asInt()))
                 .votedUserCount(recommendationProblem.path("votedUserCount").asInt())
                 .sprout(recommendationProblem.path("sprout").asBoolean())
                 .givesNoRating(recommendationProblem.path("givesNoRating").asBoolean())
@@ -63,13 +63,13 @@ public class RecommendationService {
         return recommendationResponse;
     }
 
-    public Object makeSubJson(JsonNode jsonNode) {
+    public Object makeSubJsonTitle(JsonNode jsonNode) {
         if (jsonNode.isArray()) {
             ArrayList<Object> subTitles = new ArrayList<Object>();
             int size = jsonNode.size();
 
             for (int i = 0; i < size; i++) {
-                subTitles.add(makeSubJson(jsonNode.path(i)));
+                subTitles.add(makeSubJsonTitle(jsonNode.path(i)));
             }
             return subTitles;
         }

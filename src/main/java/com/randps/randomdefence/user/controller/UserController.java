@@ -1,5 +1,7 @@
 package com.randps.randomdefence.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.user.dto.UserInfoResponse;
 import com.randps.randomdefence.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,12 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public UserInfoResponse info(@Param("bojHandle") String bojHandle) {
+    public UserInfoResponse info(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
         return userService.getInfo(bojHandle);
+    }
+
+    @GetMapping("/info/raw")
+    public JsonNode infoRaw(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
+        return userService.getInfoRaw(bojHandle);
     }
 }

@@ -21,11 +21,14 @@ public class User {
 
     private Boolean manager;
 
+    private Integer warning;
+
     @Builder
-    public User(String bojHandle, String notionId, Boolean manager) {
+    public User(String bojHandle, String notionId, Boolean manager, Integer warning) {
         this.bojHandle = bojHandle;
         this.notionId = notionId;
         this.manager = manager;
+        this.warning = warning;
     }
 
 }
