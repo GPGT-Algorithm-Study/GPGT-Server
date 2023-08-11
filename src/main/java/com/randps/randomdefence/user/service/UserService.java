@@ -50,11 +50,12 @@ public class UserService {
     public UserInfoResponse getInfo(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        UserInfoResponse userInfoResponse = new UserInfoResponse();
-        solvedacParser.crawlingUserInfo(bojHandle);
-//        solvedacParser.getSolvedStreak();
+        UserInfoResponse userInfoResponse = solvedacParser.getSolvedUserInfo(bojHandle);
+        userInfoResponse.setNotionId(user.getNotionId());
+        userInfoResponse.setWarning(user.getWarning());
+        userInfoResponse.setIsManager(user.getManager());
 
-        return new UserInfoResponse();
+        return userInfoResponse;
     }
 
     @Transactional

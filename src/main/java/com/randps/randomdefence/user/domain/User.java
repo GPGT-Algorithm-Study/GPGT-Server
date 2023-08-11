@@ -1,5 +1,6 @@
 package com.randps.randomdefence.user.domain;
 
+import com.randps.randomdefence.auditing.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Table(name = "RD_USER")
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,4 +32,13 @@ public class User {
         this.warning = warning;
     }
 
+    public void increaseWarning() {
+        if (this.warning < 4)
+            this.warning++;
+    }
+
+    public void decreaseWarning() {
+        if (this.warning > 1)
+            this.warning--;
+    }
 }
