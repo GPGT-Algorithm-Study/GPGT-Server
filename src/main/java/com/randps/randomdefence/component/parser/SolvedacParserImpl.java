@@ -3,6 +3,7 @@ package com.randps.randomdefence.component.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.randps.randomdefence.component.crawler.SolvedacWebCrawler;
 import com.randps.randomdefence.component.crawler.WebCrawler;
 import com.randps.randomdefence.component.query.Query;
 import com.randps.randomdefence.component.query.SolvedacQueryImpl;
@@ -32,7 +33,7 @@ public class SolvedacParserImpl implements Parser {
     private Integer currentStreak;
     private Integer maxStreak;
 
-    private final WebCrawler webCrawler;
+    private final SolvedacWebCrawler webCrawler;
 
     @Override
     public List<Object> getSolvedProblemList(String userName) {
@@ -44,7 +45,7 @@ public class SolvedacParserImpl implements Parser {
                 .scheme("https").host("solved.ac").path("/profile/" + bojHandle).build();
 
         webCrawler.setUrl(uri.toUriString());
-        List<Object> elements = webCrawler.process("solvedac");
+        List<Object> elements = webCrawler.process();
         String jsonString = ((Element)elements.get(0)).unwrap().toString();
 
         ObjectMapper om = new ObjectMapper();

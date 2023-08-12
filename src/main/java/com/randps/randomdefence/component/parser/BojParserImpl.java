@@ -3,6 +3,7 @@ package com.randps.randomdefence.component.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.randps.randomdefence.component.crawler.BojWebCrawler;
 import com.randps.randomdefence.component.crawler.WebCrawler;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Element;
@@ -18,7 +19,7 @@ import java.util.List;
 public class BojParserImpl implements Parser {
     private JsonNode userSolvedList;
 
-    private final WebCrawler webCrawler;
+    private final BojWebCrawler webCrawler;
 
     /*
      * 오늘 푼 문제 리스트를 반환한다.
@@ -35,7 +36,7 @@ public class BojParserImpl implements Parser {
                 .build();
 
         webCrawler.setUrl(uri.toUriString());
-        solvedProblems = webCrawler.process("baekjoon");
+        solvedProblems = webCrawler.process();
 
         return solvedProblems;
     }
