@@ -24,6 +24,9 @@ public class UserService {
 
     private final BojParserImpl bojParser;
 
+    /*
+     * 유저를 DB에 저장한다.
+     */
     @Transactional
     public User save(String bojHandle, String notionId, Long manager) {
         if (!(manager == 0 || manager == 1)) {
@@ -41,6 +44,9 @@ public class UserService {
         return user;
     }
 
+    /*
+     * 유저를 DB에서 삭제한다.
+     */
     @Transactional
     public void delete(String bojHandle) {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
@@ -48,11 +54,14 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    //TODO: jsoup으로 백준 or solved 프로필 파싱
+    /*
+     * 유저의 정보를 불러온다.
+     */
     @Transactional
     public UserInfoResponse getInfo(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
+        //TODO: 지금은 직접 불러오는데 내부 DB에서 가져오게 수정해야함.
         UserInfoResponse userInfoResponse = solvedacParser.getSolvedUserInfo(bojHandle);
         userInfoResponse.setNotionId(user.getNotionId());
         userInfoResponse.setWarning(user.getWarning());
@@ -61,6 +70,9 @@ public class UserService {
         return userInfoResponse;
     }
 
+    /*
+     * 유저의 프로필 정보를 불러온다. (직접 불러오기)
+     */
     @Transactional
     public JsonNode getInfoRaw(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
@@ -68,6 +80,9 @@ public class UserService {
         return solvedacParser.crawlingUserInfo(bojHandle);
     }
 
+    /*
+     * 유저가 오늘 푼 문제 목록을 불러온다. (직접 불러오기)
+     */
     @Transactional
     public List<Object> getTodaySolvedRaw(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));

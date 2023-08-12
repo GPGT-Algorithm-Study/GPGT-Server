@@ -20,6 +20,9 @@ import static com.randps.randomdefence.component.parser.BojParserImpl.convertDif
 @Service
 public class RecommendationService {
 
+    /*
+     * solvedac의 문제를 랜덤하게 추천받는 내부 쿼리를 만든다.
+     */
     @Transactional
     public String makeQuery(String userId, String start, String end) {
         Query query = new SolvedacQueryImpl();
@@ -36,6 +39,9 @@ public class RecommendationService {
         return query.getQuery();
     }
 
+    /*
+     * 추천 문제를 뽑는다.
+     */
     @Transactional
     public RecommendationResponse makeRecommend(String url) {
         RestTemplate restTemplate = new RestTemplate();
@@ -50,7 +56,7 @@ public class RecommendationService {
                 .isSolvable(recommendationProblem.path("isSolvable").asBoolean())
                 .isPartial(recommendationProblem.path("isPartial").asBoolean())
                 .acceptedUserCount(recommendationProblem.path("acceptedUserCount").asInt())
-                .level(convertDifficulty(recommendationProblem.path("level").asInt()))
+                .level(recommendationProblem.path("level").asText())
                 .votedUserCount(recommendationProblem.path("votedUserCount").asInt())
                 .sprout(recommendationProblem.path("sprout").asBoolean())
                 .givesNoRating(recommendationProblem.path("givesNoRating").asBoolean())
@@ -63,6 +69,9 @@ public class RecommendationService {
         return recommendationResponse;
     }
 
+    /*
+     * Json의 title부분을 파싱한다.
+     */
     public Object makeSubJsonTitle(JsonNode jsonNode) {
         if (jsonNode.isArray()) {
             ArrayList<Object> subTitles = new ArrayList<Object>();
@@ -83,6 +92,9 @@ public class RecommendationService {
         return subTitle;
     }
 
+    /*
+     * Json의 Tag부분을 파싱한다.
+     */
     public ArrayList<Object> makeSubJsonTag(JsonNode jsonNode) {
         ArrayList<Object> subTags = new ArrayList<Object>();
         int size = jsonNode.size();

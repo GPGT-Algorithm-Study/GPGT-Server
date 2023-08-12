@@ -1,5 +1,6 @@
 package com.randps.randomdefence.component.crawler;
 
+import com.randps.randomdefence.component.crawler.dto.BojProblemPair;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -23,7 +24,12 @@ public class BojWebCrawler extends WebCrawler {
             // 푼 시간이랑 문제 번호만 뽑아내기
             Elements innerElems = select.select("a");
             if (isToday(innerElems.get(2).attr("title"))) {
-                list.add(innerElems.get(1).text());
+                BojProblemPair pair = BojProblemPair.builder()
+                        .problemId(Integer.valueOf(innerElems.get(1).text()))
+                        .title(innerElems.get(1).attr("title"))
+                        .dateTime(innerElems.get(2).attr("title"))
+                        .build();
+                list.add(pair);
             }
             //html(), text(), children(), append().... 등 다양한 메서드 사용 가능
             //https://jsoup.org/apidocs/org/jsoup/nodes/Element.html 참고
@@ -49,7 +55,7 @@ public class BojWebCrawler extends WebCrawler {
         else return false;
     }
 
-    private Boolean is6AmAfter(Integer h) {
+    public static Boolean is6AmAfter(Integer h) {
         if (h >= 6) return true;
         return false;
     }

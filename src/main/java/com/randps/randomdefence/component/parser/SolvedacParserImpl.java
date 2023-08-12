@@ -71,7 +71,7 @@ public class SolvedacParserImpl implements Parser {
 
         UserInfoResponse userInfoResponse = UserInfoResponse.builder()
                 .bojHandle(bojHandle)
-                .userTier(convertDifficulty(userInfo.path("props").path("pageProps").path("user").path("tier").asInt()))
+                .userTier(userInfo.path("props").path("pageProps").path("user").path("tier").asText())
                 .notionId("")
                 .profileImg(userInfo.path("props").path("pageProps").path("user").path("profileImageUrl").asText())
                 .currentStreak(userInfo.path("props").path("pageProps").path("grass").path("currentStreak").asInt())
