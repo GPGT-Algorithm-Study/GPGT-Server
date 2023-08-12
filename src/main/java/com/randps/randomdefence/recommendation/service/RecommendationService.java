@@ -14,11 +14,11 @@ import org.springframework.web.client.RestTemplate;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 
+import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
+
 @RequiredArgsConstructor
 @Service
 public class RecommendationService {
-
-    private final BojParserImpl bojParser;
 
     @Transactional
     public String makeQuery(String userId, String start, String end) {
@@ -50,7 +50,7 @@ public class RecommendationService {
                 .isSolvable(recommendationProblem.path("isSolvable").asBoolean())
                 .isPartial(recommendationProblem.path("isPartial").asBoolean())
                 .acceptedUserCount(recommendationProblem.path("acceptedUserCount").asInt())
-                .level(bojParser.convertDifficulty(recommendationProblem.path("level").asInt()))
+                .level(convertDifficulty(recommendationProblem.path("level").asInt()))
                 .votedUserCount(recommendationProblem.path("votedUserCount").asInt())
                 .sprout(recommendationProblem.path("sprout").asBoolean())
                 .givesNoRating(recommendationProblem.path("givesNoRating").asBoolean())

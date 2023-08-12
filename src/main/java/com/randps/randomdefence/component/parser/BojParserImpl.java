@@ -1,23 +1,46 @@
 package com.randps.randomdefence.component.parser;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.randps.randomdefence.component.crawler.WebCrawler;
+import lombok.RequiredArgsConstructor;
+import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Component
 public class BojParserImpl implements Parser {
+    private JsonNode userSolvedList;
 
+    private final WebCrawler webCrawler;
+
+    /*
+     * 오늘 푼 문제 리스트를 반환한다.
+     */
     @Override
-    public List<Object> getSolvedProblemList(String userName) {
+    public List<Object> getSolvedProblemList(String bojHandle) throws JsonProcessingException {
         List<Object> solvedProblems = new ArrayList<>();
+        UriComponents uri = UriComponentsBuilder.newInstance()
+                .scheme("https").host("www.acmicpc.net").path("/status")
+                .queryParam("problem_id", "")
+                .queryParam("user_id", bojHandle)
+                .queryParam("language_id", "-1")
+                .queryParam("result_id", 4)
+                .build();
 
-        // http를 파싱해서 유저의 백준 아이디에서 해결한 문제 리스트를 가져온다.
+        webCrawler.setUrl(uri.toUriString());
+        solvedProblems = webCrawler.process("baekjoon");
 
         return solvedProblems;
     }
 
-    public String convertDifficulty(Integer difficulty) {
+    public static String convertDifficulty(Integer difficulty) {
         if (difficulty == 0) {return "Unrated";}
         if (difficulty == 1) {return "브론즈 5";}
         if (difficulty == 2) {return "브론즈 4";}

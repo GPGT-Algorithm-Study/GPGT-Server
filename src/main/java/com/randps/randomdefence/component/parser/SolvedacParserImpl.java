@@ -21,6 +21,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
+
 @Getter
 @RequiredArgsConstructor
 @Component
@@ -42,7 +44,7 @@ public class SolvedacParserImpl implements Parser {
                 .scheme("https").host("solved.ac").path("/profile/" + bojHandle).build();
 
         webCrawler.setUrl(uri.toUriString());
-        List<Object> elements = webCrawler.process();
+        List<Object> elements = webCrawler.process("solvedac");
         String jsonString = ((Element)elements.get(0)).unwrap().toString();
 
         ObjectMapper om = new ObjectMapper();
@@ -68,7 +70,7 @@ public class SolvedacParserImpl implements Parser {
 
         UserInfoResponse userInfoResponse = UserInfoResponse.builder()
                 .bojHandle(bojHandle)
-                .userTier(new BojParserImpl().convertDifficulty(userInfo.path("props").path("pageProps").path("user").path("tier").asInt()))
+                .userTier(convertDifficulty(userInfo.path("props").path("pageProps").path("user").path("tier").asInt()))
                 .notionId("")
                 .profileImg(userInfo.path("props").path("pageProps").path("user").path("profileImageUrl").asText())
                 .currentStreak(userInfo.path("props").path("pageProps").path("grass").path("currentStreak").asInt())

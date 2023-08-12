@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +21,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final SolvedacParserImpl solvedacParser;
+
+    private final BojParserImpl bojParser;
 
     @Transactional
     public User save(String bojHandle, String notionId, Long manager) {
@@ -63,5 +66,12 @@ public class UserService {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         return solvedacParser.crawlingUserInfo(bojHandle);
+    }
+
+    @Transactional
+    public List<Object> getTodaySolvedRaw(String bojHandle) throws JsonProcessingException {
+        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        return bojParser.getSolvedProblemList(bojHandle);
     }
 }
