@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -48,7 +49,11 @@ public class SolvedacParserImpl implements Parser {
 
     public Boolean isTodaySolved(JsonNode userInfo) {
         JsonNode grass = userInfo.path("props").path("pageProps").path("grass").path("grass");
+        LocalDateTime cur = LocalDateTime.now();
         LocalDate now = LocalDate.now();
+        if (cur.getHour() < 6) {
+            now = now.minusDays(1);
+        }
 
         for (JsonNode day : grass) {
             if (day.path("date").asText().equals(now.toString()))
