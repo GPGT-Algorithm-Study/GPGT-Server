@@ -4,25 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.randps.randomdefence.component.crawler.SolvedacWebCrawler;
-import com.randps.randomdefence.component.crawler.WebCrawler;
-import com.randps.randomdefence.component.query.Query;
-import com.randps.randomdefence.component.query.SolvedacQueryImpl;
-import com.randps.randomdefence.recommendation.dto.RecommendationResponse;
-import com.randps.randomdefence.user.domain.User;
+import com.randps.randomdefence.component.parser.dto.UserScrapingInfoDto;
 import com.randps.randomdefence.user.dto.UserInfoResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Element;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
 
 @Getter
 @RequiredArgsConstructor
@@ -65,22 +57,18 @@ public class SolvedacParserImpl implements Parser {
         return false;
     }
 
-    public UserInfoResponse getSolvedUserInfo(String bojHandle) throws JsonProcessingException {
-        // TODO: 내부DB먼저 스캔해서 사용하게 바꿔야함. 일단 개발 단계에서는 바로 스크래핑 데이터 사용
+    public UserScrapingInfoDto getSolvedUserInfo(String bojHandle) throws JsonProcessingException {
         JsonNode userInfo = crawlingUserInfo(bojHandle);
 
-        UserInfoResponse userInfoResponse = UserInfoResponse.builder()
-                .bojHandle(bojHandle)
-                .userTier(userInfo.path("props").path("pageProps").path("user").path("tier").asText())
-                .notionId("")
+        UserScrapingInfoDto userscrapingInfoDto = UserScrapingInfoDto.builder()
+                .tier(userInfo.path("props").path("pageProps").path("user").path("tier").asInt())
                 .profileImg(userInfo.path("props").path("pageProps").path("user").path("profileImageUrl").asText())
                 .currentStreak(userInfo.path("props").path("pageProps").path("grass").path("currentStreak").asInt())
-                .warning(0)
-                .isManager(false)
+                .totalSolved(userInfo.path("props").path("pageProps").path("user").path("solvedCount").asInt())
                 .isTodaySolved(isTodaySolved(userInfo))
                 .build();
 
-        return userInfoResponse;
+        return userscrapingInfoDto;
     }
 
 }

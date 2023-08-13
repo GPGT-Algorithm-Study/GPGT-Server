@@ -5,35 +5,64 @@ import lombok.Data;
 
 @Data
 public class UserInfoResponse {
-    public String bojHandle;
-    public String userTier;
-    public String notionId;
-    public String profileImg;
-    public Integer currentStreak;
-    public Integer warning;
-    public Boolean isManager;
-    public Boolean isTodaySolved;
+
+    private String bojHandle;
+
+    private String notionId;
+
+    private Boolean manager;
+
+    private Integer warning;
+
+    private String profileImg;
+
+    private String emoji;
+
+    private Integer tier;
+
+    private Integer totalSolved;
+
+    private Integer currentStreak;
+
+    private Integer currentRandomStreak;
+
+    private Integer team;
+
+    private Integer point;
+
+    private Boolean isTodaySolved;
 
     @Builder
-    public UserInfoResponse(String bojHandle, String userTier, String notionId, String profileImg, Integer currentStreak, Integer warning, Boolean isManager, Boolean isTodaySolved) {
+    public UserInfoResponse(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved) {
         this.bojHandle = bojHandle;
-        this.userTier = userTier;
         this.notionId = notionId;
-        this.profileImg = profileImg;
-        this.currentStreak = currentStreak;
+        this.manager = manager;
         this.warning = warning;
-        this.isManager = isManager;
+        this.profileImg = profileImg;
+        this.emoji = emoji;
+        this.tier = tier;
+        this.totalSolved = totalSolved;
+        this.currentStreak = currentStreak;
+        this.currentRandomStreak = currentRandomStreak;
+        this.team = team;
+        this.point = point;
         this.isTodaySolved = isTodaySolved;
     }
 
+
     public UserInfoResponse() {
         this.bojHandle = "";
-        this.userTier = "";
         this.notionId = "";
-        this.profileImg = "";
-        this.currentStreak = 0;
+        this.manager = false;
         this.warning = 0;
-        this.isManager = false;
+        this.profileImg = "";
+        this.emoji = "";
+        this.tier = 0;
+        this.totalSolved = 0;
+        this.currentStreak = 0;
+        this.currentRandomStreak = 0;
+        this.team = 0;
+        this.point = 0;
         this.isTodaySolved = false;
     }
 }

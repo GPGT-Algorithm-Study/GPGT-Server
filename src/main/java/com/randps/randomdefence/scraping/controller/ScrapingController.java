@@ -3,6 +3,7 @@ package com.randps.randomdefence.scraping.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.problem.service.ProblemService;
 import com.randps.randomdefence.scraping.service.ScrapingService;
+import com.randps.randomdefence.user.service.UserInfoService;
 import com.randps.randomdefence.userSolvedProblem.service.UserSolvedProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +20,8 @@ public class ScrapingController {
 
     private final UserSolvedProblemService userSolvedProblemService;
 
+    private final UserInfoService userInfoService;
+
     private final ScrapingService scrapingService;
 
     private final ProblemService problemService;
@@ -29,6 +32,16 @@ public class ScrapingController {
     @GetMapping("/user/today-solved")
     public HttpStatus scrapUserTodaySolvedList(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
         userSolvedProblemService.crawlTodaySolvedProblem(bojHandle);
+
+        return HttpStatus.OK;
+    }
+
+    /*
+     * 유저의 프로필 정보 스크래핑 (기존에 유저가 등록되어 있어야함.)
+     */
+    @GetMapping("/user/info")
+    public HttpStatus scrapUserInfo(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
+        userInfoService.crawlUserInfo(bojHandle);
 
         return HttpStatus.OK;
     }
