@@ -45,8 +45,10 @@ public class User extends BaseTimeEntity {
 
     private Boolean isTodaySolved; // by Solved
 
+    private Boolean isTodayRandomSolved;
+
     @Builder
-    public User(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved) {
+    public User(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved) {
         this.bojHandle = bojHandle;
         this.notionId = notionId;
         this.manager = manager;
@@ -60,6 +62,7 @@ public class User extends BaseTimeEntity {
         this.team = team;
         this.point = point;
         this.isTodaySolved = isTodaySolved;
+        this.isTodayRandomSolved = isTodayRandomSolved;
     }
 
     public void increaseWarning() {
@@ -87,6 +90,7 @@ public class User extends BaseTimeEntity {
                 .team(this.getTeam())
                 .point(this.getPoint())
                 .isTodaySolved(this.getIsTodaySolved())
+                .isTodayRandomSolved(this.getIsTodayRandomSolved())
                 .build();
     }
 

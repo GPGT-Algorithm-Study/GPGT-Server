@@ -48,6 +48,7 @@ public class UserService {
                 .team(0)
                 .point(0)
                 .isTodaySolved(false)
+                .isTodayRandomSolved(false)
                 .build();
 
         userRepository.save(user);
