@@ -18,7 +18,7 @@ public class SolvedacQueryImpl implements Query {
     }
 
     @Override
-    public Boolean setParam(String key, String value) {
+    public Boolean setParam(String key, Object value) {
         try {
             this.params.add(new Pair(key, value));
         } catch (InternalError e) {

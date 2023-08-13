@@ -1,12 +1,20 @@
 package com.randps.randomdefence.problem.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.randps.randomdefence.component.query.Query;
+import com.randps.randomdefence.component.query.SolvedacQueryImpl;
 import com.randps.randomdefence.problem.domain.Problem;
 import com.randps.randomdefence.problem.domain.ProblemRepository;
 import com.randps.randomdefence.problem.dto.ProblemDto;
+import com.randps.randomdefence.recommendation.dto.RecommendationResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -15,22 +23,69 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
-//    //TODO: 문제 정보를 받아올 때, 내부 DB에서 가져오고 내부 DB에 없다면 API를 호출해서 가져온 뒤, DB에 저장하고 반환한다.
-//    /*
-//     * solvedac의 문제를 내부 DB에서 불러온다.
-//     */
-//    @Transactional
-//    public ProblemDto findProblem(Integer problemId) {
-//        Optional<Problem> problem = problemRepository.findByProblemId(problemId);
-//
-//        if ()
-//    }
-//
-//    /*
-//     * solvedac의 문제를 크롤링 후, DB에 저장한다.
-//     */
-//    @Transactional
-//    public Problem scrapProblem(Integer problemId) {
-//
-//    }
+    //TODO: 문제 정보를 받아올 때, 내부 DB에서 가져오고 내부 DB에 없다면 API를 호출해서 가져온 뒤, DB에 저장하고 반환한다.
+    /*
+     * solvedac의 문제를 내부 DB에서 불러온다.
+     */
+    @Transactional
+    public ProblemDto findProblem(Integer problemId) {
+        Optional<Problem> problem = problemRepository.findByProblemId(problemId);
+
+        if (problem.isPresent()) {
+            return problem.get().toDto();
+        } else if (problemId == 0) {
+            return new ProblemDto();
+        }
+        return scrapProblem(problemId).toDto();
+    }
+
+    /*
+     * solvedac의 문제를 크롤링 후, DB에 저장한다.
+     */
+    @Transactional
+    public Problem scrapProblem(Integer problemId) {
+        Query query = new SolvedacQueryImpl();
+
+        query.setDomain("https://solved.ac/api/v3/problem/show");
+
+        query.setParam("problemId", problemId);
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<JsonNode> response = restTemplate.getForEntity(query.getQuery(), JsonNode.class);
+        JsonNode problemInfo = response.getBody();
+
+        Problem problem = Problem.builder()
+                .problemId(problemInfo.path("problemId").asInt())
+                .titleKo(problemInfo.path("titleKo").asText())
+                .isSolvable(problemInfo.path("isSolvable").asBoolean())
+                .isPartial(problemInfo.path("isPartial").asBoolean())
+                .acceptedUserCount(problemInfo.path("acceptedUserCount").asInt())
+                .level(problemInfo.path("level").asInt())
+                .votedUserCount(problemInfo.path("votedUserCount").asInt())
+                .sprout(problemInfo.path("sprout").asBoolean())
+                .givesNoRating(problemInfo.path("givesNoRating").asBoolean())
+                .isLevelLocked(problemInfo.path("isLevelLocked").asBoolean())
+                .averageTries(problemInfo.path("averageTries").asText())
+                .official(problemInfo.path("official").asBoolean())
+                .tags(makeSubJsonTag(problemInfo.path("tags")))
+                .build();
+
+        problemRepository.save(problem);
+
+        return problem;
+    }
+
+    /*
+     * Json의 Tag부분을 파싱한다.
+     */
+    public ArrayList<String> makeSubJsonTag(JsonNode jsonNode) {
+        ArrayList<String> subTags = new ArrayList<String>();
+        int size = jsonNode.size();
+
+        for (int i = 0; i < size; i++) {
+            subTags.add(jsonNode.path(i).path("displayNames").path(0).path("name").asText());
+        }
+        return subTags;
+    }
 }

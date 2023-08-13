@@ -1,6 +1,7 @@
 package com.randps.randomdefence.problem.domain;
 
 import com.randps.randomdefence.auditing.BaseTimeEntity;
+import com.randps.randomdefence.problem.dto.ProblemDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,4 +63,21 @@ public class Problem extends BaseTimeEntity {
         this.tags = tags;
     }
 
+    public ProblemDto toDto() {
+        return ProblemDto.builder()
+                .problemId(this.getProblemId())
+                .titleKo(this.getTitleKo())
+                .isSolvable(this.getIsSolvable())
+                .isPartial(this.getIsPartial())
+                .acceptedUserCount(this.getAcceptedUserCount())
+                .level(this.getLevel())
+                .votedUserCount(this.getVotedUserCount())
+                .sprout(this.getSprout())
+                .givesNoRating(this.getGivesNoRating())
+                .isLevelLocked(this.getIsLevelLocked())
+                .averageTries(this.getAverageTries())
+                .official(this.getOfficial())
+                .tags(this.getTags())
+                .build();
+    }
 }

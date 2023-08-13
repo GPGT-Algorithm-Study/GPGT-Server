@@ -21,6 +21,16 @@ public class BojWebCrawler extends WebCrawler {
         //select 메서드 안에 css selector를 작성하여 Elements를 가져올 수 있다.
 
         for (Element select : selects) {
+            // 비어있는 문제 지나가기
+            if (select.select("td").get(2).text().isBlank()) {
+                BojProblemPair pair = BojProblemPair.builder()
+                        .problemId(0)
+                        .title("아레나 문제")
+                        .dateTime(select.select("a").get(0).attr("title"))
+                        .build();
+                list.add(pair);
+                continue;
+            }
             // 푼 시간이랑 문제 번호만 뽑아내기
             Elements innerElems = select.select("a");
             if (isToday(innerElems.get(2).attr("title"))) {

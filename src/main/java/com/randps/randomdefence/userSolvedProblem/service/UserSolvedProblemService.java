@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.component.crawler.BojWebCrawler;
 import com.randps.randomdefence.component.crawler.dto.BojProblemPair;
 import com.randps.randomdefence.component.parser.BojParserImpl;
+import com.randps.randomdefence.problem.dto.ProblemDto;
+import com.randps.randomdefence.problem.service.ProblemService;
 import com.randps.randomdefence.userSolvedProblem.domain.UserSolvedProblem;
 import com.randps.randomdefence.userSolvedProblem.domain.UserSolvedProblemRepository;
 import com.randps.randomdefence.userSolvedProblem.dto.SolvedProblemDto;
@@ -23,6 +25,9 @@ public class UserSolvedProblemService {
 
     private final UserSolvedProblemRepository userSolvedProblemRepository;
 
+    private final ProblemService problemService;
+
+
     private final BojParserImpl bojParser;
 
     /*
@@ -34,7 +39,11 @@ public class UserSolvedProblemService {
         List<SolvedProblemDto> solvedProblems = new ArrayList<SolvedProblemDto>();
 
         for (UserSolvedProblem problem : userSolvedProblems) {
-            solvedProblems.add(problem.toDto());
+            SolvedProblemDto solvedProblemDto = problem.toDto();
+            ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
+            solvedProblemDto.setTier(problemDto.getLevel());
+            solvedProblemDto.setTags(problemDto.getTags());
+            solvedProblems.add(solvedProblemDto);
         }
 
         return solvedProblems;
@@ -63,7 +72,13 @@ public class UserSolvedProblemService {
         for (UserSolvedProblem problem : userSolvedProblems) {
             LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
 
-            if (startOfDateTime.isBefore(target)) solvedProblems.add(problem.toDto());
+            if (startOfDateTime.isBefore(target)) {
+                SolvedProblemDto solvedProblemDto = problem.toDto();
+                ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
+                solvedProblemDto.setTier(problemDto.getLevel());
+                solvedProblemDto.setTags(problemDto.getTags());
+                solvedProblems.add(solvedProblemDto);
+            }
         }
 
         return solvedProblems;

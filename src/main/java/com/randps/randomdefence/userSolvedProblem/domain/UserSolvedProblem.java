@@ -10,10 +10,13 @@ import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
-@Table(name = "RD_USERSOLVEDPROBLEM")
+@Table(name = "RD_USER_SOLVED_PROBLEM")
 @Entity
 public class UserSolvedProblem extends BaseTimeEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Integer problemId;
 
     private String bojHandle;

@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.ElementCollection;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -50,5 +51,21 @@ public class ProblemDto {
         this.averageTries = averageTries;
         this.official = official;
         this.tags = tags;
+    }
+
+    public ProblemDto() {
+        this.problemId = 0;
+        this.titleKo = "";
+        this.isSolvable = false;
+        this.isPartial = false;
+        this.acceptedUserCount = 0;
+        this.level = 0;
+        this.votedUserCount = 0;
+        this.sprout = false;
+        this.givesNoRating = false;
+        this.isLevelLocked = false;
+        this.averageTries = "";
+        this.official = false;
+        this.tags = new ArrayList<String>();
     }
 }

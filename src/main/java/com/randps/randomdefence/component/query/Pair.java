@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 public class Pair {
     String key;
-    String value;
+    Object value;
 
     @Builder
-    public Pair(String key, String value) {
+    public Pair(String key, Object value) {
         this.key = key;
         this.value = value;
     }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,6 +32,22 @@ public class UserInfoService {
 
         return user.toUserInfoResponse();
     }
+
+    /*
+     * 모든 유저의 프로필 정보를 불러온다.
+     */
+    @Transactional
+    public List<UserInfoResponse> getAllInfo() {
+        List<User> users = userRepository.findAll();
+        List<UserInfoResponse> userInfoResponses = new ArrayList<>();
+
+        for (User user : users) {
+            userInfoResponses.add(user.toUserInfoResponse());
+        }
+
+        return userInfoResponses;
+    }
+
 
     /*
      * 유저의 프로필 정보를 크롤링 후, DB에 저장한다.

@@ -56,7 +56,7 @@ public class RecommendationService {
                 .isSolvable(recommendationProblem.path("isSolvable").asBoolean())
                 .isPartial(recommendationProblem.path("isPartial").asBoolean())
                 .acceptedUserCount(recommendationProblem.path("acceptedUserCount").asInt())
-                .level(recommendationProblem.path("level").asText())
+                .level(recommendationProblem.path("level").asInt())
                 .votedUserCount(recommendationProblem.path("votedUserCount").asInt())
                 .sprout(recommendationProblem.path("sprout").asBoolean())
                 .givesNoRating(recommendationProblem.path("givesNoRating").asBoolean())

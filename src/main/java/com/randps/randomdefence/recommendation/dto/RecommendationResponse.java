@@ -13,7 +13,7 @@ public class RecommendationResponse {
     public Boolean isSolvable;
     public Boolean isPartial;
     public Integer acceptedUserCount;
-    public String level;
+    public Integer level;
     public Integer votedUserCount;
     public Boolean sprout;
     public Boolean givesNoRating;
@@ -23,7 +23,7 @@ public class RecommendationResponse {
     public ArrayList<Object> tags;
 
     @Builder
-    public RecommendationResponse(Integer problemId, String titleKo, Object titles, Boolean isSolvable, Boolean isPartial, Integer acceptedUserCount, String level, Integer votedUserCount, Boolean sprout, Boolean givesNoRating, Boolean isLevelLocked, String averageTries, Boolean official, ArrayList<Object> tags) {
+    public RecommendationResponse(Integer problemId, String titleKo, Object titles, Boolean isSolvable, Boolean isPartial, Integer acceptedUserCount, Integer level, Integer votedUserCount, Boolean sprout, Boolean givesNoRating, Boolean isLevelLocked, String averageTries, Boolean official, ArrayList<Object> tags) {
         this.problemId = problemId;
         this.titleKo = titleKo;
         this.titles = titles;

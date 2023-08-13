@@ -57,6 +57,14 @@ public class UserController {
     }
 
     /*
+     * 모든 유저의 프로필 정보를 불러온다. (유저 정보만)
+     */
+    @GetMapping("/info/all")
+    public List<UserInfoResponse> allInfo() {
+        return userInfoService.getAllInfo();
+    }
+
+    /*
      * 유저의 오늘 푼 문제 목록을 불러온다.
      */
     @GetMapping("/info/today-solved")
