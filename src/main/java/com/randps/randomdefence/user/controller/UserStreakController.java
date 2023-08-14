@@ -73,7 +73,7 @@ public class UserStreakController {
      */
     @PostMapping("/make-random-problem")
     public HttpStatus makeRandomProblem() {
-        userRandomStreakService.makeUpUserRandomProblem();
+        userRandomStreakService.makeUpUserRandomProblemAll();
 
         return HttpStatus.OK;
     }

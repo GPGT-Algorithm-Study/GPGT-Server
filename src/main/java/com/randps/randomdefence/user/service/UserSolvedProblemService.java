@@ -10,6 +10,7 @@ import com.randps.randomdefence.user.domain.UserRepository;
 import com.randps.randomdefence.user.domain.UserSolvedProblem;
 import com.randps.randomdefence.user.domain.UserSolvedProblemRepository;
 import com.randps.randomdefence.user.dto.SolvedProblemDto;
+import com.randps.randomdefence.user.dto.UserSolvedProblemPairDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -90,7 +91,7 @@ public class UserSolvedProblemService {
      * 오늘 모든 유저가 푼 모든 문제의 정보를 가져온다.
      */
     @Transactional
-    public List<List<SolvedProblemDto>> findAllTodayUserSolvedProblemAll() {
+    public List<UserSolvedProblemPairDto> findAllTodayUserSolvedProblemAll() {
         // 오늘의 기준을 만든다.
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfDateTime;
@@ -103,7 +104,7 @@ public class UserSolvedProblemService {
 
         // 모든 유저 조회
         List<User> users = userRepository.findAll();
-        List<List<SolvedProblemDto>> allUserSolvedProblems = new ArrayList<>();
+        List<UserSolvedProblemPairDto> userSolvedProblemPairDtos = new ArrayList<>();
 
         for (User user : users) {
             // 데이터를 DB에서 가져온다.
@@ -123,10 +124,13 @@ public class UserSolvedProblemService {
                 }
             }
 
-            allUserSolvedProblems.add(solvedProblems);
+            userSolvedProblemPairDtos.add(UserSolvedProblemPairDto.builder()
+                    .bojHandle(user.getBojHandle())
+                    .solvedProblemList(solvedProblems)
+                    .build());
         }
 
-        return allUserSolvedProblems;
+        return userSolvedProblemPairDtos;
     }
 
     /*

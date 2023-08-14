@@ -74,6 +74,25 @@ public class UserInfoService {
     }
 
     /*
+     * 모든 유저의 스트릭 끊김 여부를 확인 후, 스트릭이 끊겼다면 경고를 1 올린다. (Daily batch job 서버용)
+     * 단, 크롤링 딜레이를 고려해서 새벽 6시 1분 이후에 사용해야 정확성이 보장됨.
+     * TODO: 코드도 정확도를 높이기 위해 추가로 solved 잔디도 확인해야함
+     */
+    @Transactional
+    public void checkAllUserSolvedStreak() throws JsonProcessingException {
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
+            userRepository.save(user);
+            if (user.getCurrentStreak().equals(0)) {
+                user.increaseWarning();
+                userRepository.save(user);
+            }
+        }
+    }
+
+    /*
      * 유저의 프로필 정보를 불러온다. (직접 불러오기)
      */
     @Transactional

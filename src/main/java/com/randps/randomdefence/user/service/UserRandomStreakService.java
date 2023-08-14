@@ -114,7 +114,7 @@ public class UserRandomStreakService {
      * 모든 유저의 랜덤 문제를 1문제를 뽑아 저장한다.
      */
     @Transactional
-    public void makeUpUserRandomProblem() {
+    public void makeUpUserRandomProblemAll() {
         List<User> users = userRepository.findAll();
 
         for (User user : users) {
@@ -150,7 +150,7 @@ public class UserRandomStreakService {
         List<SolvedProblemDto> solvedProblemDtos =  userSolvedProblemService.findAllTodayUserSolvedProblem(bojHandle);
 
         for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
-            if (solvedProblemDto.getProblemId() == randomProblem.getProblemId()) {
+            if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
                 User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
                 UserGrass todayUserGrass = userGrassRepository.findByUserRandomStreak(userRandomStreak).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 잔디입니다."));
 
@@ -175,6 +175,41 @@ public class UserRandomStreakService {
     }
 
     /*
+     * 모든 유저에 대해 유저가 랜덤 문제를 풀었다면 체크한다.
+     */
+    @Transactional
+    public void solvedCheckAll() {
+        List<User> users = userRepository.findAll();
+
+        for (User userCur : users) {
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            ProblemDto randomProblem = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
+            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(userCur.getBojHandle());
+
+            for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
+                if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
+                    User user = userRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                    UserGrass todayUserGrass = userGrassRepository.findByUserRandomStreak(userRandomStreak).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 잔디입니다."));
+
+                    // 유저의 정보 갱신
+                    user.increasePoint(randomProblem.getLevel()); // 문제의 레벨만큼의 포인트를 지급한다.
+                    user.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
+                    user.checkTodayRandomSolvedOk();
+                    userRepository.save(user);
+
+                    // 잔디 정보 갱신
+                    todayUserGrass.infoCheckOk();
+                    userGrassRepository.save(todayUserGrass);
+
+                    // 랜덤 스트릭 정보 갱신
+                    userRandomStreak.solvedCheckOk();
+                    userRandomStreakRepository.save(userRandomStreak);
+                }
+            }
+        }
+    }
+
+    /*
      * 유저의 전일 문제가 풀리지 않았다면 스트릭을 끊는다.
      */
     @Transactional
@@ -196,5 +231,30 @@ public class UserRandomStreakService {
             return false;
         }
         return true;
+    }
+
+    /*
+     * 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 스트릭을 끊는다.
+     */
+    @Transactional
+    public void streakCheckAll() {
+        List<User> users = userRepository.findAll();
+
+        for (User userCur : users) {
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            UserGrass yesterday = userGrassService.findYesterdayUserGrass(userRandomStreak);
+            if (!yesterday.getGrassInfo()) {
+                User user = userRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+                // 유저 정보 갱신
+                user.checkTodayRandomSolvedNo();
+                user.resetCurrentRandomStreak();
+                userRepository.save(user);
+
+                // 랜덤 스트릭 정보 갱신
+                userRandomStreak.resetCurrentStreak();
+                userRandomStreakRepository.save(userRandomStreak);
+            }
+        }
     }
 }

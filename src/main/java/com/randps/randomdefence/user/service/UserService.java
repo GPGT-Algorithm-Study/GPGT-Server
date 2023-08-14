@@ -7,8 +7,11 @@ import com.randps.randomdefence.component.parser.SolvedacParserImpl;
 import com.randps.randomdefence.component.query.Query;
 import com.randps.randomdefence.component.query.SolvedacQueryImpl;
 import com.randps.randomdefence.user.domain.User;
+import com.randps.randomdefence.user.domain.UserRandomStreak;
+import com.randps.randomdefence.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.user.domain.UserRepository;
 import com.randps.randomdefence.user.dto.UserInfoResponse;
+import com.randps.randomdefence.user.dto.UserRandomStreakResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +24,21 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    private final UserGrassService userGrassService;
+
+    private final UserRandomStreakRepository userRandomStreakRepository;
+
+    private final UserInfoService userInfoService;
+
+    private final UserRandomStreakService userRandomStreakService;
+
+    private final UserSolvedProblemService userSolvedProblemService;
+
     /*
      * 유저를 DB에 저장한다.
      */
     @Transactional
-    public User save(String bojHandle, String notionId, Long manager, String emoji) {
+    public User save(String bojHandle, String notionId, Long manager, String emoji) throws JsonProcessingException {
         Optional<User> isExistUser = userRepository.findByBojHandle(bojHandle);
         if (isExistUser.isPresent()) {
             return isExistUser.get();
@@ -52,6 +65,16 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+
+        // 유저 프로필 정보 크롤링
+        userInfoService.crawlUserInfo(bojHandle);
+        // 유저 오늘 푼 문제 크롤링
+        userSolvedProblemService.crawlTodaySolvedProblem(bojHandle);
+        // 유저 랜덤 스트릭 생성
+        userRandomStreakService.save(bojHandle);
+        // 전날의 랜덤 스트릭 잔디 생성 (새로운 유저 생성 시 에러 방지용)
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        userGrassService.makeYesterdayGrass(userRandomStreak);
 
         return user;
     }

@@ -46,6 +46,25 @@ public class UserGrassService {
     }
 
     /*
+     * 특정 유저의 전날의 잔디를 생성한다.
+     */
+    @Transactional
+    public void makeYesterdayGrass(UserRandomStreak userRandomStreak) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.getHour() >= 6) now = now.minusDays(1);
+        if (now.getHour() < 6) now = now.minusDays(2);
+        String yesterday = now.toString().substring(0,10);
+
+        UserGrass todayUserGrass = UserGrass.builder()
+                .problemId(userRandomStreak.getTodayRandomProblemId())
+                .date(yesterday)
+                .grassInfo(false)
+                .userRandomStreak(userRandomStreak)
+                .build();
+        userGrassRepository.save(todayUserGrass);
+    }
+
+    /*
      * 모든 유저의 오늘의 잔디를 생성한다.
      */
     @Transactional
@@ -93,9 +112,9 @@ public class UserGrassService {
     public UserGrass findTodayUserGrass(UserRandomStreak userRandomStreak) {
         LocalDateTime now = LocalDateTime.now();
         if (now.getHour() < 6) now = now.minusDays(1);
-        String yesterday = now.toString().substring(0,10);
+        String today = now.toString().substring(0,10);
 
-        return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, yesterday).orElseThrow(() -> new IllegalStateException("아직 존재하지 않는 스트릭입니다."));
+        return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, today).orElseThrow(() -> new IllegalStateException("아직 존재하지 않는 스트릭입니다."));
     }
 
     /*

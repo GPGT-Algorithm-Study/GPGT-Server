@@ -2,12 +2,11 @@ package com.randps.randomdefence.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.randps.randomdefence.user.domain.UserRandomStreak;
 import com.randps.randomdefence.user.dto.UserInfoResponse;
-import com.randps.randomdefence.user.service.UserInfoService;
-import com.randps.randomdefence.user.service.UserRandomStreakService;
-import com.randps.randomdefence.user.service.UserService;
+import com.randps.randomdefence.user.dto.UserSolvedProblemPairDto;
+import com.randps.randomdefence.user.service.*;
 import com.randps.randomdefence.user.dto.SolvedProblemDto;
-import com.randps.randomdefence.user.service.UserSolvedProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,8 @@ public class UserController {
 
     private final UserRandomStreakService userRandomStreakService;
 
+    private final UserGrassService userGrassService;
+
     //TODO: useradd, userdel은 jwt 토큰을 헤더에 넣어야지 접근가능하게 설정
     /*
      * 유저를 DB에 추가한다.
@@ -36,8 +37,6 @@ public class UserController {
     @PostMapping("/add")
     public HttpStatus userAdd(@Param("bojHandle") String bojHandle, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
         userService.save(bojHandle, notionId, manager, emoji);
-        userInfoService.crawlUserInfo(bojHandle);
-        userRandomStreakService.save(bojHandle);
 
         return HttpStatus.OK;
     }
@@ -69,10 +68,10 @@ public class UserController {
     }
 
     /*
-     * 유저의 오늘 푼 문제 목록을 불러온다.
+     * 모든 유저의 오늘 푼 문제 목록을 불러온다.
      */
     @GetMapping("/info/today-solved/all")
-    public List<List<SolvedProblemDto>> todaySolvedAll() {
+    public List<UserSolvedProblemPairDto> todaySolvedAll() {
         return userSolvedProblemService.findAllTodayUserSolvedProblemAll();
     }
 
@@ -204,8 +203,6 @@ public class UserController {
 
         for (int i=0;i< bojHandles.size();i++) {
             userService.save(bojHandles.get(i), notionIds.get(i), managers.get(i)?1L:0L, emojis.get(i));
-            userInfoService.crawlUserInfo(bojHandles.get(i));
-            userRandomStreakService.save(bojHandles.get(i));
         }
 
         return HttpStatus.OK;

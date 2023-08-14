@@ -3,7 +3,9 @@ package com.randps.randomdefence.scraping.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.problem.service.ProblemService;
 import com.randps.randomdefence.scraping.service.ScrapingService;
+import com.randps.randomdefence.user.service.UserGrassService;
 import com.randps.randomdefence.user.service.UserInfoService;
+import com.randps.randomdefence.user.service.UserRandomStreakService;
 import com.randps.randomdefence.user.service.UserSolvedProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +22,10 @@ public class ScrapingController {
     private final UserSolvedProblemService userSolvedProblemService;
 
     private final UserInfoService userInfoService;
+
+    private final UserRandomStreakService userRandomStreakService;
+
+    private final UserGrassService userGrassService;
 
     /*
      * 유저가 오늘 푼 문제 스크래핑 (기존 데이터와 중복 제거 포함, 단 옛날에 똑같은 문제를 푼적 있다면 중복 제거되지 않음)
@@ -61,4 +67,30 @@ public class ScrapingController {
         return HttpStatus.OK;
     }
 
+    /*
+     * 정해진 시간마다 실행되는 스크래핑 메서드 (30분 간격)
+     */
+    @GetMapping("/cron/batch")
+    public HttpStatus cronBatch() throws JsonProcessingException {
+        userInfoService.crawlUserInfoAll(); // 모든 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
+        userSolvedProblemService.crawlTodaySolvedProblemAll(); // 모든 유저의 맞았습니다를 크롤링해서 해결한 문제 DB를 업데이트한다.
+        userRandomStreakService.solvedCheckAll(); // 모든 유저의 오늘의 추첨 랜덤 문제 풀었는지 여부를 체크하고 DB를 업데이트한다.
+
+        return HttpStatus.OK;
+    }
+
+    /*
+     * 정해진 시간마다 실행되는 스크래핑 메서드 (매일 새벽 6시)
+     * 주의사항 : 2일치 잔디가 심어져있지 않다면, 잔디 NotFoundException이 뜬다.
+     *          -> 이는 유저 생성시 전 일의 잔디를 생성해서 해결했음. 단 유저 생성 메서드 외의 방법으로 유저 생성 시 에러 유발 가능
+     */
+    @GetMapping("/cron/batch/daily")
+    public HttpStatus cronBatchDaily() throws JsonProcessingException {
+        userGrassService.makeTodayGrassAll(); // 모든 유저의 오늘 잔디를 생성한다.
+        userRandomStreakService.makeUpUserRandomProblemAll(); // 모든 유저의 랜덤 문제를 1문제를 뽑아 저장한다.
+        userRandomStreakService.streakCheckAll(); // 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 랜덤 스트릭을 끊는다.
+        userInfoService.checkAllUserSolvedStreak(); // 유저의 스트릭이 끊겼다면(랜덤 스트릭이 아닌 Solvedac 스트릭) 경고를 1회 올린다.
+
+        return HttpStatus.OK;
+    }
 }
