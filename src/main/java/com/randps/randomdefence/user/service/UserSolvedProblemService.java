@@ -1,14 +1,13 @@
-package com.randps.randomdefence.userSolvedProblem.service;
+package com.randps.randomdefence.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.randps.randomdefence.component.crawler.BojWebCrawler;
 import com.randps.randomdefence.component.crawler.dto.BojProblemPair;
 import com.randps.randomdefence.component.parser.BojParserImpl;
 import com.randps.randomdefence.problem.dto.ProblemDto;
 import com.randps.randomdefence.problem.service.ProblemService;
-import com.randps.randomdefence.userSolvedProblem.domain.UserSolvedProblem;
-import com.randps.randomdefence.userSolvedProblem.domain.UserSolvedProblemRepository;
-import com.randps.randomdefence.userSolvedProblem.dto.SolvedProblemDto;
+import com.randps.randomdefence.user.domain.UserSolvedProblem;
+import com.randps.randomdefence.user.domain.UserSolvedProblemRepository;
+import com.randps.randomdefence.user.dto.SolvedProblemDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

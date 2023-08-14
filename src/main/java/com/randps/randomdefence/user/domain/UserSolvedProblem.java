@@ -1,7 +1,7 @@
-package com.randps.randomdefence.userSolvedProblem.domain;
+package com.randps.randomdefence.user.domain;
 
 import com.randps.randomdefence.auditing.BaseTimeEntity;
-import com.randps.randomdefence.userSolvedProblem.dto.SolvedProblemDto;
+import com.randps.randomdefence.user.dto.SolvedProblemDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

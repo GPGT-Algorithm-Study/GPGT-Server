@@ -1,4 +1,4 @@
-package com.randps.randomdefence.userSolvedProblem.dto;
+package com.randps.randomdefence.user.dto;
 
 import lombok.Builder;
 import lombok.Data;

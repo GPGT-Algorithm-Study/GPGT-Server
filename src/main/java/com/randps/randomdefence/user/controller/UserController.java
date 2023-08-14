@@ -2,12 +2,11 @@ package com.randps.randomdefence.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.randps.randomdefence.user.domain.User;
 import com.randps.randomdefence.user.dto.UserInfoResponse;
 import com.randps.randomdefence.user.service.UserInfoService;
 import com.randps.randomdefence.user.service.UserService;
-import com.randps.randomdefence.userSolvedProblem.dto.SolvedProblemDto;
-import com.randps.randomdefence.userSolvedProblem.service.UserSolvedProblemService;
+import com.randps.randomdefence.user.dto.SolvedProblemDto;
+import com.randps.randomdefence.user.service.UserSolvedProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;

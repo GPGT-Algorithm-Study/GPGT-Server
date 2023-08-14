@@ -1,5 +1,6 @@
-package com.randps.randomdefence.userSolvedProblem.domain;
+package com.randps.randomdefence.user.domain;
 
+import com.randps.randomdefence.user.domain.UserSolvedProblem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
