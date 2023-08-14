@@ -71,6 +71,14 @@ public class UserController {
     /*
      * 유저의 오늘 푼 문제 목록을 불러온다.
      */
+    @GetMapping("/info/today-solved/all")
+    public List<List<SolvedProblemDto>> todaySolvedAll() {
+        return userSolvedProblemService.findAllTodayUserSolvedProblemAll();
+    }
+
+    /*
+     * 유저의 오늘 푼 문제 목록을 불러온다.
+     */
     @GetMapping("/info/today-solved")
     public List<SolvedProblemDto> todaySolved(@Param("bojHandle") String bojHandle) {
         return userSolvedProblemService.findAllTodayUserSolvedProblem(bojHandle);

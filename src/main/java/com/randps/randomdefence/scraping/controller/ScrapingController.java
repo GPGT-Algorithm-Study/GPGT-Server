@@ -21,10 +21,6 @@ public class ScrapingController {
 
     private final UserInfoService userInfoService;
 
-    private final ScrapingService scrapingService;
-
-    private final ProblemService problemService;
-
     /*
      * 유저가 오늘 푼 문제 스크래핑 (기존 데이터와 중복 제거 포함, 단 옛날에 똑같은 문제를 푼적 있다면 중복 제거되지 않음)
      */
@@ -36,11 +32,31 @@ public class ScrapingController {
     }
 
     /*
+     * 모든 유저가 오늘 푼 문제 스크래핑 (기존 데이터와 중복 제거 포함, 단 옛날에 똑같은 문제를 푼적 있다면 중복 제거되지 않음)
+     */
+    @GetMapping("/user/today-solved/all")
+    public HttpStatus scrapUserTodaySolvedListAll() throws JsonProcessingException {
+        userSolvedProblemService.crawlTodaySolvedProblemAll();
+
+        return HttpStatus.OK;
+    }
+
+    /*
      * 유저의 프로필 정보 스크래핑 (기존에 유저가 등록되어 있어야함.)
      */
     @GetMapping("/user/info")
     public HttpStatus scrapUserInfo(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
         userInfoService.crawlUserInfo(bojHandle);
+
+        return HttpStatus.OK;
+    }
+
+    /*
+     * 모든 유저의 프로필 정보 스크래핑 (기존에 유저가 등록되어 있어야함.)
+     */
+    @GetMapping("/user/info/all")
+    public HttpStatus scrapUserInfo() throws JsonProcessingException {
+        userInfoService.crawlUserInfoAll();
 
         return HttpStatus.OK;
     }

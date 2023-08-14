@@ -61,6 +61,19 @@ public class UserInfoService {
     }
 
     /*
+     * 모든 유저의 프로필 정보를 크롤링 후, DB에 저장한다.
+     */
+    @Transactional
+    public void crawlUserInfoAll() throws JsonProcessingException {
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
+            userRepository.save(user);
+        }
+    }
+
+    /*
      * 유저의 프로필 정보를 불러온다. (직접 불러오기)
      */
     @Transactional
