@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.user.dto.UserInfoResponse;
 import com.randps.randomdefence.user.service.UserInfoService;
+import com.randps.randomdefence.user.service.UserRandomStreakService;
 import com.randps.randomdefence.user.service.UserService;
 import com.randps.randomdefence.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.user.service.UserSolvedProblemService;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,6 +27,8 @@ public class UserController {
 
     private final UserSolvedProblemService userSolvedProblemService;
 
+    private final UserRandomStreakService userRandomStreakService;
+
     //TODO: useradd, userdel은 jwt 토큰을 헤더에 넣어야지 접근가능하게 설정
     /*
      * 유저를 DB에 추가한다.
@@ -33,6 +37,7 @@ public class UserController {
     public HttpStatus userAdd(@Param("bojHandle") String bojHandle, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
         userService.save(bojHandle, notionId, manager, emoji);
         userInfoService.crawlUserInfo(bojHandle);
+        userRandomStreakService.save(bojHandle);
 
         return HttpStatus.OK;
     }
@@ -87,4 +92,114 @@ public class UserController {
         return userInfoService.getTodaySolvedRaw(bojHandle);
     }
 
+    /*
+     * 모든 유저를 DB에 추가한다. (TEST BATCH)
+     */
+    @PostMapping("/add/all")
+    public HttpStatus userAddAll() throws JsonProcessingException {
+        List<String> bojHandles = new ArrayList<>();
+        List<String> notionIds = new ArrayList<>();
+        List<Boolean> managers = new ArrayList<>();
+        List<String> emojis = new ArrayList<>();
+
+        // 이름 넣기
+        bojHandles.add("melonboy");
+        bojHandles.add("seyeon0207");
+        bojHandles.add("fin");
+        bojHandles.add("seoheo");
+        bojHandles.add("eogns47");
+        bojHandles.add("seyjang");
+        bojHandles.add("hyeonjinan096");
+        bojHandles.add("asdf016182");
+        bojHandles.add("jake0104");
+        bojHandles.add("emforhs0315");
+        bojHandles.add("taipaise");
+        bojHandles.add("chltjwl22");
+        bojHandles.add("choish20");
+        bojHandles.add("mathpaul3");
+        bojHandles.add("dkssudgkgl");
+        bojHandles.add("jin20fd");
+        bojHandles.add("ss001015");
+        bojHandles.add("hdaisywd");
+        bojHandles.add("angrypig7");
+        bojHandles.add("wlgh1553");
+        bojHandles.add("choidg33");
+
+        // 노션 아이디 넣기
+        notionIds.add("Minboy");
+        notionIds.add("Seyeon Yang");
+        notionIds.add("성민");
+        notionIds.add("SY Heo");
+        notionIds.add("KangManJoo");
+        notionIds.add("sayyoung");
+        notionIds.add("hyeon200");
+        notionIds.add("klloo");
+        notionIds.add("재현 주");
+        notionIds.add("성훈 조");
+        notionIds.add("이동현");
+        notionIds.add("최서지");
+        notionIds.add("최승헌");
+        notionIds.add("Paul Eom");
+        notionIds.add("은정 방");
+        notionIds.add("성유진");
+        notionIds.add("RubyTubi");
+        notionIds.add("Dahee Hong");
+        notionIds.add("Kihun Song");
+        notionIds.add("이지호");
+        notionIds.add("최다경");
+
+        // 매니저 여부 넣기
+        managers.add(true);
+        managers.add(true);
+        managers.add(true);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(true);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+        managers.add(false);
+
+        // 이모지 넣기
+        emojis.add("🐧");
+        emojis.add("🐇");
+        emojis.add("🍟");
+        emojis.add("🚀");
+        emojis.add("🐱");
+        emojis.add("🍀");
+        emojis.add("🍡");
+        emojis.add("♨️");
+        emojis.add("🍷");
+        emojis.add("👍");
+        emojis.add("🐾");
+        emojis.add("🥑");
+        emojis.add("🍞");
+        emojis.add("🦊");
+        emojis.add("✱");
+        emojis.add("💫");
+        emojis.add("✏️");
+        emojis.add("☃️");
+        emojis.add("🐴");
+        emojis.add("🐸");
+        emojis.add("🍎");
+
+        for (int i=0;i< bojHandles.size();i++) {
+            userService.save(bojHandles.get(i), notionIds.get(i), managers.get(i)?1L:0L, emojis.get(i));
+            userInfoService.crawlUserInfo(bojHandles.get(i));
+            userRandomStreakService.save(bojHandles.get(i));
+        }
+
+        return HttpStatus.OK;
+    }
 }

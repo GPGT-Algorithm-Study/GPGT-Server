@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
 
@@ -40,7 +41,7 @@ public class RecommendationService {
     }
 
     /*
-     * 추천 문제를 뽑는다.
+     * 추천 문제를 뽑는다. (1 문제)
      */
     @Transactional
     public RecommendationResponse makeRecommend(String url) {
@@ -67,6 +68,41 @@ public class RecommendationService {
                 .build();
 
         return recommendationResponse;
+    }
+
+    /*
+     * 추천 문제를 뽑는다. (최대 30 문제)
+     */
+    @Transactional
+    public List<RecommendationResponse> makeRecommendList(String url) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+        int size = response.getBody().path("items").size();
+
+        List<RecommendationResponse> recommendationResponses = new ArrayList<>();
+        for (int i=0;i<size && i<30;i++) {
+            JsonNode recommendationProblem = response.getBody().path("items").path(i);
+
+            recommendationResponses.add(RecommendationResponse.builder()
+                    .problemId(recommendationProblem.path("problemId").asInt())
+                    .titleKo(recommendationProblem.path("titleKo").asText())
+                    .titles(makeSubJsonTitle(recommendationProblem.path("titles")))
+                    .isSolvable(recommendationProblem.path("isSolvable").asBoolean())
+                    .isPartial(recommendationProblem.path("isPartial").asBoolean())
+                    .acceptedUserCount(recommendationProblem.path("acceptedUserCount").asInt())
+                    .level(recommendationProblem.path("level").asInt())
+                    .votedUserCount(recommendationProblem.path("votedUserCount").asInt())
+                    .sprout(recommendationProblem.path("sprout").asBoolean())
+                    .givesNoRating(recommendationProblem.path("givesNoRating").asBoolean())
+                    .isLevelLocked(recommendationProblem.path("isLevelLocked").asBoolean())
+                    .averageTries(recommendationProblem.path("averageTries").asText())
+                    .official(recommendationProblem.path("official").asBoolean())
+                    .tags(makeSubJsonTag(recommendationProblem.path("tags")))
+                    .build());
+        }
+
+        return recommendationResponses;
     }
 
     /*

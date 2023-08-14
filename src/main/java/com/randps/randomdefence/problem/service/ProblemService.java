@@ -23,7 +23,6 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
-    //TODO: 문제 정보를 받아올 때, 내부 DB에서 가져오고 내부 DB에 없다면 API를 호출해서 가져온 뒤, DB에 저장하고 반환한다.
     /*
      * solvedac의 문제를 내부 DB에서 불러온다.
      */

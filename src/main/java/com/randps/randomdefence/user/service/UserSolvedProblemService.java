@@ -101,7 +101,16 @@ public class UserSolvedProblemService {
                     .title(pair.getTitle())
                     .dateTime(pair.getDateTime())
                     .build();
-            if (!userSolvedProblems.contains(userSolvedProblem))
+            // 중복 제거 로직
+            Boolean isAlreadyExist = false;
+            for (UserSolvedProblem alreadySolvedProblem : userSolvedProblems){
+                if (alreadySolvedProblem.getProblemId().equals(userSolvedProblem.getProblemId())) {
+                    isAlreadyExist = true;
+                    break;
+                }
+            }
+            // 중복이 없다면 저장한다.
+            if (!isAlreadyExist)
                 userSolvedProblems.add(userSolvedProblem);
         }
 

@@ -42,7 +42,6 @@ public class User extends BaseTimeEntity {
 
     private Integer point;
 
-
     private Boolean isTodaySolved; // by Solved
 
     private Boolean isTodayRandomSolved;
@@ -73,6 +72,33 @@ public class User extends BaseTimeEntity {
     public void decreaseWarning() {
         if (this.warning > 1)
             this.warning--;
+    }
+
+    public Boolean increasePoint(Integer value) {
+        this.point += value;
+        return true;
+    }
+
+    public Boolean decreasePoint(Integer value) {
+        if (this.point < value) return false;
+        this.point -= value;
+        return true;
+    }
+
+    public void checkTodayRandomSolvedOk() {
+        this.isTodayRandomSolved = true;
+    }
+
+    public void checkTodayRandomSolvedNo() {
+        this.isTodayRandomSolved = false;
+    }
+
+    public void increaseCurrentRandomStreak() {
+        this.currentRandomStreak++;
+    }
+
+    public void resetCurrentRandomStreak() {
+        this.currentRandomStreak = 0;
     }
 
     public UserInfoResponse toUserInfoResponse() {
