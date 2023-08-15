@@ -64,11 +64,25 @@ public class UserRandomStreakService {
     }
 
     /*
-     * 특정 유저의 랜덤 스트릭 정보를 불러온다.
+     * 특정 유저의 랜덤 스트릭 정보를 불러온다. (문제를 문제의 아이디만 가진 형태)
      */
     @Transactional
     public UserRandomStreak findUserRandomStreak(String bojHandle) {
         return userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+    }
+
+    /*
+     * 특정 유저의 랜덤 스트릭 정보를 불러온다. (문제를 문제의 모든 정보를 보여주는 형태)
+     */
+    @Transactional
+    public UserRandomStreakResponse findUserRandomStreakToResponseForm(String bojHandle) {
+        UserRandomStreak userRandomStreak =  userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        ProblemDto problemDto = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
+
+        // 랜덤 문제의 문제의 획득 포인트 = 레벨 * 2
+        problemDto.toDoublePoint();
+
+        return new UserRandomStreakResponse(userRandomStreak.toDto(), problemDto);
     }
 
     /*
@@ -80,7 +94,12 @@ public class UserRandomStreakService {
         List<UserRandomStreakResponse> userRandomStreakResponses = new ArrayList<>();
 
         for (UserRandomStreak userRandomStreak : userRandomStreaks) {
-            userRandomStreakResponses.add(userRandomStreak.toDto());
+            ProblemDto problemDto = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
+
+            // 랜덤 문제의 문제의 획득 포인트 = 레벨 * 2
+            problemDto.toDoublePoint();
+
+            userRandomStreakResponses.add(new UserRandomStreakResponse(userRandomStreak.toDto(), problemDto));
         }
 
         return userRandomStreakResponses;
@@ -155,7 +174,7 @@ public class UserRandomStreakService {
                 UserGrass todayUserGrass = userGrassRepository.findByUserRandomStreak(userRandomStreak).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 잔디입니다."));
 
                 // 유저의 정보 갱신
-                user.increasePoint(randomProblem.getLevel()); // 문제의 레벨만큼의 포인트를 지급한다.
+                user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
                 user.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
                 user.checkTodayRandomSolvedOk();
                 userRepository.save(user);
@@ -192,7 +211,7 @@ public class UserRandomStreakService {
                     UserGrass todayUserGrass = userGrassRepository.findByUserRandomStreak(userRandomStreak).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 잔디입니다."));
 
                     // 유저의 정보 갱신
-                    user.increasePoint(randomProblem.getLevel()); // 문제의 레벨만큼의 포인트를 지급한다.
+                    user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
                     user.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
                     user.checkTodayRandomSolvedOk();
                     userRepository.save(user);

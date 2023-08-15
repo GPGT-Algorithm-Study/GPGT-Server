@@ -1,5 +1,7 @@
 package com.randps.randomdefence.user.dto;
 
+import com.randps.randomdefence.problem.domain.Problem;
+import com.randps.randomdefence.problem.dto.ProblemDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,7 +13,7 @@ public class UserRandomStreakResponse {
 
     private String endLevel;
 
-    private Integer todayRandomProblemId;
+    private ProblemDto todayRandomProblem;
 
     private Boolean isTodayRandomSolved;
 
@@ -20,13 +22,33 @@ public class UserRandomStreakResponse {
     private Integer maxRandomStreak;
 
     @Builder
-    public UserRandomStreakResponse(String bojHandle, String startLevel, String endLevel, Integer todayRandomProblemId, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
+    public UserRandomStreakResponse(String bojHandle, String startLevel, String endLevel, ProblemDto todayRandomProblem, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
         this.bojHandle = bojHandle;
         this.startLevel = startLevel;
         this.endLevel = endLevel;
-        this.todayRandomProblemId = todayRandomProblemId;
+        this.todayRandomProblem = todayRandomProblem;
         this.isTodayRandomSolved = isTodayRandomSolved;
         this.currentRandomStreak = currentRandomStreak;
         this.maxRandomStreak = maxRandomStreak;
+    }
+
+    public UserRandomStreakResponse(UserRandomStreakDto userRandomStreakDto, Problem problem) {
+        this.bojHandle = userRandomStreakDto.getBojHandle();
+        this.startLevel = userRandomStreakDto.getStartLevel();
+        this.endLevel = userRandomStreakDto.getEndLevel();
+        this.todayRandomProblem = problem.toDto();
+        this.isTodayRandomSolved = userRandomStreakDto.getIsTodayRandomSolved();
+        this.currentRandomStreak = userRandomStreakDto.getCurrentRandomStreak();
+        this.maxRandomStreak = userRandomStreakDto.getMaxRandomStreak();
+    }
+
+    public UserRandomStreakResponse(UserRandomStreakDto userRandomStreakDto, ProblemDto problemDto) {
+        this.bojHandle = userRandomStreakDto.getBojHandle();
+        this.startLevel = userRandomStreakDto.getStartLevel();
+        this.endLevel = userRandomStreakDto.getEndLevel();
+        this.todayRandomProblem = problemDto;
+        this.isTodayRandomSolved = userRandomStreakDto.getIsTodayRandomSolved();
+        this.currentRandomStreak = userRandomStreakDto.getCurrentRandomStreak();
+        this.maxRandomStreak = userRandomStreakDto.getMaxRandomStreak();
     }
 }

@@ -2,6 +2,7 @@ package com.randps.randomdefence.user.controller;
 
 import com.randps.randomdefence.user.domain.UserRandomStreak;
 import com.randps.randomdefence.user.dto.UserGrassDto;
+import com.randps.randomdefence.user.dto.UserRandomStreakDto;
 import com.randps.randomdefence.user.dto.UserRandomStreakResponse;
 import com.randps.randomdefence.user.service.UserGrassService;
 import com.randps.randomdefence.user.service.UserRandomStreakService;
@@ -36,9 +37,7 @@ public class UserStreakController {
      */
     @GetMapping("/streak")
     public UserRandomStreakResponse findStreak(@Param("bojHandle") String bojHandle) {
-        UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(bojHandle);
-
-        return userRandomStreak.toDto();
+        return userRandomStreakService.findUserRandomStreakToResponseForm(bojHandle);
     }
 
     /*

@@ -36,6 +36,8 @@ public class ProblemDto {
 
     private List<String> tags;
 
+    private Integer point;
+
     @Builder
     public ProblemDto(Integer problemId, String titleKo, Boolean isSolvable, Boolean isPartial, Integer acceptedUserCount, Integer level, Integer votedUserCount, Boolean sprout, Boolean givesNoRating, Boolean isLevelLocked, String averageTries, Boolean official, List<String> tags) {
         this.problemId = problemId;
@@ -51,6 +53,7 @@ public class ProblemDto {
         this.averageTries = averageTries;
         this.official = official;
         this.tags = tags;
+        this.point = level;
     }
 
     public ProblemDto() {
@@ -67,5 +70,10 @@ public class ProblemDto {
         this.averageTries = "";
         this.official = false;
         this.tags = new ArrayList<String>();
+        this.point = 0;
+    }
+
+    public void toDoublePoint() {
+        this.point *= 2;
     }
 }

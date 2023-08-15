@@ -1,5 +1,6 @@
 package com.randps.randomdefence.user.domain;
 
+import com.randps.randomdefence.user.dto.UserRandomStreakDto;
 import com.randps.randomdefence.user.dto.UserRandomStreakResponse;
 import lombok.Builder;
 import lombok.Getter;
@@ -66,8 +67,8 @@ public class UserRandomStreak {
         this.isTodayRandomSolved = false;
     }
 
-    public UserRandomStreakResponse toDto() {
-        return UserRandomStreakResponse.builder()
+    public UserRandomStreakDto toDto() {
+        return UserRandomStreakDto.builder()
                 .bojHandle(this.bojHandle)
                 .startLevel(this.startLevel)
                 .endLevel(this.endLevel)
