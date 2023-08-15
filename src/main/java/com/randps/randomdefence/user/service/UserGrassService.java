@@ -91,11 +91,11 @@ public class UserGrassService {
     }
 
     /*
-     * 인자로 받은 스트릭의 모든 잔디 Dto 리스트를 반환한다.
+     * 인자로 받은 스트릭의 문제를 해결한 날의 모든 잔디 Dto 리스트를 반환한다.
      */
     @Transactional
     public List<UserGrassDto> findUserGrassList(UserRandomStreak userRandomStreak) {
-        List<UserGrass> userGrasses =  userGrassRepository.findAllByUserRandomStreak(userRandomStreak);
+        List<UserGrass> userGrasses =  userGrassRepository.findAllByUserRandomStreakAndGrassInfo(userRandomStreak, true);
         List<UserGrassDto> userGrassDtos = new ArrayList<>();
 
         for (UserGrass userGrass : userGrasses) {

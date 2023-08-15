@@ -22,7 +22,7 @@ public class UserStreakController {
     private final UserRandomStreakService userRandomStreakService;
 
     /*
-     * 특정 유저의 모든 잔디를 반환한다.
+     * 특정 유저의 문제를 해결한 날의 모든 잔디를 반환한다.
      */
     @GetMapping("/grass")
     public List<UserGrassDto> findAllGrass(@Param("bojHandle") String bojHandle) {

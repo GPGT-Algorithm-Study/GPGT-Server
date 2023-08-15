@@ -11,4 +11,6 @@ public interface UserGrassRepository extends JpaRepository<UserGrass, Long> {
     List<UserGrass> findAllByUserRandomStreak(UserRandomStreak userRandomStreak);
 
     Optional<UserGrass> findByUserRandomStreak(UserRandomStreak userRandomStreak);
+
+    List<UserGrass> findAllByUserRandomStreakAndGrassInfo(UserRandomStreak userRandomStreak, Boolean grassInfo);
 }
