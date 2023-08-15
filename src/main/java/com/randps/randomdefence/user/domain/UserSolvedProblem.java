@@ -25,12 +25,15 @@ public class UserSolvedProblem extends BaseTimeEntity {
 
     private String dateTime;
 
+    private String language;
+
     @Builder
-    public UserSolvedProblem(String bojHandle, Integer problemId, String title, String dateTime) {
+    public UserSolvedProblem(String bojHandle, Integer problemId, String title, String dateTime, String language) {
         this.bojHandle = bojHandle;
         this.problemId = problemId;
         this.title = title;
         this.dateTime = dateTime;
+        this.language = language;
     }
 
     public SolvedProblemDto toDto() {
@@ -38,6 +41,7 @@ public class UserSolvedProblem extends BaseTimeEntity {
                 .problemId(this.getProblemId())
                 .title(this.getTitle())
                 .dateTime(this.getDateTime())
+                .language(this.getLanguage())
                 .build();
     }
 }

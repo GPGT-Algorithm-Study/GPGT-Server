@@ -15,8 +15,6 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
-
 @RequiredArgsConstructor
 @Service
 public class RecommendationService {

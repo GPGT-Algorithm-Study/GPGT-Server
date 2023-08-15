@@ -46,8 +46,10 @@ public class User extends BaseTimeEntity {
 
     private Boolean isTodayRandomSolved;
 
+    private Integer todaySolvedProblemCount; // by Solved
+
     @Builder
-    public User(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved) {
+    public User(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount) {
         this.bojHandle = bojHandle;
         this.notionId = notionId;
         this.manager = manager;
@@ -62,6 +64,7 @@ public class User extends BaseTimeEntity {
         this.point = point;
         this.isTodaySolved = isTodaySolved;
         this.isTodayRandomSolved = isTodayRandomSolved;
+        this.todaySolvedProblemCount = todaySolvedProblemCount;
     }
 
     public void increaseWarning() {
@@ -117,6 +120,7 @@ public class User extends BaseTimeEntity {
                 .point(this.getPoint())
                 .isTodaySolved(this.getIsTodaySolved())
                 .isTodayRandomSolved(this.getIsTodayRandomSolved())
+                .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
                 .build();
     }
 
@@ -126,5 +130,6 @@ public class User extends BaseTimeEntity {
         this.totalSolved = userInfo.getTotalSolved();
         this.currentStreak = userInfo.getCurrentStreak();
         this.isTodaySolved = userInfo.getIsTodaySolved();
+        this.todaySolvedProblemCount = userInfo.getTodaySolvedProblemCount();
     }
 }

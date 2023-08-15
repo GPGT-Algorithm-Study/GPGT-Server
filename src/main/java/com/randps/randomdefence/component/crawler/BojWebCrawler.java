@@ -38,6 +38,7 @@ public class BojWebCrawler extends WebCrawler {
                         .problemId(Integer.valueOf(innerElems.get(1).text()))
                         .title(innerElems.get(1).attr("title"))
                         .dateTime(innerElems.get(2).attr("title"))
+                        .language(select.select("td").get(6).text())
                         .build();
                 list.add(pair);
             }

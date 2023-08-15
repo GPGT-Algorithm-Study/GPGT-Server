@@ -80,6 +80,7 @@ public class UserSolvedProblemService {
                 ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
                 solvedProblemDto.setTier(problemDto.getLevel());
                 solvedProblemDto.setTags(problemDto.getTags());
+                solvedProblemDto.setLanguage(problem.getLanguage());
                 solvedProblems.add(solvedProblemDto);
             }
         }
@@ -189,6 +190,7 @@ public class UserSolvedProblemService {
                         .problemId(pair.getProblemId())
                         .title(pair.getTitle())
                         .dateTime(pair.getDateTime())
+                        .language(pair.getLanguage())
                         .build();
                 // 중복 제거 로직
                 Boolean isAlreadyExist = false;

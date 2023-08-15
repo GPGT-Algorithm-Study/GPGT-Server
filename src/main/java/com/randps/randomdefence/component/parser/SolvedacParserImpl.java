@@ -62,6 +62,22 @@ public class SolvedacParserImpl implements Parser {
         return false;
     }
 
+    public Integer countTodaySolved(JsonNode userInfo) {
+        JsonNode grass = userInfo.path("props").path("pageProps").path("grass").path("grass");
+        LocalDateTime cur = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
+        if (cur.getHour() < 6) {
+            now = now.minusDays(1);
+        }
+
+        for (JsonNode day : grass) {
+            if (day.path("date").asText().equals(now.toString())) {
+                return day.path("value").asInt();
+            }
+        }
+        return 0;
+    }
+
     public UserScrapingInfoDto getSolvedUserInfo(String bojHandle) throws JsonProcessingException {
         JsonNode userInfo = crawlingUserInfo(bojHandle);
 
@@ -70,6 +86,7 @@ public class SolvedacParserImpl implements Parser {
                 .profileImg(userInfo.path("props").path("pageProps").path("user").path("profileImageUrl").asText())
                 .currentStreak(userInfo.path("props").path("pageProps").path("grass").path("currentStreak").asInt())
                 .totalSolved(userInfo.path("props").path("pageProps").path("user").path("solvedCount").asInt())
+                .todaySolvedProblemCount(countTodaySolved(userInfo))
                 .isTodaySolved(isTodaySolved(userInfo))
                 .build();
 
