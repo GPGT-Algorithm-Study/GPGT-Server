@@ -45,6 +45,10 @@ public class UserGrass {
         this.grassInfo = true;
     }
 
+    public void infoCheckNo() {
+        this.grassInfo = false;
+    }
+
     public void setProblemId(Integer problemId) {
         this.problemId = problemId;
     }

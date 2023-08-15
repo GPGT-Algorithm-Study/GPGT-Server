@@ -123,6 +123,12 @@ public class UserRandomStreakService {
         userRandomStreak.setTodayRandomProblemId(recommendationResponse.getProblemId());
         userRandomStreakRepository.save(userRandomStreak);
 
+        // 잔디의 정보 갱신
+        UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
+        todayUserGrass.setProblemId(recommendationResponse.getProblemId());
+        todayUserGrass.infoCheckNo();
+        userGrassRepository.save(todayUserGrass);
+
         // 유저의 정보 갱신
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         user.checkTodayRandomSolvedNo();
@@ -153,6 +159,7 @@ public class UserRandomStreakService {
             // 잔디의 정보 갱신
             UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
             todayUserGrass.setProblemId(recommendationResponse.getProblemId());
+            todayUserGrass.infoCheckNo();
             userGrassRepository.save(todayUserGrass);
 
             // 유저의 정보 갱신
