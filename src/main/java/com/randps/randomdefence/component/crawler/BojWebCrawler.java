@@ -70,4 +70,10 @@ public class BojWebCrawler extends WebCrawler {
         if (h >= 6) return true;
         return false;
     }
+    public static String getTodayDate() {
+        LocalDateTime now = LocalDateTime.now();
+        if (!is6AmAfter(now.getHour()))
+            now = now.minusDays(1);
+        return now.toString().substring(0,10);
+    }
 }

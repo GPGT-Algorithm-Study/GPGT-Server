@@ -113,6 +113,7 @@ public class UserGrassService {
         LocalDateTime now = LocalDateTime.now();
         if (now.getHour() < 6) now = now.minusDays(1);
         String today = now.toString().substring(0,10);
+        System.out.println(today);
 
         return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, today).orElseThrow(() -> new IllegalStateException("아직 존재하지 않는 스트릭입니다."));
     }

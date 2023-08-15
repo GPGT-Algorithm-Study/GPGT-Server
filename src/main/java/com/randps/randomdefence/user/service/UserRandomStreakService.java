@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.randps.randomdefence.component.crawler.BojWebCrawler.getTodayDate;
+
 @RequiredArgsConstructor
 @Service
 public class UserRandomStreakService {
@@ -171,7 +173,7 @@ public class UserRandomStreakService {
         for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
             if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
                 User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-                UserGrass todayUserGrass = userGrassRepository.findByUserRandomStreak(userRandomStreak).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 잔디입니다."));
+                UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
                 // 유저의 정보 갱신
                 user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
@@ -208,7 +210,7 @@ public class UserRandomStreakService {
             for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
                 if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
                     User user = userRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-                    UserGrass todayUserGrass = userGrassRepository.findByUserRandomStreak(userRandomStreak).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 잔디입니다."));
+                    UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
                     // 유저의 정보 갱신
                     user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
