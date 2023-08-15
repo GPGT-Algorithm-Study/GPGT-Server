@@ -46,6 +46,7 @@ public class UserSolvedProblemService {
             ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
             solvedProblemDto.setTier(problemDto.getLevel());
             solvedProblemDto.setTags(problemDto.getTags());
+            solvedProblemDto.setPoint(problemDto.getLevel());
             solvedProblems.add(solvedProblemDto);
         }
 
@@ -81,6 +82,7 @@ public class UserSolvedProblemService {
                 solvedProblemDto.setTier(problemDto.getLevel());
                 solvedProblemDto.setTags(problemDto.getTags());
                 solvedProblemDto.setLanguage(problem.getLanguage());
+                solvedProblemDto.setPoint(problemDto.getLevel());
                 solvedProblems.add(solvedProblemDto);
             }
         }
@@ -121,6 +123,7 @@ public class UserSolvedProblemService {
                     ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
                     solvedProblemDto.setTier(problemDto.getLevel());
                     solvedProblemDto.setTags(problemDto.getTags());
+                    solvedProblemDto.setPoint(problemDto.getPoint());
                     solvedProblems.add(solvedProblemDto);
                 }
             }

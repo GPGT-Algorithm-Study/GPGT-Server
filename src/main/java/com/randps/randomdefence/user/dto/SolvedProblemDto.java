@@ -21,6 +21,8 @@ public class SolvedProblemDto {
 
     private String language;
 
+    private Integer point;
+
     @Builder
     public SolvedProblemDto(Integer problemId, String title, String dateTime, String language) {
         this.problemId = problemId;
@@ -29,5 +31,6 @@ public class SolvedProblemDto {
         this.tier = 0;
         this.tags = null;
         this.language = language;
+        this.point = 0;
     }
 }
