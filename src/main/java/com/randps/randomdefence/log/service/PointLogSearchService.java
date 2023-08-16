@@ -7,8 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -38,5 +40,4 @@ public class PointLogSearchService {
             pointLogs = new ArrayList<>();
         return pointLogs;
     }
-
 }

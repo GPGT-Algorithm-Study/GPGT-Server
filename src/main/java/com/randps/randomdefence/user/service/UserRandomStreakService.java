@@ -1,5 +1,6 @@
 package com.randps.randomdefence.user.service;
 
+import com.randps.randomdefence.log.domain.PointLogRepository;
 import com.randps.randomdefence.log.service.PointLogSaveService;
 import com.randps.randomdefence.problem.domain.Problem;
 import com.randps.randomdefence.problem.dto.ProblemDto;
@@ -40,6 +41,8 @@ public class UserRandomStreakService {
     private final UserGrassService userGrassService;
 
     private final PointLogSaveService pointLogSaveService;
+
+    private final PointLogRepository pointLogRepository;
 
     /*
      * 유저 랜덤 스트릭 생성하기 (유저 생성 시 사용)
@@ -181,6 +184,8 @@ public class UserRandomStreakService {
         ProblemDto randomProblem = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
         List<SolvedProblemDto> solvedProblemDtos =  userSolvedProblemService.findAllTodayUserSolvedProblem(bojHandle);
 
+        if (userRandomStreak.getIsTodayRandomSolved()) return true;
+
         for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
             if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
                 User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
@@ -219,6 +224,8 @@ public class UserRandomStreakService {
             UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
             ProblemDto randomProblem = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
             List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(userCur.getBojHandle());
+
+            if (userRandomStreak.getIsTodayRandomSolved()) continue;
 
             for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
                 if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
