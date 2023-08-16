@@ -9,11 +9,15 @@ import com.randps.randomdefence.user.service.*;
 import com.randps.randomdefence.user.dto.SolvedProblemDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -35,20 +39,34 @@ public class UserController {
      * 유저를 DB에 추가한다.
      */
     @PostMapping("/add")
-    public HttpStatus userAdd(@Param("bojHandle") String bojHandle, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
+    public ResponseEntity<Map<String, String>> userAdd(@Param("bojHandle") String bojHandle, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
         userService.save(bojHandle, notionId, manager, emoji);
 
-        return HttpStatus.OK;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", "유저를 성공적으로 생성했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 
     /*
      * 유저를 DB에서 삭제한다.
      */
     @DeleteMapping("/del")
-    public HttpStatus userDel(@Param("bojHandle") String bojHandle) {
+    public ResponseEntity<Map<String, String>> userDel(@Param("bojHandle") String bojHandle) {
         userService.delete(bojHandle);
 
-        return HttpStatus.OK;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", "유저를 성공적으로 삭제했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 
     /*
@@ -103,7 +121,7 @@ public class UserController {
      * 모든 유저를 DB에 추가한다. (TEST BATCH)
      */
     @PostMapping("/add/all")
-    public HttpStatus userAddAll() throws JsonProcessingException {
+    public ResponseEntity<Map<String, String>> userAddAll() throws JsonProcessingException {
         List<String> bojHandles = new ArrayList<>();
         List<String> notionIds = new ArrayList<>();
         List<Boolean> managers = new ArrayList<>();
@@ -205,6 +223,14 @@ public class UserController {
             userService.save(bojHandles.get(i), notionIds.get(i), managers.get(i)?1L:0L, emojis.get(i));
         }
 
-        return HttpStatus.OK;
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", bojHandles.size() + "명의 유저 리스트를 성공적으로 생성했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 }

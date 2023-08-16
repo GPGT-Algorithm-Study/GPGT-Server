@@ -36,7 +36,7 @@ public class ItemSaveService {
             // 포인트를 지불한다.
             if (!user.decreasePoint(userItem.get().getItem().getItemValue())) {
                 // 포인트가 부족하면 구매가 실패한다.
-                throw new IllegalArgumentException("구매 실패 : 포인트가 부족합니다.");
+                throw new ArithmeticException("구매 실패 : 포인트가 부족합니다.");
 //                return false;
             }
 
@@ -46,7 +46,7 @@ public class ItemSaveService {
                 // 포인트를 되돌린다.
                 user.increasePoint(userItem.get().getItem().getItemValue());
                 userRepository.save(user);
-                throw new IllegalArgumentException("구매 실패 : 가질 수 있는 아이템의 최대 개수를 초과했습니다.");
+                throw new ArithmeticException("구매 실패 : 가질 수 있는 아이템의 최대 개수를 초과했습니다.");
 //                return false;
             }
 
@@ -61,7 +61,7 @@ public class ItemSaveService {
             // 포인트를 지불한다.
             if (!user.decreasePoint(item.getItemValue())) {
                 // 포인트가 부족하면 구매가 실패한다.
-                throw new IllegalArgumentException("구매 실패 : 포인트가 부족합니다.");
+                throw new ArithmeticException("구매 실패 : 포인트가 부족합니다.");
 //                return false;
             }
 

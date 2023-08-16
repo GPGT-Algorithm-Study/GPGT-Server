@@ -7,10 +7,14 @@ import com.randps.randomdefence.item.service.ItemSearchService;
 import com.randps.randomdefence.item.service.TestItemUseServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,32 +51,60 @@ public class ItemController {
      * 아이템을 사용한다. (아이템에 따라 다른 서비스 호출)
      */
     @PutMapping("/use")
-    public HttpStatus useItem(@Param("bojHandle") String bojHandle, @Param("itemId") Long itemId) {
+    public ResponseEntity<Map<String, String>> useItem(@Param("bojHandle") String bojHandle, @Param("itemId") Long itemId) {
         Boolean resultState = testItemUseService.useItem(bojHandle, itemId);
 
-        if (resultState)
-            return HttpStatus.ACCEPTED;
-        else
-            return HttpStatus.NOT_ACCEPTABLE;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        Map<String, String> map = new HashMap<>();
+        if (resultState) {
+            HttpStatus httpStatus = HttpStatus.OK;
+
+            map.put("type", httpStatus.getReasonPhrase());
+            map.put("code", "200");
+            map.put("message", "요청을 성공했습니다.");
+            return new ResponseEntity<>(map, responseHeaders, httpStatus);
+        }
+        else {
+            HttpStatus httpStatus = HttpStatus.NOT_ACCEPTABLE;
+
+            map.put("type", httpStatus.getReasonPhrase());
+            map.put("code", "200");
+            map.put("message", "요청에 실패했습니다.");
+            return new ResponseEntity<>(map, responseHeaders, httpStatus);
+        }
     }
 
     /*
      * 아이템을 구매한다.
      */
     @PostMapping("/buy")
-    public HttpStatus buyItem(@Param("bojHandle") String bojHandle, @Param("itemId") Long itemId) {
+    public ResponseEntity<Map<String, String>> buyItem(@Param("bojHandle") String bojHandle, @Param("itemId") Long itemId) {
         itemSaveService.buyItem(bojHandle, itemId);
 
-        return HttpStatus.ACCEPTED;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", "요청을 성공했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 
     /*
      * 테스트 아이템 생성 (테스트)
      */
     @PostMapping("/make-test-item")
-    public HttpStatus makeTestItem() {
+    public ResponseEntity<Map<String, String>> makeTestItem() {
         itemSaveService.makeItem();
 
-        return HttpStatus.ACCEPTED;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", "요청을 성공했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 }

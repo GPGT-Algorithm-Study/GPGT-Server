@@ -115,7 +115,7 @@ public class UserGrassService {
         String today = now.toString().substring(0,10);
         System.out.println(today);
 
-        return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, today).orElseThrow(() -> new IllegalStateException("아직 존재하지 않는 스트릭입니다."));
+        return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, today).orElseThrow(() -> new IllegalArgumentException("아직 존재하지 않는 스트릭입니다."));
     }
 
     /*
@@ -128,6 +128,6 @@ public class UserGrassService {
         if (now.getHour() < 6) now = now.minusDays(2);
         String yesterday = now.toString().substring(0,10);
 
-        return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, yesterday).orElseThrow(() -> new IllegalStateException("아직 존재하지 않는 스트릭입니다."));
+        return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, yesterday).orElseThrow(() -> new IllegalArgumentException("아직 존재하지 않는 스트릭입니다."));
     }
 }
