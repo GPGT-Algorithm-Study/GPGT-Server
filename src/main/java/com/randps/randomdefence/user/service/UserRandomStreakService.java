@@ -1,5 +1,6 @@
 package com.randps.randomdefence.user.service;
 
+import com.randps.randomdefence.log.service.PointLogSaveService;
 import com.randps.randomdefence.problem.domain.Problem;
 import com.randps.randomdefence.problem.dto.ProblemDto;
 import com.randps.randomdefence.problem.service.ProblemService;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.randps.randomdefence.component.crawler.BojWebCrawler.getTodayDate;
+import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
 
 @RequiredArgsConstructor
 @Service
@@ -36,6 +38,8 @@ public class UserRandomStreakService {
     private final UserGrassRepository userGrassRepository;
 
     private final UserGrassService userGrassService;
+
+    private final PointLogSaveService pointLogSaveService;
 
     /*
      * 유저 랜덤 스트릭 생성하기 (유저 생성 시 사용)
@@ -184,6 +188,8 @@ public class UserRandomStreakService {
 
                 // 유저의 정보 갱신
                 user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
+                pointLogSaveService.savePointLog(bojHandle, randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " point earn by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+
                 user.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
                 user.checkTodayRandomSolvedOk();
                 userRepository.save(user);
@@ -221,6 +227,8 @@ public class UserRandomStreakService {
 
                     // 유저의 정보 갱신
                     user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
+                    pointLogSaveService.savePointLog(user.getBojHandle(), randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " point earn by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+
                     user.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
                     user.checkTodayRandomSolvedOk();
                     userRepository.save(user);

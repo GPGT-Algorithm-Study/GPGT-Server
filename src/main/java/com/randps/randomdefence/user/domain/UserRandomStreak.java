@@ -1,5 +1,6 @@
 package com.randps.randomdefence.user.domain;
 
+import com.randps.randomdefence.auditing.BaseTimeEntity;
 import com.randps.randomdefence.user.dto.UserRandomStreakDto;
 import com.randps.randomdefence.user.dto.UserRandomStreakResponse;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Getter
 @Table(name = "RD_USER_RANDOM_STREAK")
 @Entity
-public class UserRandomStreak {
+public class UserRandomStreak extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -3,6 +3,8 @@ package com.randps.randomdefence.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.component.crawler.dto.BojProblemPair;
 import com.randps.randomdefence.component.parser.BojParserImpl;
+import com.randps.randomdefence.log.service.PointLogSaveService;
+import com.randps.randomdefence.log.service.PointLogSearchService;
 import com.randps.randomdefence.problem.domain.Problem;
 import com.randps.randomdefence.problem.dto.ProblemDto;
 import com.randps.randomdefence.problem.service.ProblemService;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.randps.randomdefence.component.crawler.BojWebCrawler.is6AmAfter;
+import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +31,8 @@ public class UserSolvedProblemService {
     private final UserRandomStreakRepository userRandomStreakRepository;
 
     private final ProblemService problemService;
+
+    private final PointLogSaveService pointLogSaveService;
 
     private final UserRepository userRepository;
 
@@ -170,8 +175,10 @@ public class UserSolvedProblemService {
                 User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
                 UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스트릭입니다."));
                 // 랜덤 스트릭 문제라면 따로 포인트를 부여한다.
-                if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId()))
+                if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId())) {
                     user.increasePoint(pb.getPoint());
+                    pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
+                }
 
                 userSolvedProblems.add(userSolvedProblem);
             }
@@ -218,8 +225,10 @@ public class UserSolvedProblemService {
                     ProblemDto pb = problemService.findProblem(userSolvedProblem.getProblemId());
                     UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(user.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스트릭입니다."));
                     // 랜덤 스트릭 문제라면 따로 포인트를 부여한다.
-                    if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId()))
+                    if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId())) {
                         user.increasePoint(pb.getPoint());
+                        pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
+                    }
 
                     userSolvedProblems.add(userSolvedProblem);
                 }

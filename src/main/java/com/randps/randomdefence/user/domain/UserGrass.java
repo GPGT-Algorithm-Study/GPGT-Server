@@ -1,5 +1,6 @@
 package com.randps.randomdefence.user.domain;
 
+import com.randps.randomdefence.auditing.BaseTimeEntity;
 import com.randps.randomdefence.user.dto.UserGrassDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Table(name = "RD_USER_GRASS")
 @Entity
-public class UserGrass {
+public class UserGrass extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
