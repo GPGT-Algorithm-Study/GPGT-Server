@@ -37,7 +37,6 @@ public class ProblemDto {
     private List<String> tags;
 
     private Integer point;
-
     @Builder
     public ProblemDto(Integer problemId, String titleKo, Boolean isSolvable, Boolean isPartial, Integer acceptedUserCount, Integer level, Integer votedUserCount, Boolean sprout, Boolean givesNoRating, Boolean isLevelLocked, String averageTries, Boolean official, List<String> tags) {
         this.problemId = problemId;

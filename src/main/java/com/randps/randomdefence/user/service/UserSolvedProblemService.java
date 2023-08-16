@@ -52,6 +52,7 @@ public class UserSolvedProblemService {
             solvedProblemDto.setTier(problemDto.getLevel());
             solvedProblemDto.setTags(problemDto.getTags());
             solvedProblemDto.setPoint(problemDto.getLevel());
+            solvedProblemDto.setLanguage(problem.getLanguage());
             solvedProblems.add(solvedProblemDto);
         }
 
@@ -129,6 +130,7 @@ public class UserSolvedProblemService {
                     solvedProblemDto.setTier(problemDto.getLevel());
                     solvedProblemDto.setTags(problemDto.getTags());
                     solvedProblemDto.setPoint(problemDto.getPoint());
+                    solvedProblemDto.setLanguage(problem.getLanguage());
                     solvedProblems.add(solvedProblemDto);
                 }
             }
@@ -159,6 +161,7 @@ public class UserSolvedProblemService {
                     .problemId(pair.getProblemId())
                     .title(pair.getTitle())
                     .dateTime(pair.getDateTime())
+                    .language(pair.getLanguage())
                     .build();
             // 중복 제거 로직
             Boolean isAlreadyExist = false;
