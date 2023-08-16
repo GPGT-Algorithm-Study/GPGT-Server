@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.component.parser.BojParserImpl;
 import com.randps.randomdefence.component.parser.SolvedacParserImpl;
 import com.randps.randomdefence.user.domain.User;
+import com.randps.randomdefence.user.domain.UserRandomStreak;
 import com.randps.randomdefence.user.domain.UserRepository;
 import com.randps.randomdefence.user.dto.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ import java.util.List;
 public class UserInfoService {
     private final UserRepository userRepository;
 
+    private final UserRandomStreakService userRandomStreakService;
+
     private final SolvedacParserImpl solvedacParser;
 
     private final BojParserImpl bojParser;
@@ -29,8 +32,9 @@ public class UserInfoService {
     @Transactional
     public UserInfoResponse getInfo(String bojHandle) {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(bojHandle);
 
-        return user.toUserInfoResponse();
+        return user.toUserInfoResponse(userRandomStreak.getMaxRandomStreak());
     }
 
     /*
@@ -42,7 +46,8 @@ public class UserInfoService {
         List<UserInfoResponse> userInfoResponses = new ArrayList<>();
 
         for (User user : users) {
-            userInfoResponses.add(user.toUserInfoResponse());
+            UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(user.getBojHandle());
+            userInfoResponses.add(user.toUserInfoResponse(userRandomStreak.getMaxRandomStreak()));
         }
 
         return userInfoResponses;

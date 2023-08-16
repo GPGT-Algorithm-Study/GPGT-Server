@@ -121,6 +121,28 @@ public class User extends BaseTimeEntity {
                 .isTodaySolved(this.getIsTodaySolved())
                 .isTodayRandomSolved(this.getIsTodayRandomSolved())
                 .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
+                .maxRandomStreak(0)
+                .build();
+    }
+
+    public UserInfoResponse toUserInfoResponse(Integer maxRandomStreak) {
+        return UserInfoResponse.builder()
+                .bojHandle(this.getBojHandle())
+                .notionId(this.getNotionId())
+                .manager(this.getManager())
+                .warning(this.getWarning())
+                .profileImg(this.getProfileImg())
+                .emoji(this.getEmoji())
+                .tier(this.getTier())
+                .totalSolved(this.getTotalSolved())
+                .currentStreak(this.getCurrentStreak())
+                .currentRandomStreak(this.getCurrentRandomStreak())
+                .team(this.getTeam())
+                .point(this.getPoint())
+                .isTodaySolved(this.getIsTodaySolved())
+                .isTodayRandomSolved(this.getIsTodayRandomSolved())
+                .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
+                .maxRandomStreak(maxRandomStreak)
                 .build();
     }
 

@@ -36,8 +36,10 @@ public class UserInfoResponse {
 
     private Integer todaySolvedProblemCount;
 
+    private Integer maxRandomStreak;
+
     @Builder
-    public UserInfoResponse(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount) {
+    public UserInfoResponse(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount, Integer maxRandomStreak) {
         this.bojHandle = bojHandle;
         this.notionId = notionId;
         this.manager = manager;
@@ -53,6 +55,7 @@ public class UserInfoResponse {
         this.isTodaySolved = isTodaySolved;
         this.isTodayRandomSolved = isTodayRandomSolved;
         this.todaySolvedProblemCount = todaySolvedProblemCount;
+        this.maxRandomStreak = maxRandomStreak;
     }
 
 
@@ -72,5 +75,6 @@ public class UserInfoResponse {
         this.isTodaySolved = false;
         this.isTodayRandomSolved = false;
         this.todaySolvedProblemCount = 0;
+        this.maxRandomStreak = 0;
     }
 }
