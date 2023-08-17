@@ -1,7 +1,7 @@
 package com.randps.randomdefence.log.domain;
 
 
-import com.randps.randomdefence.auditing.BaseTimeEntity;
+import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

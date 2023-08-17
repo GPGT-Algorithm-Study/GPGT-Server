@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.query;
+package com.randps.randomdefence.global.component.query;
 
 public interface Query {
     public Boolean setDomain(String domain);

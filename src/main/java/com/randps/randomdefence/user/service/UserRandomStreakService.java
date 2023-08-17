@@ -2,7 +2,6 @@ package com.randps.randomdefence.user.service;
 
 import com.randps.randomdefence.log.domain.PointLogRepository;
 import com.randps.randomdefence.log.service.PointLogSaveService;
-import com.randps.randomdefence.problem.domain.Problem;
 import com.randps.randomdefence.problem.dto.ProblemDto;
 import com.randps.randomdefence.problem.service.ProblemService;
 import com.randps.randomdefence.recommendation.dto.RecommendationResponse;
@@ -10,17 +9,14 @@ import com.randps.randomdefence.recommendation.service.RecommendationService;
 import com.randps.randomdefence.user.domain.*;
 import com.randps.randomdefence.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.user.dto.UserRandomStreakResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static com.randps.randomdefence.component.crawler.BojWebCrawler.getTodayDate;
-import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
+import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
 
 @RequiredArgsConstructor
 @Service

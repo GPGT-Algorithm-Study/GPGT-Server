@@ -1,4 +1,4 @@
-package com.randps.randomdefence.auditing;
+package com.randps.randomdefence.global.auditing;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.parser;
+package com.randps.randomdefence.global.component.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

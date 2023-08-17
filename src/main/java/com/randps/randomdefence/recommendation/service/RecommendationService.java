@@ -1,9 +1,8 @@
 package com.randps.randomdefence.recommendation.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.randps.randomdefence.component.parser.BojParserImpl;
-import com.randps.randomdefence.component.query.Query;
-import com.randps.randomdefence.component.query.SolvedacQueryImpl;
+import com.randps.randomdefence.global.component.query.Query;
+import com.randps.randomdefence.global.component.query.SolvedacQueryImpl;
 import com.randps.randomdefence.recommendation.dto.RecommendationResponse;
 import com.randps.randomdefence.recommendation.dto.TitleDto;
 import lombok.RequiredArgsConstructor;

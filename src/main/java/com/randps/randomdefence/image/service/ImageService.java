@@ -1,6 +1,6 @@
 package com.randps.randomdefence.image.service;
 
-import com.randps.randomdefence.component.imageParser.ImageParser;
+import com.randps.randomdefence.global.component.imageParser.ImageParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

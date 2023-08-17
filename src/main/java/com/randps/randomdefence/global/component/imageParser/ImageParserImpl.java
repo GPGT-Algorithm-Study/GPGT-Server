@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.imageParser;
+package com.randps.randomdefence.global.component.imageParser;
 
 import org.springframework.stereotype.Component;
 
@@ -7,12 +7,10 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 

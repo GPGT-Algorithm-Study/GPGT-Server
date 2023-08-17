@@ -1,6 +1,6 @@
 package com.randps.randomdefence.item.domain;
 
-import com.randps.randomdefence.auditing.BaseTimeEntity;
+import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import com.randps.randomdefence.item.dto.ItemDto;
 import lombok.Builder;
 import lombok.Getter;

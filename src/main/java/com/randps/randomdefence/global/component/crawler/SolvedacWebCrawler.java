@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.crawler;
+package com.randps.randomdefence.global.component.crawler;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

@@ -1,8 +1,7 @@
 package com.randps.randomdefence.user.domain;
 
-import com.randps.randomdefence.auditing.BaseTimeEntity;
+import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import com.randps.randomdefence.user.dto.UserRandomStreakDto;
-import com.randps.randomdefence.user.dto.UserRandomStreakResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

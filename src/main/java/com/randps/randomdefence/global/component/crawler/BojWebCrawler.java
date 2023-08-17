@@ -1,6 +1,6 @@
-package com.randps.randomdefence.component.crawler;
+package com.randps.randomdefence.global.component.crawler;
 
-import com.randps.randomdefence.component.crawler.dto.BojProblemPair;
+import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;

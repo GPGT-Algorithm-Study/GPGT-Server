@@ -1,11 +1,9 @@
 package com.randps.randomdefence.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.randps.randomdefence.component.crawler.dto.BojProblemPair;
-import com.randps.randomdefence.component.parser.BojParserImpl;
+import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
+import com.randps.randomdefence.global.component.parser.BojParserImpl;
 import com.randps.randomdefence.log.service.PointLogSaveService;
-import com.randps.randomdefence.log.service.PointLogSearchService;
-import com.randps.randomdefence.problem.domain.Problem;
 import com.randps.randomdefence.problem.dto.ProblemDto;
 import com.randps.randomdefence.problem.service.ProblemService;
 import com.randps.randomdefence.user.domain.*;
@@ -19,8 +17,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.randps.randomdefence.component.crawler.BojWebCrawler.is6AmAfter;
-import static com.randps.randomdefence.component.parser.BojParserImpl.convertDifficulty;
+import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
+import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
 
 @RequiredArgsConstructor
 @Service

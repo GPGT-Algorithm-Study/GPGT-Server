@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.crawler.dto;
+package com.randps.randomdefence.global.component.crawler.dto;
 
 import lombok.Builder;
 import lombok.Data;

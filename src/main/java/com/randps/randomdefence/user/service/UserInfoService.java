@@ -2,8 +2,8 @@ package com.randps.randomdefence.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.randps.randomdefence.component.parser.BojParserImpl;
-import com.randps.randomdefence.component.parser.SolvedacParserImpl;
+import com.randps.randomdefence.global.component.parser.BojParserImpl;
+import com.randps.randomdefence.global.component.parser.SolvedacParserImpl;
 import com.randps.randomdefence.user.domain.User;
 import com.randps.randomdefence.user.domain.UserRandomStreak;
 import com.randps.randomdefence.user.domain.UserRepository;

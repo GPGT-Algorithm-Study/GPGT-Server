@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.imageParser;
+package com.randps.randomdefence.global.component.imageParser;
 
 import java.io.File;
 import java.io.IOException;

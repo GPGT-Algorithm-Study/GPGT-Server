@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.query;
+package com.randps.randomdefence.global.component.query;
 
 import java.util.ArrayList;
 

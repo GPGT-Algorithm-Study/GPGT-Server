@@ -1,4 +1,4 @@
-package com.randps.randomdefence.exception;
+package com.randps.randomdefence.global.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpHeaders;

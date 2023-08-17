@@ -1,4 +1,4 @@
-package com.randps.randomdefence.component.parser.dto;
+package com.randps.randomdefence.global.component.parser.dto;
 
 import lombok.Builder;
 import lombok.Data;

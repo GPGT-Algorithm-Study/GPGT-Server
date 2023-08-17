@@ -1,12 +1,9 @@
-package com.randps.randomdefence.component.parser;
+package com.randps.randomdefence.global.component.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.randps.randomdefence.component.crawler.BojWebCrawler;
-import com.randps.randomdefence.component.crawler.WebCrawler;
+import com.randps.randomdefence.global.component.crawler.BojWebCrawler;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;

@@ -1,22 +1,14 @@
 package com.randps.randomdefence.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.randps.randomdefence.component.parser.BojParserImpl;
-import com.randps.randomdefence.component.parser.SolvedacParserImpl;
-import com.randps.randomdefence.component.query.Query;
-import com.randps.randomdefence.component.query.SolvedacQueryImpl;
 import com.randps.randomdefence.user.domain.User;
 import com.randps.randomdefence.user.domain.UserRandomStreak;
 import com.randps.randomdefence.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.user.domain.UserRepository;
-import com.randps.randomdefence.user.dto.UserInfoResponse;
-import com.randps.randomdefence.user.dto.UserRandomStreakResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor

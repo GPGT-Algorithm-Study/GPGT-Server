@@ -1,10 +1,10 @@
-package com.randps.randomdefence.component.parser;
+package com.randps.randomdefence.global.component.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.randps.randomdefence.component.crawler.SolvedacWebCrawler;
-import com.randps.randomdefence.component.parser.dto.UserScrapingInfoDto;
+import com.randps.randomdefence.global.component.crawler.SolvedacWebCrawler;
+import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Element;
