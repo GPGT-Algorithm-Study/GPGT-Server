@@ -37,6 +37,6 @@ public abstract class WebCrawler {
 
         return getDataList(document);
     }
-    abstract List<Object> getDataList(Document document);
+    abstract protected List<Object> getDataList(Document document);
 
 }
