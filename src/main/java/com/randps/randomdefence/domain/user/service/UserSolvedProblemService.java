@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.user.domain.*;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
@@ -38,6 +39,8 @@ public class UserSolvedProblemService {
     private final UserRepository userRepository;
 
     private final BojParserImpl bojParser;
+
+    private final UserStatisticsService userStatisticsService;
 
     /*
      * 유저가 그동안 푼 모든 문제의 정보를 가져온다.
@@ -180,12 +183,15 @@ public class UserSolvedProblemService {
                 UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스트릭입니다."));
                 // 랜덤 스트릭 문제라면 따로 포인트를 부여한다.
                 if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId())) {
+                    // 일반 문제의 포인트 부여
                     user.increasePoint(pb.getPoint());
                     pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
-                }
 
-                // 팀의 점수를 올린다.
-                teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
+                    // 팀의 점수를 올린다. (일반 문제)
+                    teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
+                    // 유저 통계를 반영한다. (일반 문제)
+                    userStatisticsService.updateByDto(user.getBojHandle(), pb, pb.getPoint());
+                }
 
                 userSolvedProblems.add(userSolvedProblem);
             }
@@ -231,14 +237,18 @@ public class UserSolvedProblemService {
                     // 문제의 포인트만큼 유저의 포인트를 추가한다.
                     ProblemDto pb = problemService.findProblem(userSolvedProblem.getProblemId());
                     UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(user.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스트릭입니다."));
+
                     // 랜덤 스트릭 문제라면 따로 포인트를 부여한다.
                     if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId())) {
+                        // 일반 문제의 포인트 부여
                         user.increasePoint(pb.getPoint());
                         pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
-                    }
 
-                    // 팀의 점수를 올린다.
-                    teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
+                        // 팀의 점수를 올린다. (일반 문제)
+                        teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
+                        // 유저 통계를 반영한다. (일반 문제)
+                        userStatisticsService.updateByDto(user.getBojHandle(), pb, pb.getPoint());
+                    }
 
                     userSolvedProblems.add(userSolvedProblem);
                 }

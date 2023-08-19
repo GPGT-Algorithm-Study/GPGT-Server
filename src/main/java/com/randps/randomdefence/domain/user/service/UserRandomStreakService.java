@@ -6,6 +6,8 @@ import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.recommendation.dto.RecommendationResponse;
 import com.randps.randomdefence.domain.recommendation.service.RecommendationService;
+import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
+import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.user.domain.*;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserRandomStreakResponse;
@@ -38,7 +40,9 @@ public class UserRandomStreakService {
 
     private final PointLogSaveService pointLogSaveService;
 
-    private final PointLogRepository pointLogRepository;
+    private final UserStatisticsService userStatisticsService;
+
+    private final TeamService teamService;
 
     /*
      * 유저 랜덤 스트릭 생성하기 (유저 생성 시 사용)
@@ -179,17 +183,22 @@ public class UserRandomStreakService {
         UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
         ProblemDto randomProblem = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
         List<SolvedProblemDto> solvedProblemDtos =  userSolvedProblemService.findAllTodayUserSolvedProblem(bojHandle);
+        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
         if (userRandomStreak.getIsTodayRandomSolved()) return true;
 
         for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
             if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
-                User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-                UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
                 // 유저의 정보 갱신
                 user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
                 pointLogSaveService.savePointLog(bojHandle, randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " point earn by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+
+                // 팀의 점수를 올린다. (랜덤 문제)
+                teamService.increaseTeamScore(user.getTeam(), randomProblem.getLevel() * 2);
+                // 유저 통계를 반영한다. (랜덤 문제)
+                userStatisticsService.updateByDto(user.getBojHandle(), randomProblem, randomProblem.getLevel() * 2);
 
                 user.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
                 user.checkTodayRandomSolvedOk();
@@ -225,16 +234,20 @@ public class UserRandomStreakService {
 
             for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
                 if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
-                    User user = userRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
                     UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
                     // 유저의 정보 갱신
-                    user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
-                    pointLogSaveService.savePointLog(user.getBojHandle(), randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " point earn by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+                    userCur.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
+                    pointLogSaveService.savePointLog(userCur.getBojHandle(), randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " point earn by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
 
-                    user.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
-                    user.checkTodayRandomSolvedOk();
-                    userRepository.save(user);
+                    // 팀의 점수를 올린다. (랜덤 문제)
+                    teamService.increaseTeamScore(userCur.getTeam(), randomProblem.getLevel() * 2);
+                    // 유저 통계를 반영한다. (랜덤 문제)
+                    userStatisticsService.updateByDto(userCur.getBojHandle(), randomProblem, randomProblem.getLevel() * 2);
+
+                    userCur.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
+                    userCur.checkTodayRandomSolvedOk();
+                    userRepository.save(userCur);
 
                     // 잔디 정보 갱신
                     todayUserGrass.infoCheckOk();

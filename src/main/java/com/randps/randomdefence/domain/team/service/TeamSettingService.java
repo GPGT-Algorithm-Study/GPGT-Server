@@ -60,12 +60,20 @@ public class TeamSettingService {
             else secondTeamUserIndexes.add(i);
         }
 
+        // 두 팀을 DB에서 뽑는다.
+        Team firstTeam = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+        Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+
         // 뽑힌 유저를 첫 번째 팀에 할당한다.
         for (Integer i=0;i<firstTeamUserIndexes.size();i++) {
             User user = users.get(firstTeamUserIndexes.get(i));
             user.setTeamNumber(0);
             userRepository.save(user);
             teamUserIndexes.get(0).add(user);
+
+            // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
+            firstTeam.increasePoint(user.getPoint());
+            teamRepository.save(firstTeam);
         }
 
         // 뽑히지 않은 유저를 두 번째 팀에 할당한다.
@@ -74,9 +82,57 @@ public class TeamSettingService {
             user.setTeamNumber(1);
             userRepository.save(user);
             teamUserIndexes.get(1).add(user);
+
+            // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
+            secondTeam.increasePoint(user.getPoint());
+            teamRepository.save(secondTeam);
         }
 
         return teamUserIndexes;
+    }
+
+    /*
+     * 추가된 유저를 0번팀과 1번팀 중 하나에 할당한다.
+     */
+    public void setUser(User user) {
+        List<User> firstTeamUsers = userRepository.findAllByTeam(0);
+        List<User> secondTeamUsers = userRepository.findAllByTeam(1);
+        Random r = new Random();
+        Integer randTeamIdx;
+
+        if ((firstTeamUsers.isEmpty() && secondTeamUsers.isEmpty()) || firstTeamUsers.size() == secondTeamUsers.size()) {
+            // 두 팀중 랜덤한 팀에 배정된다.
+            randTeamIdx = r.nextInt(2);
+        } else if (secondTeamUsers.isEmpty() || firstTeamUsers.size() > secondTeamUsers.size()) {
+            // 0번 팀이 더 많다면 1번 팀으로 배정
+            randTeamIdx = 1;
+        } else {
+            // 1번 팀이 더 많다면 0번 팀으로 배정
+            randTeamIdx = 0;
+        }
+
+        if (randTeamIdx == 0) {
+            Team firstTeam = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+
+            // 뽑힌 유저를 첫 번째 팀에 할당한다.
+            user.setTeamNumber(0);
+            userRepository.save(user);
+
+            // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
+            firstTeam.increasePoint(user.getPoint());
+            teamRepository.save(firstTeam);
+        } else {
+            Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+
+            // 뽑힌 유저를 두 번째 팀에 할당한다.
+            user.setTeamNumber(1);
+            userRepository.save(user);
+
+            // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
+            secondTeam.increasePoint(user.getPoint());
+            teamRepository.save(secondTeam);
+        }
+
     }
 
     /*

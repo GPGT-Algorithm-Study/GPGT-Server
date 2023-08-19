@@ -2,6 +2,9 @@ package com.randps.randomdefence.domain.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.randps.randomdefence.domain.team.service.TeamService;
+import com.randps.randomdefence.domain.team.service.TeamSettingService;
+import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
 import com.randps.randomdefence.domain.user.service.*;
@@ -33,13 +36,23 @@ public class UserController {
 
     private final UserGrassService userGrassService;
 
+    private final TeamSettingService teamSettingService;
+
+    private final TeamService teamService;
+
     //TODO: useradd, userdel은 jwt 토큰을 헤더에 넣어야지 접근가능하게 설정
     /*
      * 유저를 DB에 추가한다.
      */
     @PostMapping("/add")
     public ResponseEntity<Map<String, String>> userAdd(@Param("bojHandle") String bojHandle, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
-        userService.save(bojHandle, notionId, manager, emoji);
+        User user = userService.save(bojHandle, notionId, manager, emoji);
+
+        // 팀 2개 생성 (있다면 추가로 생성되지 않는다. 초기 유저 생성의 경우 이 부분이 실행됨)
+        teamSettingService.makeTeamInitialData();
+
+        // 새로운 팀 설정
+        teamSettingService.setUser(user);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -222,6 +235,11 @@ public class UserController {
             userService.save(bojHandles.get(i), notionIds.get(i), managers.get(i)?1L:0L, emojis.get(i));
         }
 
+        // 팀 2개 생성
+        teamSettingService.makeTeamInitialData();
+
+        // 전체유저 새로운 팀 설정
+        teamSettingService.setUsers();
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;
