@@ -4,6 +4,8 @@ import com.randps.randomdefence.domain.item.domain.Item;
 import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItem;
 import com.randps.randomdefence.domain.item.domain.UserItemRepository;
+import com.randps.randomdefence.domain.log.domain.PointLog;
+import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class ItemSaveService {
     private final ItemRepository itemRepository;
 
     private final UserItemRepository userItemRepository;
+
+    private final PointLogSaveService pointLogSaveService;
 
     /*
      * 유저가 아이템을 구매한다.
@@ -50,6 +54,9 @@ public class ItemSaveService {
 //                return false;
             }
 
+            // 구매 로그를 작성한다.
+            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(), "-" + item.getItemValue() + " point, purchase \'" + item.getName() + "\'", true);
+
             // 상태 변화를 저장한다.
             userRepository.save(user);
             userItemRepository.save(userItem.get());
@@ -71,6 +78,9 @@ public class ItemSaveService {
                     .count(1)
                     .item(itemRepository.getReferenceById(itemId))
                     .build();
+
+            // 구매 로그를 작성한다.
+            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(), "-" + item.getItemValue() + " point, purchase \'" + item.getName() + "\'", true);
 
             // 상태 변화를 저장한다.
             userRepository.save(user);
