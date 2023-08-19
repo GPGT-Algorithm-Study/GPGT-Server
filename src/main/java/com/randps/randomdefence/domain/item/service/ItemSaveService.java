@@ -80,7 +80,7 @@ public class ItemSaveService {
                     .build();
 
             // 구매 로그를 작성한다.
-            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(), "-" + item.getItemValue() + " point, purchase \'" + item.getName() + "\'", true);
+            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(), "-" + item.getItemValue() + " points, purchase \'" + item.getName() + "\'", true);
 
             // 상태 변화를 저장한다.
             userRepository.save(user);

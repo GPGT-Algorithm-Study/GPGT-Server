@@ -185,7 +185,7 @@ public class UserSolvedProblemService {
                 if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId())) {
                     // 일반 문제의 포인트 부여
                     user.increasePoint(pb.getPoint());
-                    pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
+                    pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " points are earned by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
 
                     // 팀의 점수를 올린다. (일반 문제)
                     teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
@@ -242,7 +242,7 @@ public class UserSolvedProblemService {
                     if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId())) {
                         // 일반 문제의 포인트 부여
                         user.increasePoint(pb.getPoint());
-                        pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
+                        pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " points are earned by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
 
                         // 팀의 점수를 올린다. (일반 문제)
                         teamService.increaseTeamScore(user.getTeam(), pb.getPoint());

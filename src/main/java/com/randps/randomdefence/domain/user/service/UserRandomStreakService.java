@@ -193,7 +193,7 @@ public class UserRandomStreakService {
 
                 // 유저의 정보 갱신
                 user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
-                pointLogSaveService.savePointLog(bojHandle, randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " point earn by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+                pointLogSaveService.savePointLog(bojHandle, randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " points are earned by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
 
                 // 팀의 점수를 올린다. (랜덤 문제)
                 teamService.increaseTeamScore(user.getTeam(), randomProblem.getLevel() * 2);
@@ -238,7 +238,7 @@ public class UserRandomStreakService {
 
                     // 유저의 정보 갱신
                     userCur.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
-                    pointLogSaveService.savePointLog(userCur.getBojHandle(), randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " point earn by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+                    pointLogSaveService.savePointLog(userCur.getBojHandle(), randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " points are earned by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
 
                     // 팀의 점수를 올린다. (랜덤 문제)
                     teamService.increaseTeamScore(userCur.getTeam(), randomProblem.getLevel() * 2);
