@@ -1,10 +1,10 @@
 package com.randps.randomdefence.global.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.randps.randomdefence.user.service.UserGrassService;
-import com.randps.randomdefence.user.service.UserInfoService;
-import com.randps.randomdefence.user.service.UserRandomStreakService;
-import com.randps.randomdefence.user.service.UserSolvedProblemService;
+import com.randps.randomdefence.domain.user.service.UserGrassService;
+import com.randps.randomdefence.domain.user.service.UserInfoService;
+import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
+import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,15 +16,17 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class Scheduler {
 
     private final UserInfoService userInfoService;
+
     private final UserSolvedProblemService userSolvedProblemService;
+
     private final UserRandomStreakService userRandomStreakService;
 
     private final UserGrassService userGrassService;
 
     /*
-     * 정해진 시간마다 실행되는 스크래핑 메서드 (매 5분 간격)
+     * 정해진 시간마다 실행되는 스크래핑 메서드 (매 20분 간격)
      */
-    @Scheduled(cron = "0 0/5 * * * *")
+    @Scheduled(cron = "0 0/20 * * * *")
     public void everyTermJob() throws JsonProcessingException {
         userInfoService.crawlUserInfoAll(); // 모든 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
         userSolvedProblemService.crawlTodaySolvedProblemAll(); // 모든 유저의 맞았습니다를 크롤링해서 해결한 문제 DB를 업데이트한다.
@@ -32,9 +34,9 @@ public class Scheduler {
     }
 
     /*
-     * 정해진 시간마다 실행되는 스크래핑 메서드 (하루 간격, 매일 새벽 6시 2분)
+     * 정해진 시간마다 실행되는 스크래핑 메서드 (하루 간격, 매일 새벽 6시 25분)
      */
-    @Scheduled(cron = "0 2 6 * * *")
+    @Scheduled(cron = "0 25 6 * * *")
     public void everyDayTermJob() throws JsonProcessingException {
         userGrassService.makeTodayGrassAll(); // 모든 유저의 오늘 잔디를 생성한다.
         userRandomStreakService.makeUpUserRandomProblemAll(); // 모든 유저의 랜덤 문제를 1문제를 뽑아 저장한다.

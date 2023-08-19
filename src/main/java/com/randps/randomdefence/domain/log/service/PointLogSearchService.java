@@ -1,0 +1,40 @@
+package com.randps.randomdefence.domain.log.service;
+
+import com.randps.randomdefence.domain.log.domain.PointLog;
+import com.randps.randomdefence.domain.log.domain.PointLogRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
+@RequiredArgsConstructor
+@Service
+public class PointLogSearchService {
+
+    private final PointLogRepository pointLogRepository;
+
+    /*
+     * 서버의 모든 포인트 로그를 조회한다.
+     */
+    @Transactional
+    public List<PointLog> findAllLog() {
+        List<PointLog> pointLogs =  pointLogRepository.findAll();
+        if (pointLogs == null)
+            pointLogs = new ArrayList<>();
+
+        return pointLogs;
+    }
+
+    /*
+     * 특정 유저의 모든 포인트 로그를 조회한다.
+     */
+    @Transactional
+    public List<PointLog> findAllLogByBojHandle(String bojHandle) {
+        List<PointLog> pointLogs = pointLogRepository.findAllByBojHandle(bojHandle);
+        if (pointLogs == null)
+            pointLogs = new ArrayList<>();
+        return pointLogs;
+    }
+}
