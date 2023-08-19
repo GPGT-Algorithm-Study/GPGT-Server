@@ -51,6 +51,7 @@ public class TeamStatisticsService {
                     .bojHandle(user.getBojHandle())
                     .notionId(user.getNotionId())
                     .profileImg(user.getProfileImg())
+                    .emoji(user.getEmoji())
                     .point(user.getPoint())
                     .build();
 
@@ -87,6 +88,7 @@ public class TeamStatisticsService {
                     .bojHandle(user.getBojHandle())
                     .notionId(user.getNotionId())
                     .profileImg(user.getProfileImg())
+                    .emoji(user.getEmoji())
                     .point(user.getPoint())
                     .build();
 

@@ -12,13 +12,16 @@ public class UserTeamStatisticsDto {
 
     private String profileImg;
 
+    private String emoji;
+
     private Integer point;
 
     @Builder
-    public UserTeamStatisticsDto(String bojHandle, String notionId, String profileImg, Integer point) {
+    public UserTeamStatisticsDto(String bojHandle, String notionId, String profileImg, String emoji, Integer point) {
         this.bojHandle = bojHandle;
         this.notionId = notionId;
         this.profileImg = profileImg;
+        this.emoji = emoji;
         this.point = point;
     }
 
@@ -26,6 +29,7 @@ public class UserTeamStatisticsDto {
         this.bojHandle = "";
         this.notionId = "";
         this.profileImg = "null";
+        this.emoji = "🧐";
         this.point = 0;
     }
 
