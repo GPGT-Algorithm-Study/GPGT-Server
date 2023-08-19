@@ -12,6 +12,8 @@ import com.randps.randomdefence.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserStatisticsService {
@@ -73,4 +75,27 @@ public class UserStatisticsService {
         return userStatisticsRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 통계입니다."));
     }
 
+    /*
+     * 모든 유저 통계 일간 초기화
+     */
+    public void initAllDailyStat() {
+        List<UserStatistics> userStatisticsList = userStatisticsRepository.findAll();
+
+        for (UserStatistics userStat : userStatisticsList) {
+            userStat.initDaily();
+            userStatisticsRepository.save(userStat);
+        }
+    }
+
+    /*
+     * 모든 유저 통계 주간 초기화
+     */
+    public void initAllWeeklyStat() {
+        List<UserStatistics> userStatisticsList = userStatisticsRepository.findAll();
+
+        for (UserStatistics userStat : userStatisticsList) {
+            userStat.initWeekly();
+            userStatisticsRepository.save(userStat);
+        }
+    }
 }

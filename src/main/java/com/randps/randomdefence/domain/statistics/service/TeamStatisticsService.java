@@ -22,13 +22,7 @@ import java.util.Optional;
 @Service
 public class TeamStatisticsService {
 
-    private final UserService userService;
-
-    private final UserStatisticsService userStatisticsService;
-
     private final UserStatisticsRepository userStatisticsRepository;
-
-    private final TeamService teamService;
 
     private final TeamRepository teamRepository;
 
@@ -44,6 +38,7 @@ public class TeamStatisticsService {
         List<UserTeamStatisticsDto> userStatDtos1 = new ArrayList<>(); // 팀에 소속된 팀원들
         UserTeamStatisticsDto topContributor1 = new UserTeamStatisticsDto(); // 한 주간 팀에 가장 많이 기여한 사람
         Integer solved1 = 0; // 한 주간 팀이 푼 전체 문제 수
+        Integer score1 = 0; // 팀 포인트
 
         // 유저 팀 통계 dto로 변환
         for (User user : users1) {
@@ -55,10 +50,12 @@ public class TeamStatisticsService {
                     .point(user.getPoint())
                     .build();
 
-            // 팀이 푼 문제 수 더하기
+            // 팀이 푼 문제 수 더하기, 포인트 더하기
             Optional<UserStatistics> userStatistics = userStatisticsRepository.findByBojHandle(dto.getBojHandle());
-            if (userStatistics.isPresent())
+            if (userStatistics.isPresent()) {
                 solved1 += userStatistics.get().getWeeklySolvedProblemCount();
+                score1 += userStatistics.get().getDailyEarningPoint();
+            }
 
             // 가장 기여 많은 유저 찾아서 갱신
             if (topContributor1.getPoint() < dto.getPoint())
@@ -70,6 +67,8 @@ public class TeamStatisticsService {
 
         TeamStatisticsDto firstTeam = TeamStatisticsDto.builder()
                 .team(team1)
+                .rank(0)
+                .score(score1)
                 .solved(solved1)
                 .topContributor(topContributor1)
                 .users(userStatDtos1)
@@ -81,6 +80,7 @@ public class TeamStatisticsService {
         List<UserTeamStatisticsDto> userStatDtos2 = new ArrayList<>(); // 팀에 소속된 팀원들
         UserTeamStatisticsDto topContributor2 = new UserTeamStatisticsDto(); // 한 주간 팀에 가장 많이 기여한 사람
         Integer solved2 = 0; // 한 주간 팀이 푼 전체 문제 수
+        Integer score2 = 0; // 팀 포인트
 
         // 유저 팀 통계 dto로 변환
         for (User user : users2) {
@@ -92,10 +92,12 @@ public class TeamStatisticsService {
                     .point(user.getPoint())
                     .build();
 
-            // 팀이 푼 문제 수 더하기
+            // 팀이 푼 문제 수 더하기, 포인트 더하기
             Optional<UserStatistics> userStatistics = userStatisticsRepository.findByBojHandle(dto.getBojHandle());
-            if (userStatistics.isPresent())
+            if (userStatistics.isPresent()) {
                 solved2 += userStatistics.get().getWeeklySolvedProblemCount();
+                score2 += userStatistics.get().getDailyEarningPoint();
+            }
 
             // 가장 기여 많은 유저 찾아서 갱신
             if (topContributor2.getPoint() < dto.getPoint())
@@ -105,13 +107,26 @@ public class TeamStatisticsService {
             userStatDtos2.add(dto);
         }
 
-
         TeamStatisticsDto secondTeam = TeamStatisticsDto.builder()
                 .team(team2)
+                .rank(0)
+                .score(score2)
                 .solved(solved2)
                 .topContributor(topContributor2)
                 .users(userStatDtos2)
                 .build();
+
+        // 등수 정하기
+        if (firstTeam.getScore() > secondTeam.getScore()) {
+            firstTeam.setRank(1);
+            secondTeam.setRank(2);
+        } else if (firstTeam.getScore() < secondTeam.getScore()) {
+            firstTeam.setRank(2);
+            secondTeam.setRank(1);
+        } else {
+            firstTeam.setRank(1);
+            secondTeam.setRank(1);
+        }
 
         // 팀 통계를 모을 리스트
         List<TeamStatisticsDto> teamStatisticsDtos = new ArrayList<>();
@@ -123,4 +138,5 @@ public class TeamStatisticsService {
 
         return teamStatisticsResponse;
     }
+
 }

@@ -1,6 +1,8 @@
 package com.randps.randomdefence.domain.scraping.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
+import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.service.UserGrassService;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
@@ -29,6 +31,10 @@ public class ScrapingController {
     private final UserRandomStreakService userRandomStreakService;
 
     private final UserGrassService userGrassService;
+
+    private final UserStatisticsService userStatisticsService;
+
+    private final TeamSettingService teamSettingService;
 
     /*
      * 유저가 오늘 푼 문제 스크래핑 (기존 데이터와 중복 제거 포함, 단 옛날에 똑같은 문제를 푼적 있다면 중복 제거되지 않음)
@@ -128,6 +134,9 @@ public class ScrapingController {
         userRandomStreakService.makeUpUserRandomProblemAll(); // 모든 유저의 랜덤 문제를 1문제를 뽑아 저장한다.
         userRandomStreakService.streakCheckAll(); // 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 랜덤 스트릭을 끊는다.
         userInfoService.checkAllUserSolvedStreak(); // 유저의 스트릭이 끊겼다면(랜덤 스트릭이 아닌 Solvedac 스트릭) 경고를 1회 올린다.
+        userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
+        teamSettingService.initWeekly(); // 팀 포인트 주간 초기화
+        teamSettingService.setUsers(); // 모든 유저 팀 할당
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

@@ -136,6 +136,18 @@ public class TeamSettingService {
     }
 
     /*
+     * 팀 주간 초기화
+     */
+    public void initWeekly() {
+        List<Team> teams = teamRepository.findAll();
+
+        for (Team team : teams) {
+            team.resetTeamPoint();
+            teamRepository.save(team);
+        }
+    }
+
+    /*
      * 초기 팀 데이터 생성 (테스트)
      */
     public void makeTeamInitialData() {
