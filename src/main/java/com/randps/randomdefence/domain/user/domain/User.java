@@ -154,4 +154,8 @@ public class User extends BaseTimeEntity {
         this.isTodaySolved = userInfo.getIsTodaySolved();
         this.todaySolvedProblemCount = userInfo.getTodaySolvedProblemCount();
     }
+
+    public void setTeamNumber(Integer team) {
+        this.team = team;
+    }
 }

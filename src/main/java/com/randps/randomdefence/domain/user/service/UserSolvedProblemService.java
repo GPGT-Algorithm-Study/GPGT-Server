@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.user.domain.*;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
@@ -31,6 +32,8 @@ public class UserSolvedProblemService {
     private final ProblemService problemService;
 
     private final PointLogSaveService pointLogSaveService;
+
+    private final TeamService teamService;
 
     private final UserRepository userRepository;
 
@@ -181,6 +184,9 @@ public class UserSolvedProblemService {
                     pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
                 }
 
+                // 팀의 점수를 올린다.
+                teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
+
                 userSolvedProblems.add(userSolvedProblem);
             }
         }
@@ -230,6 +236,9 @@ public class UserSolvedProblemService {
                         user.increasePoint(pb.getPoint());
                         pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " point earn by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
                     }
+
+                    // 팀의 점수를 올린다.
+                    teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
 
                     userSolvedProblems.add(userSolvedProblem);
                 }
