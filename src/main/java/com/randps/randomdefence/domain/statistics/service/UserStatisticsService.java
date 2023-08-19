@@ -1,14 +1,11 @@
 package com.randps.randomdefence.domain.statistics.service;
 
-import com.randps.randomdefence.domain.problem.domain.Problem;
-import com.randps.randomdefence.domain.problem.domain.ProblemRepository;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -98,4 +95,5 @@ public class UserStatisticsService {
             userStatisticsRepository.save(userStat);
         }
     }
+
 }

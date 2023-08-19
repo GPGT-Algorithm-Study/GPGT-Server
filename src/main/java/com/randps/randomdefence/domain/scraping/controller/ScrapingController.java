@@ -135,8 +135,6 @@ public class ScrapingController {
         userRandomStreakService.streakCheckAll(); // 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 랜덤 스트릭을 끊는다.
         userInfoService.checkAllUserSolvedStreak(); // 유저의 스트릭이 끊겼다면(랜덤 스트릭이 아닌 Solvedac 스트릭) 경고를 1회 올린다.
         userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
-        teamSettingService.initWeekly(); // 팀 포인트 주간 초기화
-        teamSettingService.setUsers(); // 모든 유저 팀 할당
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

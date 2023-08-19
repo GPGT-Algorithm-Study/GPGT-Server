@@ -3,6 +3,7 @@ package com.randps.randomdefence.global.scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.statistics.service.TeamStatisticsService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
+import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.service.UserGrassService;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
@@ -29,6 +30,8 @@ public class Scheduler {
     private final UserStatisticsService userStatisticsService;
 
     private final TeamSettingService teamSettingService;
+
+    private final TeamService teamService;
 
     /*
      * 정해진 시간마다 실행되는 스크래핑 메서드 (매 20분 간격)
@@ -61,5 +64,6 @@ public class Scheduler {
         userStatisticsService.initAllWeeklyStat(); // 모든 유저의 주간 통계를 초기화한다.
         teamSettingService.initWeekly(); // 팀 포인트 주간 초기화
         teamSettingService.setUsers(); // 모든 유저 팀 할당
+        teamService.weeklyTeamPointDistribution(); // 승리 팀에게 승리 포인트 지급
     }
 }
