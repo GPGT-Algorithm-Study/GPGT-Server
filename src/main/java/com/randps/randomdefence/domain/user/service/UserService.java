@@ -9,6 +9,7 @@ import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class UserService {
     public User save(String bojHandle, String notionId, Long manager, String emoji) throws JsonProcessingException {
         Optional<User> isExistUser = userRepository.findByBojHandle(bojHandle);
         if (isExistUser.isPresent()) {
-            return null;
+            throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
         }
         if (!(manager == 0 || manager == 1)) {
             throw new IllegalArgumentException("잘못된 파라미터가 전달되었습니다.");
