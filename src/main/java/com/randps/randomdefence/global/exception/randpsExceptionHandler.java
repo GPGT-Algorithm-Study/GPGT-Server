@@ -21,7 +21,7 @@ public class randpsExceptionHandler {
         Map<String, String> map = new HashMap<>();
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "400");
-        map.put("message", "잘못된 요청입니다.");
+        map.put("message", e.getMessage());
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }

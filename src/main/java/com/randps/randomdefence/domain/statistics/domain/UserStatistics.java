@@ -60,6 +60,22 @@ public class UserStatistics extends BaseTimeEntity {
         this.totalEarningPoint = totalEarningPoint;
     }
 
+    public UserStatistics(String bojHandle) {
+        this.bojHandle = bojHandle;
+        this.dailySolvedProblemCount = 0;
+        this.dailySolvedMostDifficultProblemId = 0;
+        this.dailySolvedMostDifficult = 0;
+        this.dailyEarningPoint = 0;
+        this.weeklySolvedProblemCount = 0;
+        this.weeklySolvedMostDifficultProblemId = 0;
+        this.weeklySolvedMostDifficult = 0;
+        this.weeklyEarningPoint = 0;
+        this.totalSolvedProblemCount = 0;
+        this.totalSolvedMostDifficultProblemId = 0;
+        this.totalSolvedMostDifficult = 0;
+        this.totalEarningPoint = 0;
+    }
+
     /*
      * 유저의 통계에 푼 문제를 추가한다.
      */
