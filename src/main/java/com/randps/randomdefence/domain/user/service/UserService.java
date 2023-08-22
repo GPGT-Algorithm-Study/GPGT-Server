@@ -34,7 +34,7 @@ public class UserService {
     public User save(String bojHandle, String notionId, Long manager, String emoji) throws JsonProcessingException {
         Optional<User> isExistUser = userRepository.findByBojHandle(bojHandle);
         if (isExistUser.isPresent()) {
-            return isExistUser.get();
+            return null;
         }
         if (!(manager == 0 || manager == 1)) {
             throw new IllegalArgumentException("잘못된 파라미터가 전달되었습니다.");

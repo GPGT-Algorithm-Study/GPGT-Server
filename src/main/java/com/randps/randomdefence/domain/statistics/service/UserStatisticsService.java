@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -89,7 +90,17 @@ public class UserStatisticsService {
      */
     @Transactional
     public UserStatistics findByBojHandle(String bojHandle) {
-        return userStatisticsRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 통계입니다."));
+        Optional<UserStatistics> stat = userStatisticsRepository.findByBojHandle(bojHandle);
+        UserStatistics userStat;
+
+        // 존재한다면 통계 반환
+        if (stat.isPresent()) return stat.get();
+
+        // 존재하지 않는다면 생성해서 저장 후 반환
+        userStat = new UserStatistics(bojHandle);
+        userStatisticsRepository.save(userStat);
+
+        return userStat;
     }
 
     /*

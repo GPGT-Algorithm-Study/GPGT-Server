@@ -1,5 +1,7 @@
 package com.randps.randomdefence.domain.team.service;
 
+import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
+import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.domain.Team;
 import com.randps.randomdefence.domain.team.domain.TeamRepository;
 import com.randps.randomdefence.domain.user.domain.User;
@@ -19,6 +21,8 @@ public class TeamSettingService {
     private final TeamRepository teamRepository;
 
     private final UserService userService;
+
+    private final UserStatisticsService userStatisticsService;
 
     private final UserRepository userRepository;
 
@@ -64,6 +68,9 @@ public class TeamSettingService {
         Team firstTeam = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
         Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
 
+        firstTeam.resetTeamPoint();
+        secondTeam.resetTeamPoint();
+
         // 뽑힌 유저를 첫 번째 팀에 할당한다.
         for (Integer i=0;i<firstTeamUserIndexes.size();i++) {
             User user = users.get(firstTeamUserIndexes.get(i));
@@ -72,7 +79,8 @@ public class TeamSettingService {
             teamUserIndexes.get(0).add(user);
 
             // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
-            firstTeam.increasePoint(user.getPoint());
+            UserStatistics stat = userStatisticsService.findByBojHandle(user.getBojHandle());
+            firstTeam.increasePoint(stat.getWeeklyEarningPoint());
             teamRepository.save(firstTeam);
         }
 
@@ -84,7 +92,8 @@ public class TeamSettingService {
             teamUserIndexes.get(1).add(user);
 
             // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
-            secondTeam.increasePoint(user.getPoint());
+            UserStatistics stat = userStatisticsService.findByBojHandle(user.getBojHandle());
+            secondTeam.increasePoint(stat.getWeeklyEarningPoint());
             teamRepository.save(secondTeam);
         }
 
@@ -119,7 +128,8 @@ public class TeamSettingService {
             userRepository.save(user);
 
             // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
-            firstTeam.increasePoint(user.getPoint());
+            UserStatistics stat = userStatisticsService.findByBojHandle(user.getBojHandle());
+            firstTeam.increasePoint(stat.getWeeklyEarningPoint());
             teamRepository.save(firstTeam);
         } else {
             Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
@@ -129,7 +139,8 @@ public class TeamSettingService {
             userRepository.save(user);
 
             // 뽑힌 유저의 포인트를 팀 점수에 반영한다.
-            secondTeam.increasePoint(user.getPoint());
+            UserStatistics stat = userStatisticsService.findByBojHandle(user.getBojHandle());
+            secondTeam.increasePoint(stat.getWeeklyEarningPoint());
             teamRepository.save(secondTeam);
         }
 

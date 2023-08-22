@@ -63,6 +63,7 @@ public class TeamService {
         // 팀의 전체 포인트를 나눠가진다.
         for (User user : winingTeamUsers) {
             user.increasePoint(winingPoint);
+            userRepository.save(user);
 
             // 포인트 로그를 기록한다.
             pointLogSaveService.savePointLog(user.getBojHandle(), winingPoint, winingPoint + "earning by Team " + teamName + " Winning! Congratulation 🥳", true);
