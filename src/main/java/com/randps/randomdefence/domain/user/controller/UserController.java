@@ -45,8 +45,8 @@ public class UserController {
      * 유저를 DB에 추가한다.
      */
     @PostMapping("/add")
-    public ResponseEntity<Map<String, String>> userAdd(@Param("bojHandle") String bojHandle, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
-        User user = userService.save(bojHandle, notionId, manager, emoji);
+    public ResponseEntity<Map<String, String>> userAdd(@Param("bojHandle") String bojHandle, @Param("password") String password, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
+        User user = userService.save(bojHandle, password, notionId, manager, emoji);
 
         // 팀 2개 생성 (있다면 추가로 생성되지 않는다. 초기 유저 생성의 경우 이 부분이 실행됨)
         teamSettingService.makeTeamInitialData();
@@ -232,7 +232,8 @@ public class UserController {
         emojis.add("🍎");
 
         for (int i=0;i< bojHandles.size();i++) {
-            userService.save(bojHandles.get(i), notionIds.get(i), managers.get(i)?1L:0L, emojis.get(i));
+            // 초기 비밀번호 백준 핸들로 설정
+            userService.save(bojHandles.get(i), bojHandles.get(i), notionIds.get(i), managers.get(i)?1L:0L, emojis.get(i));
         }
 
         // 팀 2개 생성

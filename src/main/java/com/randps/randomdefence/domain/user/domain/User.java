@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -18,7 +21,11 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String bojHandle;
+    private String bojHandle; // 아이디
+
+    private String password; // 초기 : 자신의 bojHandle
+
+    private String roles; // USER, ADMIN
 
     private String notionId;
 
@@ -48,9 +55,22 @@ public class User extends BaseTimeEntity {
 
     private Integer todaySolvedProblemCount; // by Solved
 
+
+    /*
+     * 유저 Role Parser
+     */
+    public List<String> getRolesList(){
+        if(this.roles.length() > 0){
+            return Arrays.asList(this.roles.split(","));
+        }
+        return new ArrayList<>();
+    }
+
     @Builder
-    public User(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount) {
+    public User(String bojHandle, String password, String roles, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount) {
         this.bojHandle = bojHandle;
+        this.password = password;
+        this.roles = roles;
         this.notionId = notionId;
         this.manager = manager;
         this.warning = warning;

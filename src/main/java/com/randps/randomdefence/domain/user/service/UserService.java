@@ -7,6 +7,7 @@ import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -16,6 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class UserService {
+
+    private final BCryptPasswordEncoder passwordEncoder;
+
     private final UserRepository userRepository;
 
     private final UserGrassService userGrassService;
@@ -32,7 +36,7 @@ public class UserService {
      * 유저를 DB에 저장한다.
      */
     @Transactional
-    public User save(String bojHandle, String notionId, Long manager, String emoji) throws JsonProcessingException {
+    public User save(String bojHandle, String password, String notionId, Long manager, String emoji) throws JsonProcessingException {
         Optional<User> isExistUser = userRepository.findByBojHandle(bojHandle);
         if (isExistUser.isPresent()) {
             throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
@@ -44,6 +48,8 @@ public class UserService {
         User user = User.builder()
                 .bojHandle(bojHandle)
                 .notionId(notionId)
+                .password(passwordEncoder.encode(password)) // encoder로 암호화 후 넣기
+                .roles(manager==1?"USER,ADMIN":"USER") // 유저의 권한 설정
                 .manager(manager==1?true:false)
                 .warning(0)
                 .profileImg("")
