@@ -32,7 +32,7 @@ public class UserAuthService {
             return LoginSuccessResponse.builder()
                     .bojHandle(bojHandle)
                     .password(password)
-                    .jwtToken(jwtProvider.generateJwtToken(user.getId(), user.getBojHandle(), user.getNotionId()))
+                    .jwt(jwtProvider.generateJwtToken(user.getId(), user.getBojHandle(), user.getNotionId()))
                     .build();
         }
 
