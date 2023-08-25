@@ -1,4 +1,4 @@
-package com.randps.randomdefence.domain.user.dto;
+package com.randps.randomdefence.domain.user.dto.authDto;
 
 import com.randps.randomdefence.domain.user.domain.User;
 import lombok.Data;

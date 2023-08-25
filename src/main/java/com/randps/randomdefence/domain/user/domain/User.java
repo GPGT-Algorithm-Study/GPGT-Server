@@ -178,4 +178,8 @@ public class User extends BaseTimeEntity {
     public void setTeamNumber(Integer team) {
         this.team = team;
     }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

@@ -1,7 +1,7 @@
 package com.randps.randomdefence.global.config.filter;
 
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.dto.PrincipalDetails;
+import com.randps.randomdefence.domain.user.dto.authDto.PrincipalDetails;
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
 import com.randps.randomdefence.global.jwt.JwtProvider;
 import org.springframework.security.authentication.AuthenticationManager;

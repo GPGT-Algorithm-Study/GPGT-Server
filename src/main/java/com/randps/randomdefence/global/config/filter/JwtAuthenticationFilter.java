@@ -2,7 +2,7 @@ package com.randps.randomdefence.global.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.dto.PrincipalDetails;
+import com.randps.randomdefence.domain.user.dto.authDto.PrincipalDetails;
 import com.randps.randomdefence.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

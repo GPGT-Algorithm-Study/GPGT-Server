@@ -2,14 +2,9 @@ package com.randps.randomdefence.domain.user.controller;
 
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
-import com.randps.randomdefence.domain.user.dto.LoginRequest;
-import com.randps.randomdefence.domain.user.dto.LoginSuccessResponse;
-import com.randps.randomdefence.domain.user.dto.PrincipalDetails;
+import com.randps.randomdefence.domain.user.dto.authDto.*;
 import com.randps.randomdefence.domain.user.service.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -43,6 +38,33 @@ public class UserAuthController {
     @PostMapping("/login")
     public LoginSuccessResponse login(@RequestBody LoginRequest loginRequest) {
         return userAuthService.login(loginRequest);
+    }
+
+    /*
+     * 로그아웃 : 요청 body에 json형식으로 다음과 같은 데이터를 넘겨주면 된다.
+     * 헤더에 유저 본인의 유효한 "Refresh_Token"이 들어있어야 한다.
+     * {
+     *      "bojHandle" : "백준핸들"
+     * }
+     */
+    @PostMapping("/logout")
+    public LogoutResponse logout(@RequestHeader("Refresh_Token") String refresh, @RequestBody LogoutRequest logoutRequest) {
+        return userAuthService.logout(logoutRequest, refresh);
+    }
+
+    /*
+     * 비밀변호 변경 : 요청 body에 json형식으로 다음과 같은 데이터를 넘겨주면 된다.
+     * 헤더에 유저 본인의 유효한 "Refresh_Token"이 들어있어야 한다.
+     * {
+     *      "bojHandle" : "백준핸들",
+     *      "oldPassword" : "이전 비밀번호",
+     *      "newPassword" : "바꿀 비밀번호"
+     * }
+     * 비밀번호 변경에 성공하면 기존 로그인은 로그아웃 처리된다.
+     */
+    @PostMapping("/pwchange")
+    public ChangePasswordResponse changePassword(@RequestHeader("Refresh_Token") String refresh, @RequestBody ChangePasswordRequest changePasswordRequest) {
+        return userAuthService.change(changePasswordRequest, refresh);
     }
 
 //    /*

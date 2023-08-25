@@ -1,4 +1,4 @@
-package com.randps.randomdefence.domain.user.dto;
+package com.randps.randomdefence.domain.user.dto.authDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginRequest {
-    private String bojHandle;
-    private String password;
+public class LoginFailureResponse {
+    private String message;
 }
