@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class LoginSuccessResponse {
     private String bojHandle;
     private String password;
-    private String jwtToken;
+    private String jwt;
 }
