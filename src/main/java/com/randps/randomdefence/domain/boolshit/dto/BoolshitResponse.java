@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.boolshit.dto;
 
 import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class BoolshitResponse {
 
     private String message;
 
-    private User user;
+    private UserInfoResponse user;
 
     private LocalDateTime writtenDate;
 }

@@ -44,7 +44,7 @@ public class BoolshitService {
         return BoolshitResponse.builder()
                 .id(boolshit.getId())
                 .message(boolshit.getMessage())
-                .user(user)
+                .user(user.toUserInfoResponse())
                 .writtenDate(boolshit.getCreatedDate())
                 .build();
     }
@@ -64,7 +64,7 @@ public class BoolshitService {
             boolshitResponses.add(BoolshitResponse.builder()
                     .id(boolshit.getId())
                     .message(boolshit.getMessage())
-                    .user(user)
+                    .user(user.toUserInfoResponse())
                     .writtenDate(boolshit.getCreatedDate())
                     .build());
         }
