@@ -6,12 +6,14 @@ import com.randps.randomdefence.domain.boolshit.dto.BoolshitResponse;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoolshitService {
@@ -28,7 +30,7 @@ public class BoolshitService {
         List<Boolshit> boolshitList = boolshitRepository.findAll();
 
         // 아직 나의 한마디가 존재하지 않는다면 기본 값을 반환한다.
-        if (boolshitList.isEmpty()) {
+        if (boolshitList == null || boolshitList.isEmpty()) {
             return BoolshitResponse.builder().id(0L).message("아직 나의 한마디가 존재하지 않습니다.").user(null).build();
         }
 

@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/boolshit")
 public class BoolshitController {
 
-    private BoolshitService boolshitService;
+    private final BoolshitService boolshitService;
 
     /*
      * 유저의 가장 최근의 나의 한마디를 조회한다.
