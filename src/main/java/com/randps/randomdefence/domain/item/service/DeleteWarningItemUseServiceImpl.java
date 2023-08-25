@@ -10,26 +10,29 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 
 @Service
-public class TestItemUseServiceImpl extends ItemUseService{
+public class DeleteWarningItemUseServiceImpl extends ItemUseService {
 
-    protected TestItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository, UserItemRepository userItemRepository) {
+    protected DeleteWarningItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository, UserItemRepository userItemRepository) {
         super(userRepository, itemRepository, userItemRepository);
     }
 
-    /*
-     * 아이템의 효과를 실행시킨다. (기능 테스트용)
-     */
     @Transactional
     @Override
     public Object itemEffect(User user, Long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템입니다."));
 
         // 에러 처리
-        if (!item.getName().equals("테스트 상품")) {
+        if (!item.getName().equals("경고 차감권")) {
             throw new IllegalArgumentException("잘못된 아이템 사용입니다.");
         }
+        if (user.getWarning() == 0) {
+            throw new IllegalArgumentException("경고가 없으면 아이템을 사용할 수 없습니다.");
+        }
 
-        System.out.println("아이템을 정상적으로 사용했습니다.");
-        return true;
+        // 경고를 차감하고 저장한다.
+        user.decreaseWarning();
+        userRepository.save(user);
+
+        return null;
     }
 }

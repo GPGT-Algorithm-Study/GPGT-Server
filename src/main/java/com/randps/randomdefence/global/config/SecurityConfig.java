@@ -55,9 +55,10 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
-                .antMatchers("/api/v1/user/auth/login", "/api/v1/user/auth/logout", "/api/v1/user/add/all").permitAll()
-                .antMatchers("/api/v1/user/add", "/api/v1/user/del", "/api/v1/scraping/*").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
+//                .antMatchers("/api/v1/user/auth/login", "/api/v1/user/auth/logout", "/api/v1/user/add/all").permitAll()
+//                .antMatchers("/api/v1/user/add", "/api/v1/user/del", "/api/v1/scraping/*").hasRole("ADMIN")
+//                .anyRequest().authenticated()
                 .and()
                 .cors().disable()
                 .csrf().disable()

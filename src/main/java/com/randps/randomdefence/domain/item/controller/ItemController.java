@@ -1,10 +1,9 @@
 package com.randps.randomdefence.domain.item.controller;
 
+import com.randps.randomdefence.domain.item.domain.Item;
 import com.randps.randomdefence.domain.item.dto.ItemDto;
 import com.randps.randomdefence.domain.item.dto.UserItemResponse;
-import com.randps.randomdefence.domain.item.service.ItemSaveService;
-import com.randps.randomdefence.domain.item.service.ItemSearchService;
-import com.randps.randomdefence.domain.item.service.TestItemUseServiceImpl;
+import com.randps.randomdefence.domain.item.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +21,10 @@ import java.util.Map;
 public class ItemController {
 
     private final TestItemUseServiceImpl testItemUseService;
+
+    private final BoolshitItemUseServiceImpl boolshitItemUseService;
+
+    private final DeleteWarningItemUseServiceImpl deleteWarningItemUseService;
 
     private final ItemSaveService itemSaveService;
 
@@ -51,8 +54,26 @@ public class ItemController {
      * 아이템을 사용한다. (아이템에 따라 다른 서비스 호출)
      */
     @PutMapping("/use")
-    public ResponseEntity<Map<String, String>> useItem(@Param("bojHandle") String bojHandle, @Param("itemId") Long itemId) {
-        Boolean resultState = testItemUseService.useItem(bojHandle, itemId);
+    public ResponseEntity<Map<String, String>> useItem(@Param("bojHandle") String bojHandle, @Param("itemId") Long itemId, @Param("message") String message) {
+        Boolean resultState = false;
+
+        if (itemId == 1) {
+            // 테스트 아이템 사용
+            resultState = testItemUseService.useItem(bojHandle, itemId);
+        }
+        if (itemId == 2) {
+            // 경고 차감권 사용
+            resultState = deleteWarningItemUseService.useItem(bojHandle, itemId);
+        }
+        if (itemId == 3) {
+            // 랜덤 스트릭 프리즈 사용 (하지만 사실 유저가 직접 사용하면 안됨)
+            resultState = false;
+        }
+        if (itemId == 4) {
+            // 나의 한마디 사용
+            boolshitItemUseService.setMessage(message);
+            resultState = boolshitItemUseService.useItem(bojHandle, itemId);
+        }
 
         HttpHeaders responseHeaders = new HttpHeaders();
         Map<String, String> map = new HashMap<>();
@@ -94,8 +115,8 @@ public class ItemController {
     /*
      * 테스트 아이템 생성 (테스트)
      */
-    @PostMapping("/make-test-item")
-    public ResponseEntity<Map<String, String>> makeTestItem() {
+    @PostMapping("/make-item")
+    public ResponseEntity<Map<String, String>> makeItem() {
         itemSaveService.makeItem();
 
         HttpHeaders responseHeaders = new HttpHeaders();

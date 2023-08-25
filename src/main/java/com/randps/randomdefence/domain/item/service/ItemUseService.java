@@ -39,7 +39,37 @@ public abstract class ItemUseService {
         }
 
         // 아이템이 있다면 사용한다.
-        itemEffect(bojHandle, itemId);
+        itemEffect(user, itemId);
+
+        // 아이템의 개수가 1개라면 사용하고 삭제한다.
+        if (userItem.get().getCount() == 1) {
+            userItemRepository.delete(userItem.get());
+            return true;
+        }
+        // 아이템의 개수가 1개 이상이라면 하나 사용한다.
+        userItem.get().decreaseCount();
+
+        // 유저 아이템의 상태를 저장한다.
+        userItemRepository.save(userItem.get());
+
+        return true;
+    }
+
+    /*
+     * 유저가 아이템을 사용한다.
+     */
+    @Transactional
+    public Boolean useItem(User user, Long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템입니다."));
+        Optional<UserItem> userItem = userItemRepository.findByBojHandleAndItem(user.getBojHandle(), item);
+
+        // 아이템이 없다면 사용에 실패한다.
+        if (!userItem.isPresent()) {
+            return false;
+        }
+
+        // 아이템이 있다면 사용한다.
+        itemEffect(user, itemId);
 
         // 아이템의 개수가 1개라면 사용하고 삭제한다.
         if (userItem.get().getCount() == 1) {
@@ -59,5 +89,5 @@ public abstract class ItemUseService {
      * 아이템의 효과를 실행시킨다.
      */
     @Transactional
-    abstract public Object itemEffect(String bojHandle, Long itemId);
+    abstract public Object itemEffect(User user, Long itemId);
 }

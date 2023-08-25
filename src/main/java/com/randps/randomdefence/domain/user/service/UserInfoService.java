@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.global.component.parser.BojParserImpl;
 import com.randps.randomdefence.global.component.parser.SolvedacParserImpl;
@@ -21,6 +22,8 @@ public class UserInfoService {
     private final UserRepository userRepository;
 
     private final UserRandomStreakService userRandomStreakService;
+
+    private final UserRandomStreakRepository userRandomStreakRepository;
 
     private final SolvedacParserImpl solvedacParser;
 

@@ -93,7 +93,7 @@ public class User extends BaseTimeEntity {
     }
 
     public void decreaseWarning() {
-        if (this.warning > 1)
+        if (this.warning >= 1)
             this.warning--;
     }
 

@@ -1,5 +1,6 @@
 package com.randps.randomdefence.domain.user.service;
 
+import com.randps.randomdefence.domain.item.service.RandomStreakFreezeItemUseServiceImpl;
 import com.randps.randomdefence.domain.log.domain.PointLogRepository;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
@@ -43,6 +44,8 @@ public class UserRandomStreakService {
     private final UserStatisticsService userStatisticsService;
 
     private final TeamService teamService;
+
+    private final RandomStreakFreezeItemUseServiceImpl randomStreakFreezeItemUseService;
 
     /*
      * 유저 랜덤 스트릭 생성하기 (유저 생성 시 사용)
@@ -186,6 +189,7 @@ public class UserRandomStreakService {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
+        // 유저가 오늘 문제를 풀었다면 넘어간다.
         if (userRandomStreak.getIsTodayRandomSolved()) return true;
 
         for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
@@ -230,6 +234,7 @@ public class UserRandomStreakService {
             ProblemDto randomProblem = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
             List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(userCur.getBojHandle());
 
+            // 유저가 오늘 문제를 풀었다면 넘어간다.
             if (userRandomStreak.getIsTodayRandomSolved()) continue;
 
             for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
@@ -263,6 +268,7 @@ public class UserRandomStreakService {
 
     /*
      * 유저의 전일 문제가 풀리지 않았다면 스트릭을 끊는다.
+     * 문제를 풀지 않았고, 스트릭 프리즈가 있다면 스트릭 프리즈를 사용한다.
      */
     @Transactional
     public Boolean streakCheck(String bojHandle) {
@@ -270,6 +276,13 @@ public class UserRandomStreakService {
         UserGrass yesterday = userGrassService.findYesterdayUserGrass(userRandomStreak);
         if (!yesterday.getGrassInfo()) {
             User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+            // 스트릭 프리즈가 있다면 사용한다.
+            if (randomStreakFreezeItemUseService.isExist(user)) {
+                randomStreakFreezeItemUseService.useItem(user, 3L);
+                // 스트릭 프리즈를 사용했으므로 넘어간다.
+                return true;
+            }
 
             // 유저 정보 갱신
             user.checkTodayRandomSolvedNo();
@@ -287,6 +300,7 @@ public class UserRandomStreakService {
 
     /*
      * 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 스트릭을 끊는다.
+     * 문제를 풀지 않았고, 스트릭 프리즈가 있다면 스트릭 프리즈를 사용한다.
      */
     @Transactional
     public void streakCheckAll() {
@@ -297,6 +311,13 @@ public class UserRandomStreakService {
             UserGrass yesterday = userGrassService.findYesterdayUserGrass(userRandomStreak);
             if (!yesterday.getGrassInfo()) {
                 User user = userRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+                // 스트릭 프리즈가 있다면 사용한다.
+                if (randomStreakFreezeItemUseService.isExist(user)) {
+                    randomStreakFreezeItemUseService.useItem(user, 3L);
+                    // 스트릭 프리즈를 사용했으므로 넘어간다.
+                    continue;
+                }
 
                 // 유저 정보 갱신
                 user.checkTodayRandomSolvedNo();

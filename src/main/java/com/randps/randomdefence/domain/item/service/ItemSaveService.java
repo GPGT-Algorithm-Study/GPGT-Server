@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -91,10 +92,17 @@ public class ItemSaveService {
     }
 
     /*
-     * 테스트 아이템을 생성한다. (테스트)
+     * 모든 아이템을 생성한다.
      */
     @Transactional
     public Boolean makeItem() {
+        List<Item> items = itemRepository.findAll();
+
+        if (items.size() > 0) {
+            throw new IllegalArgumentException("이미 아이템이 생성되었습니다.");
+        }
+
+        // 테스트 상품
         Item newItem = Item.builder()
                 .name("테스트 상품")
                 .description("테스트 상품입니다. 사용하면 서버에 로그를 하나 찍습니다.")
@@ -102,6 +110,34 @@ public class ItemSaveService {
                 .maxItemCount(2)
                 .build();
         itemRepository.save(newItem);
+
+        // 경고 차감권
+        Item deleteWarningItem = Item.builder()
+                .name("경고 차감권")
+                .description("사용하면 경고를 하나 차감합니다.")
+                .itemValue(40)
+                .maxItemCount(3)
+                .build();
+        itemRepository.save(deleteWarningItem);
+
+        // 랜덤 스트릭 프리즈
+        Item randomStreakFreezeItem = Item.builder()
+                .name("랜덤 스트릭 프리즈")
+                .description("가지고 있으면 문제를 풀지 않았을 시, 자동으로 스트릭이 유지됩니다.")
+                .itemValue(200)
+                .maxItemCount(2)
+                .build();
+        itemRepository.save(randomStreakFreezeItem);
+
+        // 나의 한마디
+        Item boolshitItem = Item.builder()
+                .name("나의 한마디")
+                .description("나의 멋진 한마디를 모두에게 공지합니다.")
+                .itemValue(1)
+                .maxItemCount(1)
+                .build();
+        itemRepository.save(boolshitItem);
+
         return true;
     }
 }
