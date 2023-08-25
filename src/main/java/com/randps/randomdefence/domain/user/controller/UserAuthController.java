@@ -41,26 +41,38 @@ public class UserAuthController {
      * }
      */
     @PostMapping("/login")
-    public Object login(@RequestBody LoginRequest loginRequest) {
-        return userAuthService.login(loginRequest.getBojHandle(), loginRequest.getPassword());
+    public LoginSuccessResponse login(@RequestBody LoginRequest loginRequest) {
+        return userAuthService.login(loginRequest);
     }
 
-    /*
-     * JWT 인증 테스트용 엔드포인트
-     */
-    @GetMapping("/info")
-    public String info(@AuthenticationPrincipal PrincipalDetails principalDetails, Authentication authentication) {
-        System.out.println("PrincipalDetails " + principalDetails);
-        System.out.println("authentication " + authentication);
+//    /*
+//     * 로그인 : 요청 body에 json형식으로 다음과 같은 데이터를 넘겨주면 된다.
+//     * {
+//     *      "bojHandle" : "백준핸들",
+//     *      "password" : "비밀번호"
+//     * }
+//     */
+//    @PostMapping("/login")
+//    public Object login(@RequestBody LoginRequest loginRequest) {
+//        return userAuthService.login(loginRequest.getBojHandle(), loginRequest.getPassword());
+//    }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("PrincipalDetails ");
-        sb.append(principalDetails);
-        sb.append("\n\n");
-        sb.append("authentication ");
-        sb.append(authentication);
-
-        return sb.toString();
-    }
+//    /*
+//     * JWT 인증 테스트용 엔드포인트
+//     */
+//    @GetMapping("/info")
+//    public String info(@AuthenticationPrincipal PrincipalDetails principalDetails, Authentication authentication) {
+//        System.out.println("PrincipalDetails " + principalDetails);
+//        System.out.println("authentication " + authentication);
+//
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("PrincipalDetails ");
+//        sb.append(principalDetails);
+//        sb.append("\n\n");
+//        sb.append("authentication ");
+//        sb.append(authentication);
+//
+//        return sb.toString();
+//    }
 
 }

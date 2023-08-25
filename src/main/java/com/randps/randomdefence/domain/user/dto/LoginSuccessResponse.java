@@ -1,5 +1,6 @@
 package com.randps.randomdefence.domain.user.dto;
 
+import com.randps.randomdefence.global.jwt.dto.TokenDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoginSuccessResponse {
     private String bojHandle;
-    private String password;
-    private String jwt;
+    private TokenDto jwt;
 }

@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -14,16 +15,15 @@ import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtProvider {
 
     private final UserRepository userRepository;
-
     static Long EXPIRE_TIME = 60L * 60L * 1000L; // 만료 시간 1시간
 
     @Value("${jwt.secret}")
     private String secretKey;
-
 
     private Algorithm getSign(){
         return Algorithm.HMAC512(secretKey);
@@ -56,14 +56,14 @@ public class JwtProvider {
      * 토큰 검증
      *  - 토큰에서 가져온 email 정보와 DB의 유저 정보 일치하는지 확인
      *  - 토큰 만료 시간이 지났는지 확인
-     * @param jwtToken
+     * @param token
      * @return 유저 객체 반환
      */
-    public User validToken(String jwtToken){
+    public User validToken(String token){
         try {
 
             String bojHandle = JWT.require(this.getSign())
-                    .build().verify(jwtToken).getClaim("bojHandle").asString();
+                    .build().verify(token).getClaim("bojHandle").asString();
 
             // 비어있는 값이다.
             if (bojHandle == null){
@@ -71,7 +71,7 @@ public class JwtProvider {
             }
 
             // EXPIRE_TIME이 지나지 않았는지 확인
-            Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build().verify(jwtToken).getExpiresAt();
+            Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build().verify(token).getExpiresAt();
             if (!this.validExpiredTime(expiresAt)) {
                 // 만료시간이 지났다.
                 return null;

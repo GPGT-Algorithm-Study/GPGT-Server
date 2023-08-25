@@ -4,7 +4,9 @@ import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
 import com.randps.randomdefence.global.config.filter.JwtAuthenticationFilter;
 import com.randps.randomdefence.global.config.filter.JwtAuthorizationFilter;
+import com.randps.randomdefence.global.config.filter.JwtRefreshAuthFilter;
 import com.randps.randomdefence.global.jwt.JwtProvider;
+import com.randps.randomdefence.global.jwt.JwtRefreshUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -26,6 +29,8 @@ public class SecurityConfig {
     private final PrincipalDetailsService principalDetailsService;
 
     private final UserRepository userRepository;
+
+    private final JwtRefreshUtil jwtUtil;
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
@@ -64,8 +69,9 @@ public class SecurityConfig {
 //                .antMatchers("/api/v1/auth/*").permitAll()
 //                .antMatchers("/api/v1/*").hasRole("USER")
 //                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider()))  // AuthenticationManager
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),  jwtTokenProvider(), principalDetailsService));  // AuthenticationManager
+                .addFilterBefore(new JwtRefreshAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+//                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider()))  // JWT 필터 AuthenticationManager
+//                .addFilter(new JwtAuthorizationFilter(authenticationManager(),  jwtTokenProvider(), principalDetailsService));  // JWT 필터 AuthenticationManager
 //                .authorizeHttpRequests()
 //                .anyRequest().denyAll();
 //                .antMatchers("/api/v1/auth/*").permitAll()
