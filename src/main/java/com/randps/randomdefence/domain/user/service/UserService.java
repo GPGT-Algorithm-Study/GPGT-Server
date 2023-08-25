@@ -49,7 +49,7 @@ public class UserService {
                 .bojHandle(bojHandle)
                 .notionId(notionId)
                 .password(passwordEncoder.encode(password)) // encoder로 암호화 후 넣기
-                .roles(manager==1?"USER,ADMIN":"USER") // 유저의 권한 설정
+                .roles(manager==1?"ROLE_USER,ROLE_ADMIN":"ROLE_USER") // 유저의 권한 설정
                 .manager(manager==1?true:false)
                 .warning(0)
                 .profileImg("")

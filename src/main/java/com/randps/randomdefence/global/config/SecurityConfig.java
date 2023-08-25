@@ -56,7 +56,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers("/api/v1/user/auth/*", "/api/v1/user/add/all").permitAll()
-                .antMatchers("/api/v1/user/add").hasAnyRole("ADMIN")
+                .antMatchers("/api/v1/user/add").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .cors().disable()
