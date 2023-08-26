@@ -67,6 +67,14 @@ public class UserAuthController {
         return userAuthService.change(changePasswordRequest, refresh);
     }
 
+    /*
+     * Access_Token 재발급 엔드포인트
+     */
+    @GetMapping("/refresh")
+    public RefreshDto refreshAccessToken() {
+        return RefreshDto.builder().status("재발급 성공").build();
+    }
+
 //    /*
 //     * 로그인 : 요청 body에 json형식으로 다음과 같은 데이터를 넘겨주면 된다.
 //     * {
