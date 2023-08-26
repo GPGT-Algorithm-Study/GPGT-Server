@@ -47,14 +47,17 @@ public class TeamStatisticsService {
                     .notionId(user.getNotionId())
                     .profileImg(user.getProfileImg())
                     .emoji(user.getEmoji())
-                    .point(user.getPoint())
+                    .point(0)
                     .build();
 
             // 팀이 푼 문제 수 더하기, 포인트 더하기
             Optional<UserStatistics> userStatistics = userStatisticsRepository.findByBojHandle(dto.getBojHandle());
             if (userStatistics.isPresent()) {
                 solved1 += userStatistics.get().getWeeklySolvedProblemCount();
-                score1 += userStatistics.get().getDailyEarningPoint();
+                score1 += userStatistics.get().getWeeklyEarningPoint();
+
+                // 유저의 포인트 추가
+                dto.setPoint(userStatistics.get().getWeeklyEarningPoint());
             }
 
             // 가장 기여 많은 유저 찾아서 갱신
@@ -89,14 +92,17 @@ public class TeamStatisticsService {
                     .notionId(user.getNotionId())
                     .profileImg(user.getProfileImg())
                     .emoji(user.getEmoji())
-                    .point(user.getPoint())
+                    .point(0)
                     .build();
 
             // 팀이 푼 문제 수 더하기, 포인트 더하기
             Optional<UserStatistics> userStatistics = userStatisticsRepository.findByBojHandle(dto.getBojHandle());
             if (userStatistics.isPresent()) {
                 solved2 += userStatistics.get().getWeeklySolvedProblemCount();
-                score2 += userStatistics.get().getDailyEarningPoint();
+                score2 += userStatistics.get().getWeeklyEarningPoint();
+
+                // 유저의 포인트 추가
+                dto.setPoint(userStatistics.get().getWeeklyEarningPoint());
             }
 
             // 가장 기여 많은 유저 찾아서 갱신
