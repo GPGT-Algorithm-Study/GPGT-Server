@@ -137,6 +137,15 @@ public class UserAuthService {
                     .build();
         }
     }
+//
+//    /*
+//     * 엑세스 토큰 재발급
+//     */
+//    @Transactional
+//    public TokenDto refreshAccessToken(String bojHandle) {
+//        // 아이디 정보로 Token생성
+//        TokenDto tokenDto = jwtUtil.createAllToken(loginReqDto.getBojHandle());
+//    }
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
         response.addHeader(JwtRefreshUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
