@@ -77,7 +77,7 @@ public class RandomStreakFreezeItemUseServiceImpl extends ItemUseService {
         }
 
         // 유저 잔디를 풀었다고 체크하고 문제 번호를 0으로 만든다. 그 뒤 저장한다.
-        UserGrass userGrass = userGrassService.findTodayUserGrass(userRandomStreak);
+        UserGrass userGrass = userGrassService.findYesterdayUserGrass(userRandomStreak);
         userGrass.infoCheckOk();
         userGrass.setProblemId(0);
         userGrassRepository.save(userGrass);

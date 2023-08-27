@@ -33,7 +33,7 @@ public class JwtRefreshUtil {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private static final long ACCESS_TIME = 60L * 1000L;  // 만료 시간 1분
+    private static final long ACCESS_TIME = 60L * 1000L;  // 만료 시간 1분 -> 24시간(테스트)
 //    private static final long REFRESH_TIME = 2L * 60L * 1000L; // 만료 시간 2분
     private static final long REFRESH_TIME = 24L * 60L * 60L * 1000L; // 만료 시간 24시간
     public static final String ACCESS_TOKEN = "Access_Token";
