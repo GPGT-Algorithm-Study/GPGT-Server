@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.cert.CertificateExpiredException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class JwtRefreshUtil {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private static final long ACCESS_TIME = 24L * 60L * 60L * 1000L;  // 만료 시간 1분 -> 24시간(테스트)
+    private static final long ACCESS_TIME = 60L * 1000L;  // 만료 시간 1분
 //    private static final long REFRESH_TIME = 2L * 60L * 1000L; // 만료 시간 2분
     private static final long REFRESH_TIME = 24L * 60L * 60L * 1000L; // 만료 시간 24시간
     public static final String ACCESS_TOKEN = "Access_Token";
@@ -88,6 +89,17 @@ public class JwtRefreshUtil {
         } catch (Exception ex) {
             log.error(ex.getMessage());
             return false;
+        }
+    }
+
+    /*
+     * 토큰에서 백준 핸들을 뽑아낸다.
+     */
+    public String getBojHandle(String token) throws CertificateExpiredException {
+        try {
+            return JWT.require(this.getSign()).build().verify(token).getClaim("bojHandle").asString();
+        } catch (Exception ex) {
+            throw new CertificateExpiredException("토큰 인증이 실패했습니다.");
         }
     }
 

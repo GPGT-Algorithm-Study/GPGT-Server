@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.security.cert.CertificateExpiredException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -137,15 +138,27 @@ public class UserAuthService {
                     .build();
         }
     }
-//
-//    /*
-//     * 엑세스 토큰 재발급
-//     */
-//    @Transactional
-//    public TokenDto refreshAccessToken(String bojHandle) {
-//        // 아이디 정보로 Token생성
-//        TokenDto tokenDto = jwtUtil.createAllToken(loginReqDto.getBojHandle());
-//    }
+
+    /*
+     * 엑세스 토큰 재발급
+     */
+    @Transactional
+    public RefreshDto refreshAccessToken(String token) throws CertificateExpiredException {
+        // 아이디 정보로 Token생성
+        RefreshDto refreshDto = RefreshDto.builder()
+                .accessToken(jwtUtil.createToken(getBojHandleByJWT(token).getClaim(), "Access")).build();
+
+        return refreshDto;
+    }
+
+    /*
+     * JWT로 유저 백준핸들 반환
+     */
+    @Transactional
+    public ParseDto getBojHandleByJWT(String token) throws CertificateExpiredException {
+        return ParseDto.builder().claim(jwtUtil.getBojHandle(token)).build();
+    }
+
 
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
         response.addHeader(JwtRefreshUtil.ACCESS_TOKEN, tokenDto.getAccessToken());

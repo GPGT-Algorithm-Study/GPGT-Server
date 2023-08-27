@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 @Builder
-public class RefreshDto {
-    private String accessToken;
+public class ParseDto {
+    private String claim;
 }

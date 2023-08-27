@@ -5,7 +5,10 @@ import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.dto.authDto.*;
 import com.randps.randomdefence.domain.user.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.cert.CertificateExpiredException;
 
 @RequiredArgsConstructor
 @RestController
@@ -71,8 +74,16 @@ public class UserAuthController {
      * Access_Token 재발급 엔드포인트
      */
     @GetMapping("/refresh")
-    public RefreshDto refreshAccessToken() {
-        return RefreshDto.builder().status("재발급 성공").build();
+    public RefreshDto refreshAccessToken(@RequestHeader("Refresh_Token") String refresh) throws CertificateExpiredException {
+        return userAuthService.refreshAccessToken(refresh);
+    }
+
+    /*
+     * 토큰으로 bojHandle 반환
+     */
+    @GetMapping("/parse/boj")
+    public ParseDto parseBojJHandle(@Param("token") String token) throws CertificateExpiredException {
+        return userAuthService.getBojHandleByJWT(token);
     }
 
 //    /*
