@@ -18,6 +18,7 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
+        config.setAllowedHeaders(Arrays.asList("Access_Token", "Refresh_Token"));
         config.addAllowedOriginPattern("/api/v1/user/auth/refresh"); // 허용할 URL
         config.addAllowedHeader("*"); // 허용할 Header
         config.addAllowedMethod("*"); // 허용할 Http Method
