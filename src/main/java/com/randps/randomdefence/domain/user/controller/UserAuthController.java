@@ -82,7 +82,7 @@ public class UserAuthController {
      * 토큰으로 bojHandle 반환
      */
     @GetMapping("/parse/boj")
-    public ParseDto parseBojJHandle(@Param("token") String token) throws CertificateExpiredException {
+    public ParseDto parseBojJHandle(@RequestHeader("Refresh_Token") String token) throws CertificateExpiredException {
         return userAuthService.getBojHandleByJWT(token);
     }
 
