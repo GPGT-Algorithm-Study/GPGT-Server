@@ -50,13 +50,13 @@ public class TeamService {
             teamName = firstTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = (Integer) (firstTeam.getTeamPoint() / winingTeamUsers.size());
+            winingPoint = 5 + (Integer) (firstTeam.getTeamPoint() / winingTeamUsers.size());
         } else {
             winingTeamUsers = userRepository.findAllByTeam(1);
             teamName = secondTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = (Integer) (secondTeam.getTeamPoint() / winingTeamUsers.size());
+            winingPoint = 5 + (Integer) (secondTeam.getTeamPoint() / winingTeamUsers.size());
         }
 
         // 승리한 팀의 유저들에게 포인트를 지급한다.
@@ -66,7 +66,7 @@ public class TeamService {
             userRepository.save(user);
 
             // 포인트 로그를 기록한다.
-            pointLogSaveService.savePointLog(user.getBojHandle(), winingPoint, winingPoint + "earning by Team " + teamName + " Winning! Congratulation 🥳", true);
+            pointLogSaveService.savePointLog(user.getBojHandle(), winingPoint, winingPoint + " points earned by Team [" + teamName + "] Winning!🎉 Congratulation 🥳", true);
         }
     }
 }

@@ -42,9 +42,11 @@ public class UserRandomStreak extends BaseTimeEntity {
         this.maxRandomStreak = maxRandomStreak;
     }
 
-    public void updateLevel(String startLevel, String endLevel) {
+    public Boolean updateLevel(String startLevel, String endLevel) {
+        Boolean isSetup = (this.startLevel.equals("") && this.endLevel.equals(""));
         this.startLevel = startLevel;
         this.endLevel = endLevel;
+        return isSetup;
     }
 
     public void increaseCurrentStreak() {

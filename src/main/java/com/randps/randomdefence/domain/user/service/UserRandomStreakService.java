@@ -72,7 +72,12 @@ public class UserRandomStreakService {
         UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
 
         // 유효성 검사도 넣으면 좋음
-        userRandomStreak.updateLevel(startLevel, endLevel);
+        Boolean isSetup = userRandomStreak.updateLevel(startLevel, endLevel);
+
+        // 처음으로 세팅했다면 문제를 추천해준다.
+        if (isSetup) {
+            makeUpUserRandomProblem(bojHandle);
+        }
     }
 
     /*

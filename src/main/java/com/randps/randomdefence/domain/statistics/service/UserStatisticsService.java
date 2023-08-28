@@ -134,10 +134,12 @@ public class UserStatisticsService {
         // 푼 문제 난이도별 개수 초기화
         for (UserProblemStatistics userStat : userProblemStatistics) {
             userStat.initDaily();
+            userStat.initWeekly();
             userProblemStatisticsRepository.save(userStat);
         }
         // 유저 통계 초기화
         for (UserStatistics userStat : userStatisticsList) {
+            userStat.initDaily();
             userStat.initWeekly();
             userStatisticsRepository.save(userStat);
         }

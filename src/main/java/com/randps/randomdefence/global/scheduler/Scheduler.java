@@ -60,10 +60,10 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 26 6 * * 1")
     public void weekInitJob() {
-        userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
+//        userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
         userStatisticsService.initAllWeeklyStat(); // 모든 유저의 주간 통계를 초기화한다.
+        teamService.weeklyTeamPointDistribution(); // 승리 팀에게 승리 포인트 지급
         teamSettingService.initWeekly(); // 팀 포인트 주간 초기화
         teamSettingService.setUsers(); // 모든 유저 팀 할당
-        teamService.weeklyTeamPointDistribution(); // 승리 팀에게 승리 포인트 지급
     }
 }

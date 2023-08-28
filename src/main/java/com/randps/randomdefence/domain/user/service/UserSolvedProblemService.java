@@ -42,6 +42,8 @@ public class UserSolvedProblemService {
 
     private final UserStatisticsService userStatisticsService;
 
+    private final UserAlreadySolvedService userAlreadySolvedService;
+
     /*
      * 유저가 그동안 푼 모든 문제의 정보를 가져온다.
      */
@@ -176,7 +178,7 @@ public class UserSolvedProblemService {
                 }
             }
             // 중복이 없다면 저장한다.
-            if (!isAlreadyExist) {
+            if (!isAlreadyExist && !userAlreadySolvedService.isSolved(bojHandle, userSolvedProblem.getProblemId())) {
                 // 문제의 포인트만큼 유저의 포인트를 추가한다.
                 ProblemDto pb = problemService.findProblem(userSolvedProblem.getProblemId());
                 User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
@@ -233,7 +235,7 @@ public class UserSolvedProblemService {
                     }
                 }
                 // 중복이 없다면 저장한다.
-                if (!isAlreadyExist) {
+                if (!isAlreadyExist && !userAlreadySolvedService.isSolved(user.getBojHandle(), userSolvedProblem.getProblemId())) {
                     // 문제의 포인트만큼 유저의 포인트를 추가한다.
                     ProblemDto pb = problemService.findProblem(userSolvedProblem.getProblemId());
                     UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(user.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스트릭입니다."));

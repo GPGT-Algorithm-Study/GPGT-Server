@@ -32,6 +32,8 @@ public class UserController {
 
     private final UserSolvedProblemService userSolvedProblemService;
 
+    private final UserAlreadySolvedService userAlreadySolvedService;
+
     private final UserRandomStreakService userRandomStreakService;
 
     private final UserGrassService userGrassService;
@@ -130,6 +132,14 @@ public class UserController {
     }
 
     /*
+     * 유저의 오늘 푼 문제 목록을 불러온다. (테스트용 직접 요청)
+     */
+    @GetMapping("/info/already-solved/raw")
+    public List<Object> alreadySolvedRaw(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
+        return userAlreadySolvedService.scrapingDataRaw(bojHandle);
+    }
+
+    /*
      * 모든 유저를 DB에 추가한다. (TEST BATCH)
      */
     @PostMapping("/add/all")
@@ -216,7 +226,7 @@ public class UserController {
         emojis.add("🐱");
         emojis.add("🍀");
         emojis.add("🍡");
-        emojis.add("♨️");
+        emojis.add("🏖️");
         emojis.add("🍷");
         emojis.add("👍");
         emojis.add("🐾");

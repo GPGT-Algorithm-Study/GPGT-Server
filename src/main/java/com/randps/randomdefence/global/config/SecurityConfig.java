@@ -72,7 +72,7 @@ public class SecurityConfig {
 //                .antMatchers("/api/v1/auth/*").permitAll()
 //                .antMatchers("/api/v1/*").hasRole("USER")
 //                .and()
-                .addFilter(corsConfig.corsFilter())
+//                .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(new JwtRefreshAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider()))  // JWT 필터 AuthenticationManager
 //                .addFilter(new JwtAuthorizationFilter(authenticationManager(),  jwtTokenProvider(), principalDetailsService));  // JWT 필터 AuthenticationManager

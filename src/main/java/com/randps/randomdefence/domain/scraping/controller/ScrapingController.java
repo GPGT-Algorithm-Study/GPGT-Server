@@ -3,10 +3,7 @@ package com.randps.randomdefence.domain.scraping.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
-import com.randps.randomdefence.domain.user.service.UserGrassService;
-import com.randps.randomdefence.domain.user.service.UserInfoService;
-import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
-import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
+import com.randps.randomdefence.domain.user.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +31,8 @@ public class ScrapingController {
 
     private final UserStatisticsService userStatisticsService;
 
+    private final UserAlreadySolvedService userAlreadySolvedService;
+
     private final TeamSettingService teamSettingService;
 
     /*
@@ -59,6 +58,23 @@ public class ScrapingController {
     @GetMapping("/user/today-solved/all")
     public ResponseEntity<Map<String, String>> scrapUserTodaySolvedListAll() throws JsonProcessingException {
         userSolvedProblemService.crawlTodaySolvedProblemAll();
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", "요청을 성공했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+    /*
+     * 모든 유저의 기존에 이미 푼 문제 스크래핑 (기존에 유저가 등록되어 있어야함)
+     */
+    @GetMapping("/user/already-solved/all")
+    public ResponseEntity<Map<String, String>> scrapUserAlreadySolvedProblem() throws JsonProcessingException {
+        userAlreadySolvedService.saveAllScrapingData();
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

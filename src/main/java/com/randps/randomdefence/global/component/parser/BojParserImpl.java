@@ -2,6 +2,7 @@ package com.randps.randomdefence.global.component.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.randps.randomdefence.global.component.crawler.BojProfileWebCrawler;
 import com.randps.randomdefence.global.component.crawler.BojWebCrawler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ public class BojParserImpl implements Parser {
     private JsonNode userSolvedList;
 
     private final BojWebCrawler webCrawler;
+
 
     /*
      * 오늘 푼 문제 리스트를 반환한다.
