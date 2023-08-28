@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.log.service;
 import com.randps.randomdefence.domain.log.domain.PointLog;
 import com.randps.randomdefence.domain.log.domain.PointLogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,6 +34,17 @@ public class PointLogSearchService {
     @Transactional
     public List<PointLog> findAllLogByBojHandle(String bojHandle) {
         List<PointLog> pointLogs = pointLogRepository.findAllByBojHandle(bojHandle);
+        if (pointLogs == null)
+            pointLogs = new ArrayList<>();
+        return pointLogs;
+    }
+
+    /*
+     * 특정 유저의 모든 포인트 로그를 페이지 단위로 조회한다.
+     */
+    @Transactional
+    public List<PointLog> findPagingLogByBojHandle(String bojHandle, Pageable pageable) {
+        List<PointLog> pointLogs = pointLogRepository.findAllByBojHandleOrderByCreatedDateDesc(bojHandle, pageable);
         if (pointLogs == null)
             pointLogs = new ArrayList<>();
         return pointLogs;
