@@ -23,7 +23,7 @@ public abstract class WebCrawler {
     }
 
     public List<Object> process() {
-        Connection conn = Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36");
+        Connection conn = Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36");
         //Jsoup 커넥션 생성
 
         Document document = null;
