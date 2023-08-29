@@ -23,7 +23,7 @@ public abstract class WebCrawler {
     }
 
     public List<Object> process() {
-        System.setProperty("https.protocols", "TLSv1.3");
+        System.setProperty("https.protocols", "TLSv1.2");
         Connection conn = Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36");
         //Jsoup 커넥션 생성
 
