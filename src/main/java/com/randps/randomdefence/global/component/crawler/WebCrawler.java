@@ -25,8 +25,8 @@ public abstract class WebCrawler {
     public List<Object> process() {
         System.setProperty("https.protocols", "TLSv1.2");
         Connection conn = Jsoup.connect(url)
-                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36")
-                .referrer(url);
+                .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
+                .referrer("https://solved.ac");
         //Jsoup 커넥션 생성
 
         Document document = null;
