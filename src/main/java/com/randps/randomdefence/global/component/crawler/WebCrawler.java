@@ -28,6 +28,12 @@ public abstract class WebCrawler {
                 .header("Content-Type","application/x-www-form-urlencoded")
                 .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
                 .referrer("https://solved.ac")
+                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
+                .header("Sec-Ch-Ua", "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\"")
+                .header("Sec-Ch-Ua-Platform", "\"macOS\"")
+                .header("Accept-Encoding", "gzip, deflate, br")
+                .header("Accept-Language", "en-US,en;q=0.9,ko-KR;q=0.8,ko;q=0.7,ja-JP;q=0.6,ja;q=0.5,ru-RU;q=0.4,ru;q=0.3")
+                .method(Connection.Method.GET)
                 .ignoreContentType(true);
         //Jsoup 커넥션 생성
 
