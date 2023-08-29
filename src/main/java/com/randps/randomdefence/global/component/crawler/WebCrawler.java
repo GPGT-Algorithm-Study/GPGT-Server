@@ -23,7 +23,14 @@ public abstract class WebCrawler {
     }
 
     public List<Object> process() {
-        Connection conn = Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36").referrer("http://www.google.com");
+        Connection conn = Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
+                .timeout(3000)
+                .header("Origin", "http://solved.ac")
+                .header("Referer", "http://solved.ac")
+                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Accept-Encoding", "gzip, deflate, br")
+                .header("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.6,en;q=0.4");
         //Jsoup 커넥션 생성
 
         Document document = null;
