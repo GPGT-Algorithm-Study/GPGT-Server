@@ -7,7 +7,11 @@ import com.randps.randomdefence.domain.statistics.domain.UserProblemStatisticsRe
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
 import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
+import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
+import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,10 @@ public class UserStatisticsService {
     private final UserProblemStatisticsService userProblemStatisticsService;
 
     private final ProblemService problemService;
+
+    private final UserSolvedProblemService userSolvedProblemService;
+
+    private final UserRandomStreakService userRandomStreakService;
 
     /*
      * 유저 통계를 생성한다. (초기화)
@@ -145,4 +153,55 @@ public class UserStatisticsService {
         }
     }
 
+    /*
+     * 모든 유저의 일일 문제풀이 통계를 신뢰성 있게 처음부터 다시 만든다.(버그가 발생 했을 시 데이터 정상화 메서드)
+     */
+    @Transactional
+    public void integrityCheckTodayStatistics() {
+
+        // 1.유저가 오늘 푼 문제를 계산한다.
+        List<UserProblemStatistics> userProblemStatistics = userProblemStatisticsRepository.findAll();
+
+        // 각각 유저의 정보를 가져와서 통계를 만들고 저장한다.
+        for (UserProblemStatistics stat: userProblemStatistics) {
+            // 유저가 오늘 푼 문제 통계 초기화
+            stat.initDaily();
+
+            // 오늘 푼 문제들 통계 누적
+            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(stat.getBojHandle());
+            for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
+                stat.addStatDaily(solvedProblemDto);
+            }
+
+            // 통계 저장
+            userProblemStatisticsRepository.save(stat);
+        }
+
+        // 2.유저가 오늘 번 포인트를 계산한다.
+        List<UserStatistics> userStatisticsList = userStatisticsRepository.findAll();
+
+        // 각각 유저의 정보를 가져와서 통계를 만들고 저장한다.
+        for (UserStatistics stat: userStatisticsList) {
+            // 유저가 오늘 번 포인트 통계 초기화
+            stat.initDaily();
+
+            // 유저의 랜덤 스트릭 가져오기
+            UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(stat.getBojHandle());
+
+            // 오늘 푼 문제들 포인트 통계 누적
+            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(stat.getBojHandle());
+            for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
+
+                // 랜덤문제라면 포인트 2배
+                if (userRandomStreak.getTodayRandomProblemId().equals(solvedProblemDto.getProblemId())) {
+                    stat.addStatDaily(solvedProblemDto, solvedProblemDto.getPoint() * 2);
+                } else {
+                    stat.addStatDaily(solvedProblemDto, solvedProblemDto.getPoint());
+                }
+            }
+
+            // 통계 저장
+            userStatisticsRepository.save(stat);
+        }
+    }
 }

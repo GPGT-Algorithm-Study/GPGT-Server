@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.statistics.domain;
 
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
+import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -113,6 +114,18 @@ public class UserProblemStatistics extends BaseTimeEntity {
         else return 6; // Ruby;
     }
 
+    public Integer calcLevel(SolvedProblemDto problem) {
+        Integer level = problem.getTier();
+
+        if (level == 0) return 0; // Unknown;
+        else if (level <= 5) return 1; // Bronze;
+        else if (level <= 10) return 2; // Silver;
+        else if (level <= 15) return 3; // Gold;
+        else if (level <= 20) return 4; // Platinum;
+        else if (level <= 25) return 5; // Diamond;
+        else return 6; // Ruby;
+    }
+
     /*
      * 유저의 통계에 푼 문제를 추가한다.
      */
@@ -148,6 +161,70 @@ public class UserProblemStatistics extends BaseTimeEntity {
             this.dailySolvedCountRuby++;
             this.weeklySolvedCountRuby++;
             this.totalSolvedCountRuby++;
+        }
+    }
+
+    /*
+     * 유저의 통계에 푼 문제를 추가한다.
+     */
+    public void addStat(SolvedProblemDto problem) {
+        Integer level = calcLevel(problem);
+        // 문제 푼 수를 올린다.
+        if (level == 1) {
+            this.dailySolvedCountBronze++;
+            this.weeklySolvedCountBronze++;
+            this.totalSolvedCountBronze++;
+        }
+        else if (level == 2) {
+            this.dailySolvedCountSilver++;
+            this.weeklySolvedCountSilver++;
+            this.totalSolvedCountSilver++;
+        }
+        else if (level == 3) {
+            this.dailySolvedCountGold++;
+            this.weeklySolvedCountGold++;
+            this.totalSolvedCountGold++;
+        }
+        else if (level == 4) {
+            this.dailySolvedCountPlatinum++;
+            this.weeklySolvedCountPlatinum++;
+            this.totalSolvedCountPlatinum++;
+        }
+        else if (level == 5) {
+            this.dailySolvedCountDiamond++;
+            this.weeklySolvedCountDiamond++;
+            this.totalSolvedCountDiamond++;
+        }
+        else if (level == 6) {
+            this.dailySolvedCountRuby++;
+            this.weeklySolvedCountRuby++;
+            this.totalSolvedCountRuby++;
+        }
+    }
+
+    /*
+     * 유저의 통계에 푼 문제를 추가한다. (오늘만)
+     */
+    public void addStatDaily(SolvedProblemDto problem) {
+        Integer level = calcLevel(problem);
+        // 문제 푼 수를 올린다.
+        if (level == 1) {
+            this.dailySolvedCountBronze++;
+        }
+        else if (level == 2) {
+            this.dailySolvedCountSilver++;
+        }
+        else if (level == 3) {
+            this.dailySolvedCountGold++;
+        }
+        else if (level == 4) {
+            this.dailySolvedCountPlatinum++;
+        }
+        else if (level == 5) {
+            this.dailySolvedCountDiamond++;
+        }
+        else if (level == 6) {
+            this.dailySolvedCountRuby++;
         }
     }
 
