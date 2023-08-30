@@ -50,7 +50,7 @@ public class SolvedacQueryImpl implements Query {
     public String makeSolvedQuery(String userId, String start, String end) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("*" + start + ".." + end + " -@" + userId + "o?true");
+        sb.append("*" + start + ".." + end + " -@" + userId + " o?true");
 
         return sb.toString();
     }

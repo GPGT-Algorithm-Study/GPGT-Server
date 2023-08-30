@@ -28,6 +28,7 @@ public class RecommendationService {
         query.setDomain("https://solved.ac/api/v3/search/problem");
 
         query.setParam("query", new SolvedacQueryImpl().makeSolvedQuery(userId, start, end));
+        System.out.println(query.getQuery());
 
         // solved에서 random으로 1page의 문제를 오름차순으로 가져오게 한다.
         query.setParam("direction", "asc");
