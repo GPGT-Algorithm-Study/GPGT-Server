@@ -6,9 +6,7 @@ import com.randps.randomdefence.domain.statistics.domain.UserProblemStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserProblemStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
-import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.domain.*;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
 import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
@@ -16,8 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
 
 @RequiredArgsConstructor
 @Service
@@ -33,7 +35,7 @@ public class UserStatisticsService {
 
     private final ProblemService problemService;
 
-    private final UserSolvedProblemService userSolvedProblemService;
+    private final UserSolvedProblemRepository userSolvedProblemRepository;
 
     private final UserRandomStreakService userRandomStreakService;
 
@@ -158,6 +160,15 @@ public class UserStatisticsService {
      */
     @Transactional
     public void integrityCheckTodayStatistics() {
+        // 오늘의 기준을 만든다.
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDateTime;
+        if (is6AmAfter(now.getHour()))
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        else {
+            now = now.minusDays(1);
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        }
 
         // 1.유저가 오늘 푼 문제를 계산한다.
         List<UserProblemStatistics> userProblemStatistics = userProblemStatisticsRepository.findAll();
@@ -168,8 +179,26 @@ public class UserStatisticsService {
             stat.initDaily();
 
             // 오늘 푼 문제들 통계 누적
-            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(stat.getBojHandle());
-            for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
+            // 데이터를 DB에서 가져온다.
+            List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(stat.getBojHandle());
+            List<SolvedProblemDto> solvedProblems = new ArrayList<>();
+
+            // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
+            for (UserSolvedProblem problem : userSolvedProblems) {
+                LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+
+                if (startOfDateTime.isBefore(target)) {
+                    SolvedProblemDto solvedProblemDto = problem.toDto();
+                    ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
+                    solvedProblemDto.setTier(problemDto.getLevel());
+                    solvedProblemDto.setTags(problemDto.getTags());
+                    solvedProblemDto.setLanguage(problem.getLanguage());
+                    solvedProblemDto.setPoint(problemDto.getLevel());
+                    solvedProblems.add(solvedProblemDto);
+                }
+            }
+
+            for (SolvedProblemDto solvedProblemDto : solvedProblems) {
                 stat.addStatDaily(solvedProblemDto);
             }
 
@@ -189,8 +218,25 @@ public class UserStatisticsService {
             UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(stat.getBojHandle());
 
             // 오늘 푼 문제들 포인트 통계 누적
-            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(stat.getBojHandle());
-            for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
+            // 데이터를 DB에서 가져온다.
+            List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(stat.getBojHandle());
+            List<SolvedProblemDto> solvedProblems = new ArrayList<>();
+
+            // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
+            for (UserSolvedProblem problem : userSolvedProblems) {
+                LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+
+                if (startOfDateTime.isBefore(target)) {
+                    SolvedProblemDto solvedProblemDto = problem.toDto();
+                    ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
+                    solvedProblemDto.setTier(problemDto.getLevel());
+                    solvedProblemDto.setTags(problemDto.getTags());
+                    solvedProblemDto.setLanguage(problem.getLanguage());
+                    solvedProblemDto.setPoint(problemDto.getLevel());
+                    solvedProblems.add(solvedProblemDto);
+                }
+            }
+            for (SolvedProblemDto solvedProblemDto : solvedProblems) {
 
                 // 랜덤문제라면 포인트 2배
                 if (userRandomStreak.getTodayRandomProblemId().equals(solvedProblemDto.getProblemId())) {
