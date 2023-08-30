@@ -25,6 +25,8 @@ public class UserInfoService {
 
     private final UserRandomStreakRepository userRandomStreakRepository;
 
+    private final UserSolvedProblemService userSolvedProblemService;
+
     private final SolvedacParserImpl solvedacParser;
 
     private final BojParserImpl bojParser;
@@ -65,6 +67,7 @@ public class UserInfoService {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(bojHandle));
+        user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
         userRepository.save(user);
     }
 
@@ -77,6 +80,7 @@ public class UserInfoService {
 
         for (User user : users) {
             user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
+            user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
             userRepository.save(user);
         }
     }
@@ -90,6 +94,7 @@ public class UserInfoService {
 
         for (User user : users) {
             user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
+            user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
             userRepository.save(user);
             if (user.getCurrentStreak().equals(0)) {
                 user.increaseWarning();

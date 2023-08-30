@@ -182,4 +182,6 @@ public class User extends BaseTimeEntity {
     public void changePassword(String password) {
         this.password = password;
     }
+
+    public void setIsTodaySolved(Boolean isTodaySolved) {this.isTodaySolved = isTodaySolved;}
 }
