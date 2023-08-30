@@ -68,6 +68,7 @@ public class UserInfoService {
 
         user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(bojHandle));
         user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+        user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
         userRepository.save(user);
     }
 
@@ -81,6 +82,7 @@ public class UserInfoService {
         for (User user : users) {
             user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
             user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+            user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
         }
     }
@@ -95,6 +97,7 @@ public class UserInfoService {
         for (User user : users) {
             user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
             user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+            user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
             if (user.getCurrentStreak().equals(0)) {
                 user.increaseWarning();

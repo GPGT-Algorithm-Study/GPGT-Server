@@ -184,4 +184,9 @@ public class User extends BaseTimeEntity {
     }
 
     public void setIsTodaySolved(Boolean isTodaySolved) {this.isTodaySolved = isTodaySolved;}
+
+    public void setTodaySolvedProblemCount(Integer todaySolvedProblemCount) {
+        this.todaySolvedProblemCount = todaySolvedProblemCount;
+    }
+
 }

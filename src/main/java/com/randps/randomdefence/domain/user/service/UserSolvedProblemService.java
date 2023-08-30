@@ -265,6 +265,7 @@ public class UserSolvedProblemService {
     /*
      * 오늘 유저가 풀었는지 여부를 반환한다.
      */
+    @Transactional
     public Boolean isTodaySolved(String bojHandle) {
         // 오늘의 기준을 만든다.
         LocalDateTime now = LocalDateTime.now();
@@ -289,5 +290,36 @@ public class UserSolvedProblemService {
         }
 
         return false;
+    }
+
+    /*
+     * 오늘 몇 문제 풀었는지 개수를 반환한다.
+     */
+    @Transactional
+    public Integer getTodaySolvedProblemCount(String bojHandle) {
+        // 오늘의 기준을 만든다.
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDateTime;
+        if (is6AmAfter(now.getHour()))
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        else {
+            now = now.minusDays(1);
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        }
+
+        // 데이터를 DB에서 가져온다.
+        List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(bojHandle);
+
+        Integer cnt = 0;
+        // DB문제의 푼 날짜를 비교해서 오늘 푼 문제의 개수를 새고 반환한다.
+        for (UserSolvedProblem problem : userSolvedProblems) {
+            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+
+            if (startOfDateTime.isBefore(target)) {
+                cnt++;
+            }
+        }
+
+        return cnt;
     }
 }
