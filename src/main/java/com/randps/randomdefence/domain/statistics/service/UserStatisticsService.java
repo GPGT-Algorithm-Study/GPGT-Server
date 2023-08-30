@@ -37,7 +37,7 @@ public class UserStatisticsService {
 
     private final UserSolvedProblemRepository userSolvedProblemRepository;
 
-    private final UserRandomStreakService userRandomStreakService;
+    private final UserRandomStreakRepository userRandomStreakRepository;
 
     /*
      * 유저 통계를 생성한다. (초기화)
@@ -215,7 +215,7 @@ public class UserStatisticsService {
             stat.initDaily();
 
             // 유저의 랜덤 스트릭 가져오기
-            UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(stat.getBojHandle());
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(stat.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
 
             // 오늘 푼 문제들 포인트 통계 누적
             // 데이터를 DB에서 가져온다.
