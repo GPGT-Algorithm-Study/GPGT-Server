@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
@@ -24,6 +25,8 @@ public class UserInfoService {
     private final UserRandomStreakService userRandomStreakService;
 
     private final UserRandomStreakRepository userRandomStreakRepository;
+
+    private final WarningLogSaveService warningLogSaveService;
 
     private final UserSolvedProblemService userSolvedProblemService;
 
@@ -101,7 +104,10 @@ public class UserInfoService {
             user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
             if (userSolvedProblemService.isYesterdaySolved(user.getBojHandle())) {
-                user.increaseWarning();
+                Boolean isSuccess = user.increaseWarning();
+                // 경고 로그를 저장한다.
+                if (isSuccess)
+                    warningLogSaveService.saveWarningLog(user.getBojHandle(), 1, "[" + user.getBojHandle() + "]" + "'s warnings increased by 1" + " - 사유: 스트릭 끊김", true);
                 userRepository.save(user);
             }
         }

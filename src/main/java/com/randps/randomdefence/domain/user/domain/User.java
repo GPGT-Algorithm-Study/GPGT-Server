@@ -87,14 +87,36 @@ public class User extends BaseTimeEntity {
         this.todaySolvedProblemCount = todaySolvedProblemCount;
     }
 
-    public void increaseWarning() {
-        if (this.warning < 4)
+    public boolean increaseWarning() {
+        if (this.warning < 4) {
             this.warning++;
+            return true;
+        }
+        return false;
     }
 
-    public void decreaseWarning() {
-        if (this.warning >= 1)
+    public boolean decreaseWarning() {
+        if (this.warning >= 1) {
             this.warning--;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean increaseWarning(Integer value) {
+        if (this.warning + value < 4) {
+            this.warning += value;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean decreaseWarning(Integer value) {
+        if (this.warning - value >= 1) {
+            this.warning -= value;
+            return true;
+        }
+        return false;
     }
 
     public Boolean increasePoint(Integer value) {

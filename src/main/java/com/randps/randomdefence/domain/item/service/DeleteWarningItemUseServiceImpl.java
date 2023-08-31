@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.item.service;
 import com.randps.randomdefence.domain.item.domain.Item;
 import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItemRepository;
+import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,11 @@ import javax.transaction.Transactional;
 @Service
 public class DeleteWarningItemUseServiceImpl extends ItemUseService {
 
-    protected DeleteWarningItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository, UserItemRepository userItemRepository) {
+    private final WarningLogSaveService warningLogSaveService;
+
+    protected DeleteWarningItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository, UserItemRepository userItemRepository, WarningLogSaveService warningLogSaveService) {
         super(userRepository, itemRepository, userItemRepository);
+        this.warningLogSaveService = warningLogSaveService;
     }
 
     @Transactional
@@ -30,7 +34,11 @@ public class DeleteWarningItemUseServiceImpl extends ItemUseService {
         }
 
         // 경고를 차감하고 저장한다.
-        user.decreaseWarning();
+        Boolean isSuccess = user.decreaseWarning();
+        // 경고 로그를 저장한다.
+        if (isSuccess)
+            warningLogSaveService.saveWarningLog(user.getBojHandle(), -1, "[" + user.getBojHandle() + "]" + "'s warnings decreased by 1" + " - 사유: 경고 차감 아이템 사용", true);
+
         userRepository.save(user);
 
         return null;
