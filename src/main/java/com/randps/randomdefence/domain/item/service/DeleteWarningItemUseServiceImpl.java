@@ -37,7 +37,7 @@ public class DeleteWarningItemUseServiceImpl extends ItemUseService {
         Boolean isSuccess = user.decreaseWarning();
         // 경고 로그를 저장한다.
         if (isSuccess)
-            warningLogSaveService.saveWarningLog(user.getBojHandle(), -1, "[" + user.getBojHandle() + "]" + "'s warnings decreased by 1" + " - 사유: 경고 차감 아이템 사용", true);
+            warningLogSaveService.saveWarningLog(user.getBojHandle(), -1, "[" + user.getBojHandle() + "]" + "'s warnings decreased by 1" + " - 사유: 경고 차감 아이템 사용 " + "[" + (user.getWarning() + 1) + "->" + user.getWarning() + "]", true);
 
         userRepository.save(user);
 

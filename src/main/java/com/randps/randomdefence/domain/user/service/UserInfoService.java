@@ -107,7 +107,7 @@ public class UserInfoService {
                 Boolean isSuccess = user.increaseWarning();
                 // 경고 로그를 저장한다.
                 if (isSuccess)
-                    warningLogSaveService.saveWarningLog(user.getBojHandle(), 1, "[" + user.getBojHandle() + "]" + "'s warnings increased by 1" + " - 사유: 스트릭 끊김", true);
+                    warningLogSaveService.saveWarningLog(user.getBojHandle(), 1, "[" + user.getBojHandle() + "]" + "'s warnings increased by 1" + " - 사유: 스트릭 끊김 " + "[" + (user.getWarning() - 1) + "->" + user.getWarning() + "]", true);
                 userRepository.save(user);
             }
         }
