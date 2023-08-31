@@ -293,6 +293,42 @@ public class UserSolvedProblemService {
     }
 
     /*
+     * 어제 유저가 문제를 풀었는지 여부를 반환한다.
+     */
+    @Transactional
+    public Boolean isYesterdaySolved(String bojHandle) {
+        // 어제의 기준을 만든다.
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDateTime;
+        LocalDateTime endOfDateTime;
+        if (is6AmAfter(now.getHour())) {
+            endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+            now = now.minusDays(1);
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        }
+        else {
+            now = now.minusDays(1);
+            endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+            now = now.minusDays(1);
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        }
+
+        // 데이터를 DB에서 가져온다.
+        List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(bojHandle);
+
+        // DB문제의 푼 날짜를 비교해서 어제 푼 문제가 한개라도 있다면 true를 반환한다.
+        for (UserSolvedProblem problem : userSolvedProblems) {
+            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+
+            if (startOfDateTime.isBefore(target) && endOfDateTime.isAfter(target)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*
      * 오늘 몇 문제 풀었는지 개수를 반환한다.
      */
     @Transactional
@@ -316,6 +352,43 @@ public class UserSolvedProblemService {
             LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
 
             if (startOfDateTime.isBefore(target)) {
+                cnt++;
+            }
+        }
+
+        return cnt;
+    }
+
+    /*
+     * 어제 몇 문제 풀었는지 개수를 반환한다.
+     */
+    @Transactional
+    public Integer getYesterdaySolvedProblemCount(String bojHandle) {
+        // 어제의 기준을 만든다.
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfDateTime;
+        LocalDateTime endOfDateTime;
+        if (is6AmAfter(now.getHour())) {
+            endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+            now = now.minusDays(1);
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        }
+        else {
+            now = now.minusDays(1);
+            endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+            now = now.minusDays(1);
+            startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
+        }
+
+        // 데이터를 DB에서 가져온다.
+        List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(bojHandle);
+
+        Integer cnt = 0;
+        // DB문제의 푼 날짜를 비교해서 어제 푼 문제의 개수를 새고 반환한다.
+        for (UserSolvedProblem problem : userSolvedProblems) {
+            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+
+            if (startOfDateTime.isBefore(target) && endOfDateTime.isAfter(target)) {
                 cnt++;
             }
         }

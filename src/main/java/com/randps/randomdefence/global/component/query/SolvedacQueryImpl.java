@@ -47,10 +47,13 @@ public class SolvedacQueryImpl implements Query {
         return sb.toString();
     }
 
-    public String makeSolvedQuery(String userId, String start, String end) {
+    public String makeSolvedQuery(String userId, String start, String end, Boolean isKo) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("*" + start + ".." + end + " -@" + userId + " o?true");
+        if (isKo) {
+            sb.append(" %ko");
+        }
 
         return sb.toString();
     }

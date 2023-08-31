@@ -11,6 +11,8 @@ public class UserRandomStreakDto {
 
     private String endLevel;
 
+    private Boolean isKo;
+
     private Integer todayRandomProblemId;
 
     private Boolean isTodayRandomSolved;
@@ -20,10 +22,11 @@ public class UserRandomStreakDto {
     private Integer maxRandomStreak;
 
     @Builder
-    public UserRandomStreakDto(String bojHandle, String startLevel, String endLevel, Integer todayRandomProblemId, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
+    public UserRandomStreakDto(String bojHandle, String startLevel, String endLevel, Boolean isKo, Integer todayRandomProblemId, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
         this.bojHandle = bojHandle;
         this.startLevel = startLevel;
         this.endLevel = endLevel;
+        this.isKo = isKo;
         this.todayRandomProblemId = todayRandomProblemId;
         this.isTodayRandomSolved = isTodayRandomSolved;
         this.currentRandomStreak = currentRandomStreak;

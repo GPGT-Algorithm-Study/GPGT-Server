@@ -23,6 +23,8 @@ public class UserRandomStreak extends BaseTimeEntity {
 
     private String endLevel;
 
+    private Boolean isKo;
+
     private Integer todayRandomProblemId;
 
     private Boolean isTodayRandomSolved;
@@ -32,20 +34,22 @@ public class UserRandomStreak extends BaseTimeEntity {
     private Integer maxRandomStreak;
 
     @Builder
-    public UserRandomStreak(String bojHandle, String startLevel, String endLevel, Integer todayRandomProblemId, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
+    public UserRandomStreak(String bojHandle, String startLevel, String endLevel, Boolean isKo, Integer todayRandomProblemId, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
         this.bojHandle = bojHandle;
         this.startLevel = startLevel;
         this.endLevel = endLevel;
+        this.isKo = isKo;
         this.todayRandomProblemId = todayRandomProblemId;
         this.isTodayRandomSolved = isTodayRandomSolved;
         this.currentRandomStreak = currentRandomStreak;
         this.maxRandomStreak = maxRandomStreak;
     }
 
-    public Boolean updateLevel(String startLevel, String endLevel) {
+    public Boolean updateLevel(String startLevel, String endLevel, Boolean isKo) {
         Boolean isSetup = (this.startLevel.equals("") && this.endLevel.equals(""));
         this.startLevel = startLevel;
         this.endLevel = endLevel;
+        this.isKo = isKo;
         return isSetup;
     }
 
@@ -74,6 +78,7 @@ public class UserRandomStreak extends BaseTimeEntity {
                 .bojHandle(this.bojHandle)
                 .startLevel(this.startLevel)
                 .endLevel(this.endLevel)
+                .isKo(this.isKo)
                 .todayRandomProblemId(this.todayRandomProblemId)
                 .isTodayRandomSolved(this.isTodayRandomSolved)
                 .currentRandomStreak(this.currentRandomStreak)

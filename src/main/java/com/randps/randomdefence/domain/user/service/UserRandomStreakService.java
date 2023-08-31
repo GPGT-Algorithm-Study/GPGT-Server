@@ -68,16 +68,28 @@ public class UserRandomStreakService {
      * 유저 랜덤 스트릭 문제 추천 범위 업데이트 (문제 범위 바꿀 시 사용 (빈 문자열을 넣을 시 스트릭 비활성))
      */
     @Transactional
-    public void updateLevel(String bojHandle, String startLevel, String endLevel) {
+    public Boolean updateLevel(String bojHandle, String startLevel, String endLevel, Boolean isKo) {
         UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
 
+        // 풀 수 있는 문제가 존재하는지 확인한다.
+        String query = recommendationService.makeQuery(bojHandle, startLevel, endLevel, isKo);
+        RecommendationResponse recommendationResponse = recommendationService.makeRecommend(query);
+
+        // 추천된 문제가 없는경우 실패를 반환
+        if (recommendationResponse.getProblemId() == null) {
+            return false;
+        }
+
         // 유효성 검사도 넣으면 좋음
-        Boolean isSetup = userRandomStreak.updateLevel(startLevel, endLevel);
+        Boolean isSetup = userRandomStreak.updateLevel(startLevel, endLevel, isKo);
 
         // 처음으로 세팅했다면 문제를 추천해준다.
         if (isSetup) {
             makeUpUserRandomProblem(bojHandle);
         }
+
+        // 성공적으로 변경했음을 반환
+        return true;
     }
 
     /*
@@ -131,12 +143,24 @@ public class UserRandomStreakService {
 
         // 만약 시작과 끝이 빈 문자열이라면 애초에 이 함수를 호출해서는 안됨.
         // 랜덤 문제 고르기
-        String query = recommendationService.makeQuery(bojHandle, userRandomStreak.getStartLevel(), userRandomStreak.getEndLevel());
+        String query = recommendationService.makeQuery(bojHandle, userRandomStreak.getStartLevel(), userRandomStreak.getEndLevel(), userRandomStreak.getIsKo());
         RecommendationResponse recommendationResponse = recommendationService.makeRecommend(query);
 
-        // 랜덤 스트릭 정보 갱신
-        userRandomStreak.setTodayRandomProblemId(recommendationResponse.getProblemId());
-        userRandomStreakRepository.save(userRandomStreak);
+        // 추천된 문제가 없는경우
+        if (recommendationResponse.getProblemId() == null) {
+            // 랜덤 스트릭 범위를 초기화 한다.
+            userRandomStreak.updateLevel("", "", false);
+
+            // 랜덤 스트릭 정보 갱신 (0번 문제로 지정)
+            userRandomStreak.setTodayRandomProblemId(0);
+            userRandomStreakRepository.save(userRandomStreak);
+        }
+        // 추천된 문제가 있는 경우
+        else {
+            // 랜덤 스트릭 정보 갱신
+            userRandomStreak.setTodayRandomProblemId(recommendationResponse.getProblemId());
+            userRandomStreakRepository.save(userRandomStreak);
+        }
 
         // 잔디의 정보 갱신
         UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
@@ -164,12 +188,24 @@ public class UserRandomStreakService {
 
             if (userRandomStreak.getStartLevel().isBlank() || userRandomStreak.getEndLevel().isBlank()) continue;
             // 랜덤 문제 고르기
-            String query = recommendationService.makeQuery(user.getBojHandle(), userRandomStreak.getStartLevel(), userRandomStreak.getEndLevel());
+            String query = recommendationService.makeQuery(user.getBojHandle(), userRandomStreak.getStartLevel(), userRandomStreak.getEndLevel(), userRandomStreak.getIsKo());
             RecommendationResponse recommendationResponse = recommendationService.makeRecommend(query);
 
-            // 랜덤 스트릭의 정보 갱신
-            userRandomStreak.setTodayRandomProblemId(recommendationResponse.getProblemId());
-            userRandomStreakRepository.save(userRandomStreak);
+            // 추천된 문제가 없는경우
+            if (recommendationResponse.getProblemId() == null) {
+                // 랜덤 스트릭 범위를 초기화 한다.
+                userRandomStreak.updateLevel("", "", false);
+
+                // 랜덤 스트릭 정보 갱신 (0번 문제로 지정)
+                userRandomStreak.setTodayRandomProblemId(0);
+                userRandomStreakRepository.save(userRandomStreak);
+            }
+            // 추천된 문제가 있는 경우
+            else {
+                // 랜덤 스트릭 정보 갱신
+                userRandomStreak.setTodayRandomProblemId(recommendationResponse.getProblemId());
+                userRandomStreakRepository.save(userRandomStreak);
+            }
 
             // 잔디의 정보 갱신
             UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);

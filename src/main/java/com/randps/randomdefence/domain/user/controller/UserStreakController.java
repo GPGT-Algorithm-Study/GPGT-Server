@@ -55,17 +55,31 @@ public class UserStreakController {
      * 특정 유저의 랜덤 스트릭 문제 범위를 업데이트 한다.
      */
     @PutMapping("/streak/level")
-    public ResponseEntity<Map<String, String>> findStreakAll(@Param("bojHandle") String bojHandle, @Param("start") String start, @Param("end") String end) {
-        userRandomStreakService.updateLevel(bojHandle, start, end);
+    public ResponseEntity<Map<String, String>> findStreakAll(@Param("bojHandle") String bojHandle, @Param("start") String start, @Param("end") String end, @Param("isKo") Boolean isKo) {
+        Boolean result = userRandomStreakService.updateLevel(bojHandle, start, end, isKo);
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        HttpStatus httpStatus = HttpStatus.OK;
+        // 성공적으로 변경한 경우
+        if (result) {
+            HttpHeaders responseHeaders = new HttpHeaders();
+            HttpStatus httpStatus = HttpStatus.OK;
 
-        Map<String, String> map = new HashMap<>();
-        map.put("type", httpStatus.getReasonPhrase());
-        map.put("code", "200");
-        map.put("message", "요청이 성공했습니다.");
-        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+            Map<String, String> map = new HashMap<>();
+            map.put("type", httpStatus.getReasonPhrase());
+            map.put("code", "200");
+            map.put("message", "요청이 성공했습니다.");
+            return new ResponseEntity<>(map, responseHeaders, httpStatus);
+        }
+        // 구간에 추천 문제가 없는 경우
+        else {
+            HttpHeaders responseHeaders = new HttpHeaders();
+            HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
+            Map<String, String> map = new HashMap<>();
+            map.put("type", httpStatus.getReasonPhrase());
+            map.put("code", "400");
+            map.put("message", "지정한 조건의 문제 구간에 더 이상 풀 수 있는 문제가 없습니다.");
+            return new ResponseEntity<>(map, responseHeaders, httpStatus);
+        }
     }
 
     /*

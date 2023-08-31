@@ -84,7 +84,7 @@ public class SolvedacParserImpl implements Parser {
         UserScrapingInfoDto userscrapingInfoDto = UserScrapingInfoDto.builder()
                 .tier(userInfo.path("props").path("pageProps").path("user").path("tier").asInt())
                 .profileImg(userInfo.path("props").path("pageProps").path("user").path("profileImageUrl").asText())
-                .currentStreak(userInfo.path("props").path("pageProps").path("grass").path("currentStreak").asInt())
+//                .currentStreak(userInfo.path("props").path("pageProps").path("grass").path("currentStreak").asInt())
                 .currentStreak(0)
                 .totalSolved(userInfo.path("props").path("pageProps").path("user").path("solvedCount").asInt())
                 .todaySolvedProblemCount(countTodaySolved(userInfo))
