@@ -56,6 +56,8 @@ public class UserStreakController {
      */
     @PutMapping("/streak/level")
     public ResponseEntity<Map<String, String>> findStreakAll(@Param("bojHandle") String bojHandle, @Param("start") String start, @Param("end") String end, @Param("isKo") Boolean isKo) {
+        // 문제 언어 설정이 없다면 기본을 '한글'로 설정한다.
+        if (isKo == null) isKo = true;
         Boolean result = userRandomStreakService.updateLevel(bojHandle, start, end, isKo);
 
         // 성공적으로 변경한 경우

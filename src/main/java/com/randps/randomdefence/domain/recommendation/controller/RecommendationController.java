@@ -22,6 +22,8 @@ public class RecommendationController {
      */
     @GetMapping("")
     public List<RecommendationResponse> getRecommendProblem(@Param("userId") String userId, @Param("start") String start, @Param("end") String end, @Param("isKo") Boolean isKo) {
+        // 문제 언어 설정이 없다면 기본을 '한글'로 설정한다.
+        if (isKo == null) isKo = true;
         String query = recommendationService.makeQuery(userId, start, end, isKo);
         List<RecommendationResponse> recommendationResponses = recommendationService.makeRecommendList(query);
 
