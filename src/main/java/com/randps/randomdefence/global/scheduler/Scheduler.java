@@ -51,7 +51,7 @@ public class Scheduler {
         userGrassService.makeTodayGrassAll(); // 모든 유저의 오늘 잔디를 생성한다.
         userRandomStreakService.makeUpUserRandomProblemAll(); // 모든 유저의 랜덤 문제를 1문제를 뽑아 저장한다.
         userRandomStreakService.streakCheckAll(); // 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 랜덤 스트릭을 끊는다.
-        userInfoService.checkAllUserSolvedStreak(); // 유저드스트릭이 끊겼다면(랜덤 스트릭이 아닌 Solvedac 스트릭) 경고를 1회 올린다.
+        userInfoService.checkAllUserSolvedStreak(); // 모든 유저에 대해 전 일 스트릭이 끊겼다면(랜덤 스트릭이 아닌 Solvedac 스트릭) 경고를 1회 올린다.
         userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
     }
 

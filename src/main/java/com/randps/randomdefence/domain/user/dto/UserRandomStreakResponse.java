@@ -13,6 +13,8 @@ public class UserRandomStreakResponse {
 
     private String endLevel;
 
+    private Boolean isKo;
+
     private ProblemDto todayRandomProblem;
 
     private Boolean isTodayRandomSolved;
@@ -22,10 +24,11 @@ public class UserRandomStreakResponse {
     private Integer maxRandomStreak;
 
     @Builder
-    public UserRandomStreakResponse(String bojHandle, String startLevel, String endLevel, ProblemDto todayRandomProblem, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
+    public UserRandomStreakResponse(String bojHandle, String startLevel, String endLevel, Boolean isKo, ProblemDto todayRandomProblem, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
         this.bojHandle = bojHandle;
         this.startLevel = startLevel;
         this.endLevel = endLevel;
+        this.isKo = isKo;
         this.todayRandomProblem = todayRandomProblem;
         this.isTodayRandomSolved = isTodayRandomSolved;
         this.currentRandomStreak = currentRandomStreak;
@@ -36,6 +39,7 @@ public class UserRandomStreakResponse {
         this.bojHandle = userRandomStreakDto.getBojHandle();
         this.startLevel = userRandomStreakDto.getStartLevel();
         this.endLevel = userRandomStreakDto.getEndLevel();
+        this.isKo = userRandomStreakDto.getIsKo();
         this.todayRandomProblem = problem.toDto();
         this.isTodayRandomSolved = userRandomStreakDto.getIsTodayRandomSolved();
         this.currentRandomStreak = userRandomStreakDto.getCurrentRandomStreak();
@@ -46,6 +50,7 @@ public class UserRandomStreakResponse {
         this.bojHandle = userRandomStreakDto.getBojHandle();
         this.startLevel = userRandomStreakDto.getStartLevel();
         this.endLevel = userRandomStreakDto.getEndLevel();
+        this.isKo = userRandomStreakDto.getIsKo();
         this.todayRandomProblem = problemDto;
         this.isTodayRandomSolved = userRandomStreakDto.getIsTodayRandomSolved();
         this.currentRandomStreak = userRandomStreakDto.getCurrentRandomStreak();

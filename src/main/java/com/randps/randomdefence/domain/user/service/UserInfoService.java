@@ -68,6 +68,7 @@ public class UserInfoService {
 
         user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(bojHandle));
         user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+        user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
         userRepository.save(user);
     }
 
@@ -81,12 +82,14 @@ public class UserInfoService {
         for (User user : users) {
             user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
             user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+            user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
         }
     }
 
     /*
      * 모든 유저의 스트릭 끊김 여부를 확인 후, 스트릭이 끊겼다면 경고를 1 올린다. (Daily batch job 서버용)
+     * 실행 시점이 다음 날이므로 어제의 문제를 확인한다.
      */
     @Transactional
     public void checkAllUserSolvedStreak() throws JsonProcessingException {
@@ -95,8 +98,9 @@ public class UserInfoService {
         for (User user : users) {
             user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
             user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+            user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
-            if (user.getCurrentStreak().equals(0)) {
+            if (userSolvedProblemService.isYesterdaySolved(user.getBojHandle())) {
                 user.increaseWarning();
                 userRepository.save(user);
             }

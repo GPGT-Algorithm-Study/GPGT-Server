@@ -22,12 +22,12 @@ public class RecommendationService {
      * solvedac의 문제를 랜덤하게 추천받는 내부 쿼리를 만든다.
      */
     @Transactional
-    public String makeQuery(String userId, String start, String end) {
+    public String makeQuery(String userId, String start, String end, Boolean isKo) {
         Query query = new SolvedacQueryImpl();
 
         query.setDomain("https://solved.ac/api/v3/search/problem");
 
-        query.setParam("query", new SolvedacQueryImpl().makeSolvedQuery(userId, start, end));
+        query.setParam("query", new SolvedacQueryImpl().makeSolvedQuery(userId, start, end, isKo));
         System.out.println(query.getQuery());
 
         // solved에서 random으로 1page의 문제를 오름차순으로 가져오게 한다.
@@ -46,6 +46,10 @@ public class RecommendationService {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+        // 추천된 문제가 아무 것도 없다면 빈 객체 반환
+        if (response.getBody().path("count").asInt() == 0) {
+            return new RecommendationResponse();
+        }
         JsonNode recommendationProblem = response.getBody().path("items").path(0);
 
         RecommendationResponse recommendationResponse = RecommendationResponse.builder()
@@ -76,6 +80,10 @@ public class RecommendationService {
         RestTemplate restTemplate = new RestTemplate();
 
         ResponseEntity<JsonNode> response = restTemplate.getForEntity(url, JsonNode.class);
+        // 추천된 문제가 아무 것도 없다면 빈 리스트 반환
+        if (response.getBody().path("count").asInt() == 0) {
+            return new ArrayList<>();
+        }
         int size = response.getBody().path("items").size();
 
         List<RecommendationResponse> recommendationResponses = new ArrayList<>();

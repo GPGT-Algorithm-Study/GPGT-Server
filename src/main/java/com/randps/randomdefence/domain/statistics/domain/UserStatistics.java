@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.statistics.domain;
 
 import com.randps.randomdefence.domain.problem.domain.Problem;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
+import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -103,6 +104,23 @@ public class UserStatistics extends BaseTimeEntity {
         this.dailyEarningPoint += earningPoint;
         this.weeklyEarningPoint += earningPoint;
         this.totalEarningPoint += earningPoint;
+    }
+
+    /*
+     * 유저의 통계에 푼 문제를 추가한다. (오늘에만)
+     */
+    public void addStatDaily(SolvedProblemDto problem, Integer earningPoint) {
+        // 푼 문제의 개수를 늘린다.
+        this.dailySolvedProblemCount++;
+
+        // 푼 문제의 가장 어려운 난이도를 갱신한다.
+        if (this.dailySolvedMostDifficult < problem.getTier()) {
+            this.dailySolvedMostDifficult = problem.getTier();
+            this.dailySolvedMostDifficultProblemId = problem.getProblemId();
+        }
+
+        // 통계의 포인트를 늘린다.
+        this.dailyEarningPoint += earningPoint;
     }
 
     /*

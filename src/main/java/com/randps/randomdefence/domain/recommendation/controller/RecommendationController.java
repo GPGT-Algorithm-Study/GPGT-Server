@@ -21,8 +21,8 @@ public class RecommendationController {
      * 유저가 원하는 난이도 범위의 문제를 랜덤하게 추천한다. (1회 호출당 실제 solvedac의 API를 1회 호출함)
      */
     @GetMapping("")
-    public List<RecommendationResponse> getRecommendProblem(@Param("userId") String userId, @Param("start") String start, @Param("end") String end) {
-        String query = recommendationService.makeQuery(userId, start, end);
+    public List<RecommendationResponse> getRecommendProblem(@Param("userId") String userId, @Param("start") String start, @Param("end") String end, @Param("isKo") Boolean isKo) {
+        String query = recommendationService.makeQuery(userId, start, end, isKo);
         List<RecommendationResponse> recommendationResponses = recommendationService.makeRecommendList(query);
 
         return recommendationResponses;

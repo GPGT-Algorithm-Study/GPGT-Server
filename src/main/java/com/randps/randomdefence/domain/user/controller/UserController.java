@@ -171,6 +171,7 @@ public class UserController {
         bojHandles.add("angrypig7");
         bojHandles.add("wlgh1553");
         bojHandles.add("choidg33");
+        bojHandles.add("phd0801");
 
         // 노션 아이디 넣기
         notionIds.add("Minboy");
@@ -194,6 +195,7 @@ public class UserController {
         notionIds.add("Kihun Song");
         notionIds.add("이지호");
         notionIds.add("최다경");
+        notionIds.add("박성근");
 
         // 매니저 여부 넣기
         managers.add(true);
@@ -204,6 +206,7 @@ public class UserController {
         managers.add(false);
         managers.add(false);
         managers.add(true);
+        managers.add(false);
         managers.add(false);
         managers.add(false);
         managers.add(false);
@@ -240,6 +243,7 @@ public class UserController {
         emojis.add("🐴");
         emojis.add("🐸");
         emojis.add("🍎");
+        emojis.add("？");
 
         for (int i=0;i< bojHandles.size();i++) {
             // 초기 비밀번호 백준 핸들로 설정
