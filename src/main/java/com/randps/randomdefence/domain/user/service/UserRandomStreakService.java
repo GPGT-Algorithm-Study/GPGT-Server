@@ -56,6 +56,7 @@ public class UserRandomStreakService {
                 .bojHandle(bojHandle)
                 .startLevel("") // 초기화 시 빈 문자열(비활성)
                 .endLevel("") // 초기화 시 빈 문자열(비활성)
+                .isKo(true) // 초기화 시 기본 문제 한글로 설정
                 .todayRandomProblemId(0) // 문제가 없을 시 0번
                 .isTodayRandomSolved(false)
                 .currentRandomStreak(0)
