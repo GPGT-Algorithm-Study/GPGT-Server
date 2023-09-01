@@ -319,12 +319,10 @@ public class UserSolvedProblemService {
         // DB문제의 푼 날짜를 비교해서 어제 푼 문제가 한개라도 있다면 true를 반환한다.
         for (UserSolvedProblem problem : userSolvedProblems) {
             LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
-
-            if (startOfDateTime.isBefore(target) && endOfDateTime.isAfter(target)) {
+            if (target.isAfter(startOfDateTime) && target.isBefore(endOfDateTime)) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -388,7 +386,7 @@ public class UserSolvedProblemService {
         for (UserSolvedProblem problem : userSolvedProblems) {
             LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
 
-            if (startOfDateTime.isBefore(target) && endOfDateTime.isAfter(target)) {
+            if (target.isAfter(startOfDateTime) && target.isBefore(endOfDateTime)) {
                 cnt++;
             }
         }

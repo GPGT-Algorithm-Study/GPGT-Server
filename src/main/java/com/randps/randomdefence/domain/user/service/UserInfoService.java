@@ -103,7 +103,7 @@ public class UserInfoService {
             user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
             user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
-            if (userSolvedProblemService.isYesterdaySolved(user.getBojHandle())) {
+            if (!userSolvedProblemService.isYesterdaySolved(user.getBojHandle())) {
                 Boolean isSuccess = user.increaseWarning();
                 // 경고 로그를 저장한다.
                 if (isSuccess)
