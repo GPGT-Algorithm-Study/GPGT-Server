@@ -112,7 +112,7 @@ public class User extends BaseTimeEntity {
     }
 
     public boolean decreaseWarning(Integer value) {
-        if (this.warning - value >= 1) {
+        if (this.warning - value >= 0) {
             this.warning -= value;
             return true;
         }
