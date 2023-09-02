@@ -61,6 +61,32 @@ public class UserInfoService {
         return userInfoResponses;
     }
 
+    /*
+     * 특정 유저가 오늘 문제를 풀었는지 여부를 갱신한다.
+     */
+    @Transactional
+    public void updateUserInfo(String bojHandle) {
+        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+        user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
+        userRepository.save(user);
+    }
+
+    /*
+     * 모든 유저가 오늘 문제를 풀었는지 여부를 갱신한다.
+     */
+    @Transactional
+    public void updateAllUserInfo() {
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+            user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
+            userRepository.save(user);
+        }
+    }
+
 
     /*
      * 유저의 프로필 정보를 크롤링 후, DB에 저장한다.

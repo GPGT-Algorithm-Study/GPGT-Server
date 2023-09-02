@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.scraping.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
+import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.service.*;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,8 @@ public class ScrapingController {
     private final UserAlreadySolvedService userAlreadySolvedService;
 
     private final TeamSettingService teamSettingService;
+
+    private final TeamService teamService;
 
     /*
      * 유저가 오늘 푼 문제 스크래핑 (기존 데이터와 중복 제거 포함, 단 옛날에 똑같은 문제를 푼적 있다면 중복 제거되지 않음)
@@ -125,9 +128,10 @@ public class ScrapingController {
      */
     @GetMapping("/cron/batch")
     public ResponseEntity<Map<String, String>> cronBatch() throws JsonProcessingException {
-        userInfoService.crawlUserInfoAll(); // 모든 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
         userSolvedProblemService.crawlTodaySolvedProblemAll(); // 모든 유저의 맞았습니다를 크롤링해서 해결한 문제 DB를 업데이트한다.
+        userInfoService.crawlUserInfoAll(); // 모든 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
         userRandomStreakService.solvedCheckAll(); // 모든 유저의 오늘의 추첨 랜덤 문제 풀었는지 여부를 체크하고 DB를 업데이트한다.
+        userInfoService.updateAllUserInfo(); // 모든 유저의 문제 풀었는지 여부를 체크해서 저장한다.
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -151,6 +155,27 @@ public class ScrapingController {
         userRandomStreakService.streakCheckAll(); // 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 랜덤 스트릭을 끊는다.
         userInfoService.checkAllUserSolvedStreak(); // 유저의 스트릭이 끊겼다면(랜덤 스트릭이 아닌 Solvedac 스트릭) 경고를 1회 올린다.
         userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", "요청을 성공했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+    /*
+     * 정해진 시간마다 실행되는 스크래핑 메서드 (매 주 월요일 새벽 6시)
+     */
+    @GetMapping("/cron/batch/weekly")
+    public ResponseEntity<Map<String, String>> cronBatchWeekly() throws JsonProcessingException {
+        //        userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
+        userStatisticsService.initAllWeeklyStat(); // 모든 유저의 주간 통계를 초기화한다.
+        teamService.weeklyTeamPointDistribution(); // 승리 팀에게 승리 포인트 지급
+        teamSettingService.initWeekly(); // 팀 포인트 주간 초기화
+        teamSettingService.setUsers(); // 모든 유저 팀 할당
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;
