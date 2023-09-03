@@ -5,6 +5,7 @@ import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepositor
 import com.randps.randomdefence.domain.statistics.dto.TeamStatisticsDto;
 import com.randps.randomdefence.domain.statistics.dto.TeamStatisticsResponse;
 import com.randps.randomdefence.domain.statistics.dto.UserTeamStatisticsDto;
+import com.randps.randomdefence.domain.statistics.dto.UserUserStatisticsPairDto;
 import com.randps.randomdefence.domain.team.domain.Team;
 import com.randps.randomdefence.domain.team.domain.TeamRepository;
 import com.randps.randomdefence.domain.team.service.TeamService;
@@ -28,20 +29,20 @@ public class TeamStatisticsService {
 
     private final UserRepository userRepository;
 
-    /*
-     * 전체 팀 통계를 조회한다.
+    /**
+     * 전체 팀 통계를 조회한다. (Querydsl)
      */
     public TeamStatisticsResponse findAllTeamStat() {
         // 첫 번째 팀 조회 및 통계 생성
         Team team1 = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
-        List<User> users1 = userRepository.findAllByTeam(0);
+        List<UserUserStatisticsPairDto> users1 = userStatisticsRepository.findAllByTeam(0);
         List<UserTeamStatisticsDto> userStatDtos1 = new ArrayList<>(); // 팀에 소속된 팀원들
         UserTeamStatisticsDto topContributor1 = new UserTeamStatisticsDto(); // 한 주간 팀에 가장 많이 기여한 사람
         Integer solved1 = 0; // 한 주간 팀이 푼 전체 문제 수
         Integer score1 = 0; // 팀 포인트
 
         // 유저 팀 통계 dto로 변환
-        for (User user : users1) {
+        for (UserUserStatisticsPairDto user : users1) {
             UserTeamStatisticsDto dto = UserTeamStatisticsDto.builder()
                     .bojHandle(user.getBojHandle())
                     .notionId(user.getNotionId())
@@ -51,13 +52,12 @@ public class TeamStatisticsService {
                     .build();
 
             // 팀이 푼 문제 수 더하기, 포인트 더하기
-            Optional<UserStatistics> userStatistics = userStatisticsRepository.findByBojHandle(dto.getBojHandle());
-            if (userStatistics.isPresent()) {
-                solved1 += userStatistics.get().getWeeklySolvedProblemCount();
-                score1 += userStatistics.get().getWeeklyEarningPoint();
+            if (user.getWeeklyEarningPoint() != null && user.getWeeklySolvedProblemCount() != null) {
+                solved1 += user.getWeeklySolvedProblemCount();
+                score1 += user.getWeeklyEarningPoint();
 
                 // 유저의 포인트 추가
-                dto.setPoint(userStatistics.get().getWeeklyEarningPoint());
+                dto.setPoint(user.getWeeklyEarningPoint());
             }
 
             // 가장 기여 많은 유저 찾아서 갱신
@@ -79,14 +79,14 @@ public class TeamStatisticsService {
 
         // 두 번째 팀 조회 및 통계 생성
         Team team2 = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
-        List<User> users2 = userRepository.findAllByTeam(1);
+        List<UserUserStatisticsPairDto> users2 = userStatisticsRepository.findAllByTeam(1);
         List<UserTeamStatisticsDto> userStatDtos2 = new ArrayList<>(); // 팀에 소속된 팀원들
         UserTeamStatisticsDto topContributor2 = new UserTeamStatisticsDto(); // 한 주간 팀에 가장 많이 기여한 사람
         Integer solved2 = 0; // 한 주간 팀이 푼 전체 문제 수
         Integer score2 = 0; // 팀 포인트
 
         // 유저 팀 통계 dto로 변환
-        for (User user : users2) {
+        for (UserUserStatisticsPairDto user : users2) {
             UserTeamStatisticsDto dto = UserTeamStatisticsDto.builder()
                     .bojHandle(user.getBojHandle())
                     .notionId(user.getNotionId())
@@ -96,13 +96,12 @@ public class TeamStatisticsService {
                     .build();
 
             // 팀이 푼 문제 수 더하기, 포인트 더하기
-            Optional<UserStatistics> userStatistics = userStatisticsRepository.findByBojHandle(dto.getBojHandle());
-            if (userStatistics.isPresent()) {
-                solved2 += userStatistics.get().getWeeklySolvedProblemCount();
-                score2 += userStatistics.get().getWeeklyEarningPoint();
+            if (user.getWeeklyEarningPoint() != null && user.getWeeklySolvedProblemCount() != null) {
+                solved2 += user.getWeeklySolvedProblemCount();
+                score2 += user.getWeeklyEarningPoint();
 
                 // 유저의 포인트 추가
-                dto.setPoint(userStatistics.get().getWeeklyEarningPoint());
+                dto.setPoint(user.getWeeklyEarningPoint());
             }
 
             // 가장 기여 많은 유저 찾아서 갱신

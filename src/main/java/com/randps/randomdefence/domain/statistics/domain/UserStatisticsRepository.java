@@ -4,9 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserStatisticsRepository extends JpaRepository<UserStatistics, Long> {
+public interface UserStatisticsRepository extends JpaRepository<UserStatistics, Long>, UserStatisticsRepositoryCustom {
 
     Optional<UserStatistics> findByBojHandle(String bojHandle);
-
 
 }

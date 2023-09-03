@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.statistics.controller;
 
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.dto.TeamStatisticsResponse;
+import com.randps.randomdefence.domain.statistics.dto.UserUserStatisticsPairDto;
 import com.randps.randomdefence.domain.statistics.service.TeamStatisticsService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
