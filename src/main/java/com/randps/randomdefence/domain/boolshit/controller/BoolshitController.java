@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.boolshit.controller;
 
 import com.randps.randomdefence.domain.boolshit.domain.Boolshit;
+import com.randps.randomdefence.domain.boolshit.dto.BoolshitLastResponse;
 import com.randps.randomdefence.domain.boolshit.dto.BoolshitResponse;
 import com.randps.randomdefence.domain.boolshit.service.BoolshitService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,15 @@ public class BoolshitController {
     @GetMapping("/last")
     public BoolshitResponse findLast() {
         return boolshitService.findLast();
+    }
+
+
+    /**
+     * 유저의 가장 최근의 나의 한마디를 조회한다. (Querydsl)
+     */
+    @GetMapping("/v2/last")
+    public BoolshitLastResponse findLastv2() {
+        return boolshitService.findLastV2();
     }
 
     /*

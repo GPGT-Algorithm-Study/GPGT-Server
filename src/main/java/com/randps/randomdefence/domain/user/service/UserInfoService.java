@@ -45,18 +45,19 @@ public class UserInfoService {
         return user.toUserInfoResponse(userRandomStreak.getMaxRandomStreak());
     }
 
-    /*
-     * 모든 유저의 프로필 정보를 불러온다.
+    /**
+     * 모든 유저의 프로필 정보를 불러온다. (Querydsl)
      */
     @Transactional
     public List<UserInfoResponse> getAllInfo() {
-        List<User> users = userRepository.findAll();
-        List<UserInfoResponse> userInfoResponses = new ArrayList<>();
-
-        for (User user : users) {
-            UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(user.getBojHandle());
-            userInfoResponses.add(user.toUserInfoResponse(userRandomStreak.getMaxRandomStreak()));
-        }
+        List<UserInfoResponse> userInfoResponses = userRepository.findAllUserResponse();
+//        List<User> users = userRepository.findAll();
+//        List<UserInfoResponse> userInfoResponses = new ArrayList<>();
+//
+//        for (User user : users) {
+//            UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(user.getBojHandle());
+//            userInfoResponses.add(user.toUserInfoResponse(userRandomStreak.getMaxRandomStreak()));
+//        }
 
         return userInfoResponses;
     }
