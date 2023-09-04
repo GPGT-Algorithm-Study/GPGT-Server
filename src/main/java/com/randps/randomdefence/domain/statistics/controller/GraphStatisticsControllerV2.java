@@ -1,10 +1,9 @@
 package com.randps.randomdefence.domain.statistics.controller;
 
 import com.randps.randomdefence.domain.statistics.dto.PointBarGraphStatisticsResponse;
-import com.randps.randomdefence.domain.statistics.dto.SolvedBarGraphStatisticsResponse;
+import com.randps.randomdefence.domain.statistics.dto.PointBarPair;
 import com.randps.randomdefence.domain.statistics.dto.SolvedBarPair;
-import com.randps.randomdefence.domain.statistics.service.PointBarGraphStatisticsService;
-import com.randps.randomdefence.domain.statistics.service.SolvedBarGraphStatisticsService;
+import com.randps.randomdefence.domain.statistics.service.PointBarGraphStatisticsServiceV2;
 import com.randps.randomdefence.domain.statistics.service.SolvedBarGraphStatisticsServiceV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ public class GraphStatisticsControllerV2 {
 
     private final SolvedBarGraphStatisticsServiceV2 solvedBarGraphStatisticsService;
 
-//    private final PointBarGraphStatisticsService pointBarGraphStatisticsService;
+    private final PointBarGraphStatisticsServiceV2 pointBarGraphStatisticsService;
 
     /*
      * 모든 유저의 난이도별 문제수 바 그래프 통계를 조회한다.
@@ -35,16 +34,17 @@ public class GraphStatisticsControllerV2 {
     /*
      * 모든 유저의 난이도별 문제수 바 그래프 통계를 조회한다.
      */
-//    @GetMapping("/point")
-//    public PointBarGraphStatisticsResponse findPointBarGraphStat() {
-//        PointBarGraphStatisticsResponse response = pointBarGraphStatisticsService.getAllPointBarStatistics();
-//
-//        return response;
-//    }
+    @GetMapping("/point")
+    public List<PointBarPair> findPointBarGraphStat() {
+        List<PointBarPair> response = pointBarGraphStatisticsService.getAllPointBarStatistics();
+
+        return response;
+    }
 
     /*
      * 모든 유저의 오늘의 문제 해결 현황을 조회한다.
      */
+
 
 
     /*
