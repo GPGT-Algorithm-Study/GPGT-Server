@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.user.domain;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 
 import javax.persistence.EntityManager;
@@ -46,6 +47,24 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         ))
                 .from(user)
                 .join(userRandomStreak).on(user.bojHandle.eq(userRandomStreak.bojHandle))
+                .fetch();
+
+        return result;
+    }
+
+    /*
+     * 모든 유저의 경고 그래프 바 DTO를 조회한다.
+     */
+    @Override
+    public List<UserWarningBarDto> findAllWarningBarDto() {
+        List<UserWarningBarDto> result = queryFactory
+                .select(Projections.fields(
+                        UserWarningBarDto.class,
+                        user.notionId,
+                        user.emoji,
+                        user.warning
+                ))
+                .from(user)
                 .fetch();
 
         return result;

@@ -23,8 +23,8 @@ public class PointBarGraphStatisticsServiceV2 {
 
     private final UserStatisticsRepository userStatisticsRepository;
 
-    /*
-     * 모든 유저의 포인트 통계를 만들어서 반환한다.
+    /**
+     * 모든 유저의 포인트 통계를 만들어서 반환한다. (Querydsl)
      */
     @Transactional
     public List<PointBarPair> getAllPointBarStatistics() {
