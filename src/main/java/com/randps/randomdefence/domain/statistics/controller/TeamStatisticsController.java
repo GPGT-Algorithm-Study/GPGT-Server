@@ -20,8 +20,8 @@ public class TeamStatisticsController {
 
     private final TeamStatisticsService teamStatisticsService;
 
-    /*
-     * 전체 팀 통계를 조회한다.
+    /**
+     * 전체 팀 통계를 조회한다. (Querydsl)
      */
     @GetMapping("/all")
     public TeamStatisticsResponse findAllTeamStat() {

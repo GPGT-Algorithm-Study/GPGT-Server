@@ -26,15 +26,6 @@ public class BoolshitController {
         return boolshitService.findLast();
     }
 
-
-    /**
-     * 유저의 가장 최근의 나의 한마디를 조회한다. (Querydsl)
-     */
-    @GetMapping("/v2/last")
-    public BoolshitLastResponse findLastv2() {
-        return boolshitService.findLastV2();
-    }
-
     /*
      * 모든 유저의 나의 한마디를 조회한다.
      */
