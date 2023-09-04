@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.user.domain;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 
@@ -63,6 +64,24 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         user.notionId,
                         user.emoji,
                         user.warning
+                ))
+                .from(user)
+                .fetch();
+
+        return result;
+    }
+
+    /*
+     * 모든 유저의 오늘 문제 풀었는지 여부 DTO를 조회한다.
+     */
+    @Override
+    public List<UserIsTodaySolvedDto> findAllUserIsTodaySolvedDto() {
+        List<UserIsTodaySolvedDto> result = queryFactory
+                .select(Projections.fields(
+                        UserIsTodaySolvedDto.class,
+                        user.notionId,
+                        user.emoji,
+                        user.isTodaySolved
                 ))
                 .from(user)
                 .fetch();

@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
+import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
@@ -23,8 +24,6 @@ public class UserInfoService {
     private final UserRepository userRepository;
 
     private final UserRandomStreakService userRandomStreakService;
-
-    private final UserRandomStreakRepository userRandomStreakRepository;
 
     private final WarningLogSaveService warningLogSaveService;
 
@@ -51,13 +50,6 @@ public class UserInfoService {
     @Transactional
     public List<UserInfoResponse> getAllInfo() {
         List<UserInfoResponse> userInfoResponses = userRepository.findAllUserResponse();
-//        List<User> users = userRepository.findAll();
-//        List<UserInfoResponse> userInfoResponses = new ArrayList<>();
-//
-//        for (User user : users) {
-//            UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(user.getBojHandle());
-//            userInfoResponses.add(user.toUserInfoResponse(userRandomStreak.getMaxRandomStreak()));
-//        }
 
         return userInfoResponses;
     }

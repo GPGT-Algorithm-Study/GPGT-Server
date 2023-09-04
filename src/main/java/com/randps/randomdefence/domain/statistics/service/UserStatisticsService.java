@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.statistics.domain.UserProblemStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserProblemStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
+import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.user.domain.*;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
