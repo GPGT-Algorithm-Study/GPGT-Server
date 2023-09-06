@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoginSuccessResponse {
     private String bojHandle;
+    private Boolean manager;
     private TokenDto jwt;
 }

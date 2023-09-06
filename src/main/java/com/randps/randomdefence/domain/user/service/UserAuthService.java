@@ -60,7 +60,7 @@ public class UserAuthService {
             refreshTokenRepository.save(newToken);
         }
 
-        return LoginSuccessResponse.builder().bojHandle(loginReqDto.getBojHandle()).jwt(tokenDto).build();
+        return LoginSuccessResponse.builder().bojHandle(loginReqDto.getBojHandle()).manager(user.getManager()).jwt(tokenDto).build();
 
     }
 
