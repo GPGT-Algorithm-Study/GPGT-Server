@@ -156,7 +156,9 @@ public class UserAuthService {
      */
     @Transactional
     public ParseDto getBojHandleByJWT(String token) throws CertificateExpiredException {
-        return ParseDto.builder().claim(jwtUtil.getBojHandle(token)).build();
+        User user = userRepository.findByBojHandle(jwtUtil.getBojHandle(token)).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 토큰입니다."));
+
+        return ParseDto.builder().claim(jwtUtil.getBojHandle(token)).manager(user.getManager()).build();
     }
 
 

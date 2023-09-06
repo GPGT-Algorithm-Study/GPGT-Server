@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class ParseDto {
     private String claim;
+    private Boolean manager;
 }
