@@ -1,7 +1,9 @@
 package com.randps.randomdefence.domain.statistics.controller;
 
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
+import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
+import com.randps.randomdefence.domain.statistics.service.UserStatisticsServiceV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -19,6 +22,8 @@ import java.util.Map;
 public class UserStatisticsController {
 
     private final UserStatisticsService userStatisticsService;
+
+    private final UserStatisticsServiceV2 userStatisticsServiceV2;
 
     /*
      * 유저 통계를 조회한다.
@@ -62,5 +67,13 @@ public class UserStatisticsController {
         map.put("code", "200");
         map.put("message", "요청을 성공했습니다.");
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+    /*
+     * 어제 문제를 풀지 않은 유저 리스트를 반환한다. (Admin)
+     */
+    @GetMapping("/yesterday-unsolved-users")
+    public List<YesterdayUnsolvedUserDto> findAllYesterdayUnsolvedUsers() {
+        return userStatisticsServiceV2.getAllYesterdayUnsolvedUser();
     }
 }

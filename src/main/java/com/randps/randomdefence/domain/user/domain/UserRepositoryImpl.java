@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
+import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 
 import javax.persistence.EntityManager;
@@ -88,4 +89,25 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
         return result;
     }
+
+    /*
+     * 어제 문제를 풀지 않은 모든 유저를 DTO로 조회한다.
+     */
+    @Override
+    public List<YesterdayUnsolvedUserDto> findAllYesterdayUnsolvedUserDto() {
+        List<YesterdayUnsolvedUserDto> result = queryFactory
+                .select(Projections.fields(
+                        YesterdayUnsolvedUserDto.class,
+                        user.bojHandle,
+                        user.notionId,
+                        user.profileImg,
+                        user.emoji
+                ))
+                .from(user)
+                .where(user.isYesterdaySolved.eq(false))
+                .fetch();
+
+        return result;
+    }
+
 }

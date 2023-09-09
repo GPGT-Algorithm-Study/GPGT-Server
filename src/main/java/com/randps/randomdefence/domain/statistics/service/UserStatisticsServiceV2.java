@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.statistics.service;
 
 import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
+import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,14 @@ public class UserStatisticsServiceV2 {
         List<UserIsTodaySolvedDto> isTodaySolvedDtos = userRepository.findAllUserIsTodaySolvedDto();
 
         return isTodaySolvedDtos;
+    }
+
+    /*
+     * 어제 안 푼 유저 목록을 반환한다.
+     */
+    public List<YesterdayUnsolvedUserDto> getAllYesterdayUnsolvedUser() {
+        List<YesterdayUnsolvedUserDto> yesterdayUnsolvedUserDtos = userRepository.findAllYesterdayUnsolvedUserDto();
+
+        return yesterdayUnsolvedUserDtos;
     }
 }

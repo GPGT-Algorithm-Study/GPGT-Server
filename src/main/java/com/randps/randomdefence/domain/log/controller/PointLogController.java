@@ -1,16 +1,15 @@
 package com.randps.randomdefence.domain.log.controller;
 
 import com.randps.randomdefence.domain.log.domain.PointLog;
+import com.randps.randomdefence.domain.log.domain.WarningLog;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.log.service.PointLogSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -53,5 +52,17 @@ public class PointLogController {
     @PutMapping("/rollback")
     public PointLog rollbackByPointLogId(@Param("logId") Long logId) {
         return pointLogSaveService.rollbackPointLog(logId);
+    }
+
+    /*
+     * 특정 유저에게 특정 메시지로 포인트를 부여하거나 감소시킨다. (ADMIN)
+     */
+    @PostMapping("/user/save")
+    public PointLog saveUserPointLog(@Param("bojHandle") String bojHandle, @Param("changedValue") Integer changedValue, @Param("description") String description) {
+        // 로그 메시지가 없다면 디폴트 로그 메시지를 생성한다.
+        if (description.isEmpty() || description.isBlank()) {
+            description = "Changed by an administrator.";
+        }
+        return pointLogSaveService.saveAndApplyPointLog(bojHandle, changedValue, description, true);
     }
 }

@@ -35,6 +35,35 @@ public class WarningLogSaveService {
     }
 
     /*
+     * 특정 유저의 경고 변경을 로그로 기록하고 반영한다. (Admin)
+     */
+    @Transactional
+    public WarningLog saveAndApplyWarningLog(String bojHandle, Integer changedValue, String description, Boolean state) {
+        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        Boolean result;
+
+        if (changedValue > 0) {
+            result = user.increaseWarning();
+        } else {
+            result = user.decreaseWarning();
+        }
+        if (!result) {
+            throw new IllegalArgumentException("경고 (부여/차감)에 실패했습니다.");
+        }
+        userRepository.save(user);
+
+        WarningLog warningLog = WarningLog.builder()
+                .bojHandle(bojHandle)
+                .changedValue(changedValue)
+                .description(description)
+                .state(state)
+                .build();
+        warningLogRepository.save(warningLog);
+
+        return warningLog;
+    }
+
+    /*
      * 특정 경고 로그를 되돌린다.
      */
     @Transactional

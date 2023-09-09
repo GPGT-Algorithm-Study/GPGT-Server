@@ -32,6 +32,8 @@ public class UserInfoResponse {
 
     private Boolean isTodaySolved;
 
+    private Boolean isYesterdaySolved;
+
     private Boolean isTodayRandomSolved;
 
     private Integer todaySolvedProblemCount;
@@ -39,7 +41,7 @@ public class UserInfoResponse {
     private Integer maxRandomStreak;
 
     @Builder
-    public UserInfoResponse(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount, Integer maxRandomStreak) {
+    public UserInfoResponse(String bojHandle, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isYesterdaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount, Integer maxRandomStreak) {
         this.bojHandle = bojHandle;
         this.notionId = notionId;
         this.manager = manager;
@@ -53,6 +55,7 @@ public class UserInfoResponse {
         this.team = team;
         this.point = point;
         this.isTodaySolved = isTodaySolved;
+        this.isYesterdaySolved = isYesterdaySolved;
         this.isTodayRandomSolved = isTodayRandomSolved;
         this.todaySolvedProblemCount = todaySolvedProblemCount;
         this.maxRandomStreak = maxRandomStreak;
@@ -73,6 +76,7 @@ public class UserInfoResponse {
         this.team = 0;
         this.point = 0;
         this.isTodaySolved = false;
+        this.isYesterdaySolved = false;
         this.isTodayRandomSolved = false;
         this.todaySolvedProblemCount = 0;
         this.maxRandomStreak = 0;

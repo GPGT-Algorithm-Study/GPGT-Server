@@ -49,7 +49,9 @@ public class User extends BaseTimeEntity {
 
     private Integer point;
 
-    private Boolean isTodaySolved; // by Solved
+    private Boolean isTodaySolved;
+
+    private Boolean isYesterdaySolved;
 
     private Boolean isTodayRandomSolved;
 
@@ -67,7 +69,7 @@ public class User extends BaseTimeEntity {
     }
 
     @Builder
-    public User(String bojHandle, String password, String roles, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Integer todaySolvedProblemCount) {
+    public User(String bojHandle, String password, String roles, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Boolean isYesterdaySolved, Integer todaySolvedProblemCount) {
         this.bojHandle = bojHandle;
         this.password = password;
         this.roles = roles;
@@ -83,6 +85,7 @@ public class User extends BaseTimeEntity {
         this.team = team;
         this.point = point;
         this.isTodaySolved = isTodaySolved;
+        this.isYesterdaySolved = isYesterdaySolved;
         this.isTodayRandomSolved = isTodayRandomSolved;
         this.todaySolvedProblemCount = todaySolvedProblemCount;
     }
@@ -130,6 +133,14 @@ public class User extends BaseTimeEntity {
         return true;
     }
 
+    public void checkYesterdayRandomSolvedOk() {
+        this.isYesterdaySolved = true;
+    }
+
+    public void checkYesterdayRandomSolvedNo() {
+        this.isYesterdaySolved = false;
+    }
+
     public void checkTodayRandomSolvedOk() {
         this.isTodayRandomSolved = true;
     }
@@ -161,6 +172,7 @@ public class User extends BaseTimeEntity {
                 .team(this.getTeam())
                 .point(this.getPoint())
                 .isTodaySolved(this.getIsTodaySolved())
+                .isYesterdaySolved(this.getIsYesterdaySolved())
                 .isTodayRandomSolved(this.getIsTodayRandomSolved())
                 .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
                 .maxRandomStreak(0)
@@ -182,6 +194,7 @@ public class User extends BaseTimeEntity {
                 .team(this.getTeam())
                 .point(this.getPoint())
                 .isTodaySolved(this.getIsTodaySolved())
+                .isYesterdaySolved(this.getIsYesterdaySolved())
                 .isTodayRandomSolved(this.getIsTodayRandomSolved())
                 .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
                 .maxRandomStreak(maxRandomStreak)

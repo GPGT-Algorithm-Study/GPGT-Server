@@ -7,10 +7,7 @@ import com.randps.randomdefence.domain.log.service.WarningLogSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -54,5 +51,17 @@ public class WarningLogController {
     @PutMapping("/rollback")
     public WarningLog rollbackByWarningLogId(@Param("logId") Long logId) {
         return warningLogSaveService.rollbackPointLog(logId);
+    }
+
+    /*
+     * 특정 유저에게 특정 메시지로 경고를 부여하거나 감소시킨다. (ADMIN)
+     */
+    @PostMapping("/user/save")
+    public WarningLog saveUserWarningLog(@Param("bojHandle") String bojHandle, @Param("changedValue") Integer changedValue, @Param("description") String description) {
+        // 로그 메시지가 없다면 디폴트 로그 메시지를 생성한다.
+        if (description.isEmpty() || description.isBlank()) {
+            description = "Changed by an administrator.";
+        }
+        return warningLogSaveService.saveAndApplyWarningLog(bojHandle, changedValue, description, true);
     }
 }

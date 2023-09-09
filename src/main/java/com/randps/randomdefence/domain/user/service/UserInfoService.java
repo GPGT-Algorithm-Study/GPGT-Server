@@ -123,10 +123,16 @@ public class UserInfoService {
             user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
             if (!userSolvedProblemService.isYesterdaySolved(user.getBojHandle())) {
+                // 유저가 어제 문제를 풀었는지 여부를 갱신한다.
+                user.checkYesterdayRandomSolvedNo();
                 Boolean isSuccess = user.increaseWarning();
                 // 경고 로그를 저장한다.
                 if (isSuccess)
                     warningLogSaveService.saveWarningLog(user.getBojHandle(), 1, "[" + user.getBojHandle() + "]" + "'s warnings increased by 1" + " - 사유: 스트릭 끊김 " + "[" + (user.getWarning() - 1) + "->" + user.getWarning() + "]", true);
+                userRepository.save(user);
+            } else {
+                // 유저가 어제 문제를 풀었는지 여부를 갱신한다.
+                user.checkYesterdayRandomSolvedOk();
                 userRepository.save(user);
             }
         }
