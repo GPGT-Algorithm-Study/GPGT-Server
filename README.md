@@ -4,7 +4,7 @@ A site where you can manage study groups based on user information from the 'Bea
 
 https://randps.kr
 
----
+
 ## Functionality
 
 - Random Problem Streak
@@ -15,11 +15,11 @@ https://randps.kr
 
 These features help you manage your study and increase the motivation of your study members to learn algorithms.
 
----
+
 ## Dependencies
 - OpenJDK11
 
----
+
 ## Getting start
 
 ### 1. Build
