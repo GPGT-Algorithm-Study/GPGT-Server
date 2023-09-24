@@ -6,6 +6,8 @@ import com.randps.randomdefence.domain.event.domain.EventPointRepository;
 import com.randps.randomdefence.domain.event.dto.EventPointPublishRequest;
 import com.randps.randomdefence.domain.event.dto.EventPointUpdateRequest;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
+import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ public class EventPointService {
     private final EventPointRepository eventPointRepository;
 
     private final PointLogSaveService pointLogSaveService;
+
+    private final UserRepository userRepository;
 
     /**
      * 보너스 포인트 이벤트 생성
@@ -72,18 +76,21 @@ public class EventPointService {
     @Transactional
     public boolean applyEventPoint(String bojHandle, Integer changedValue) {
         List<EventPoint> validEvents = eventPointRepository.findAllValidEvent();
+        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        Boolean isExist = false;
+        if (validEvents.isEmpty()) return false;
+
         for (EventPoint event : validEvents) {
             Integer bonusPoints = (int) Math.round((double)changedValue * event.getPercentage());
             String description = bonusPoints + " extra points are earned by event \'" + event.getEventName() + "\' 🔥️🔥🔥";
             Boolean state = true;
-            isExist = true;
 
             if (bonusPoints == 0) continue;
+            user.increasePoint(bonusPoints);
             pointLogSaveService.savePointLog(bojHandle, bonusPoints, description, state);
         }
+        userRepository.save(user);
 
-        return isExist;
+        return true;
     }
 }

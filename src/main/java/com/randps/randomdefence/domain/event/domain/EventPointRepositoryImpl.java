@@ -33,6 +33,7 @@ public class EventPointRepositoryImpl implements EventPointRepositoryCustom {
                         eventPoint.percentage
                 ))
                 .from(eventPoint)
+                .orderBy(eventPoint.startTime.asc())
                 .fetch();
 
         return result;
@@ -45,6 +46,7 @@ public class EventPointRepositoryImpl implements EventPointRepositoryCustom {
         List<EventPoint> result = queryFactory
                 .selectFrom(eventPoint)
                 .where(eventPoint.startTime.before(now).and(eventPoint.endTime.after(now)))
+                .orderBy(eventPoint.startTime.asc())
                 .fetch();
 
         return result;
@@ -68,6 +70,7 @@ public class EventPointRepositoryImpl implements EventPointRepositoryCustom {
                 ))
                 .from(eventPoint)
                 .where(eventPoint.startTime.before(now).and(eventPoint.endTime.after(now)))
+                .orderBy(eventPoint.startTime.asc())
                 .fetch();
 
         return result;
