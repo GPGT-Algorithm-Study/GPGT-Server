@@ -5,6 +5,7 @@ import com.randps.randomdefence.domain.log.domain.WarningLog;
 import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.log.service.WarningLogSearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,14 @@ public class WarningLogController {
     @GetMapping("/all")
     public List<WarningLog> findAllWarningLog() {
         return warningLogSearchService.findAllLog();
+    }
+
+    /*
+     * 모든 유저의 경고 로그를 페이지 단위로 조회해서 반환한다.
+     */
+    @GetMapping("/all/page")
+    public Page<WarningLog> findAllPagingWarningLog(Pageable pageable) {
+        return warningLogSearchService.findAllPagingLog(pageable);
     }
 
 

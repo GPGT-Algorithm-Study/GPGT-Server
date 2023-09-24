@@ -4,6 +4,7 @@ import com.randps.randomdefence.domain.log.domain.PointLog;
 import com.randps.randomdefence.domain.log.domain.WarningLog;
 import com.randps.randomdefence.domain.log.domain.WarningLogRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,16 @@ public class WarningLogSearchService {
         List<WarningLog> warningLogs =  warningLogRepository.findAll();
         if (warningLogs == null)
             warningLogs = new ArrayList<>();
+
+        return warningLogs;
+    }
+
+    /*
+     * 서버의 모든 경고 로그를 페이지 단위로 조회한다.
+     */
+    @Transactional
+    public Page<WarningLog> findAllPagingLog(Pageable pageable) {
+        Page<WarningLog> warningLogs =  warningLogRepository.findAllByOrderByCreatedDateDesc(pageable);
 
         return warningLogs;
     }

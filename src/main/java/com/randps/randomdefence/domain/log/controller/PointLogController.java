@@ -5,6 +5,7 @@ import com.randps.randomdefence.domain.log.domain.WarningLog;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.log.service.PointLogSearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,15 @@ public class PointLogController {
     public List<PointLog> findAllPointLog() {
         return pointLogSearchService.findAllLog();
     }
+
+    /*
+     * 모든 유저의 포인트 로그를 페이지 단위로 조회해서 반환한다.
+     */
+    @GetMapping("/all/page")
+    public Page<PointLog> findAllPagingPointLog(Pageable pageable) {
+        return pointLogSearchService.findAllPagingLog(pageable);
+    }
+
 
 
     /*
