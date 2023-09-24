@@ -1,6 +1,7 @@
 package com.randps.randomdefence.global.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,20 @@ public class randpsExceptionHandler {
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "500");
         map.put("message", "크롤링 데이터의 HTML을 파싱하는데 실패했습니다.");
+
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+
+    @ExceptionHandler(value = InvalidContentTypeException.class)
+    public ResponseEntity<Map<String, String>> ExceptionHandler(InvalidContentTypeException e) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("error type", httpStatus.getReasonPhrase());
+        map.put("code", "400");
+        map.put("message", e.getMessage());
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }

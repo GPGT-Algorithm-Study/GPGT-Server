@@ -20,6 +20,7 @@ public class BojWebCrawler extends WebCrawler {
         Elements selects = document.select("table#status-table tbody tr");	//⭐⭐⭐ HTML의 table의 tbody의 tr태그의 값을 가져온다.
         //select 메서드 안에 css selector를 작성하여 Elements를 가져올 수 있다.
 
+        Integer cnt = 0;
         for (Element select : selects) {
             // 비어있는 문제 지나가기
             if (select.select("td").get(2).text().isBlank()) {
@@ -41,9 +42,19 @@ public class BojWebCrawler extends WebCrawler {
                         .language(select.select("td").get(6).text())
                         .build();
                 list.add(pair);
+                cnt++;
             }
             //html(), text(), children(), append().... 등 다양한 메서드 사용 가능
             //https://jsoup.org/apidocs/org/jsoup/nodes/Element.html 참고
+        }
+
+        // 다음 페이지로 넘어간다면 중복이라면 재귀적으로 다음 페이지를 파싱한다.
+        if (cnt == 20) {
+            Element link = document.select("a#next_page").first();	//⭐⭐⭐ HTML의 id가 'next_page'인 태그의 a태그를 선택한다.
+            //select 메서드 안에 css selector를 작성하여 Elements를 가져올 수 있다.
+            String url = link.attr("href"); // 다음페이지 url
+            setUrl(url);
+            list.addAll(process());
         }
 
         return list.stream().distinct().collect(Collectors.toList());

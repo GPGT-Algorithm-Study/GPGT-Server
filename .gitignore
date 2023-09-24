@@ -39,3 +39,7 @@ out/
 
 ### Querydsl ###
 /src/main/generated
+
+### Secret Properties ###
+*.properties
+!application.properties
