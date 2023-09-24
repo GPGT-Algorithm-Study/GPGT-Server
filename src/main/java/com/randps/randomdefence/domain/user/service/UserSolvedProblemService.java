@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.user.domain.*;
@@ -43,6 +44,8 @@ public class UserSolvedProblemService {
     private final UserStatisticsService userStatisticsService;
 
     private final UserAlreadySolvedService userAlreadySolvedService;
+
+    private final EventPointService eventPointService;
 
     /*
      * 유저가 그동안 푼 모든 문제의 정보를 가져온다.
@@ -189,6 +192,9 @@ public class UserSolvedProblemService {
                     user.increasePoint(pb.getPoint());
                     pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " points are earned by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
 
+                    // 이벤트를 적용한다
+                    eventPointService.applyEventPoint(user.getBojHandle(), pb.getPoint());
+
                     // 팀의 점수를 올린다. (일반 문제)
                     teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
                     // 유저 통계를 반영한다. (일반 문제)
@@ -245,6 +251,9 @@ public class UserSolvedProblemService {
                         // 일반 문제의 포인트 부여
                         user.increasePoint(pb.getPoint());
                         pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),  pb.getPoint() + " points are earned by solving problem " + pb.getProblemId().toString() + " : " + "\"" + pb.getTitleKo() + "\""+ " level - " + convertDifficulty(pb.getLevel()), true);
+
+                        // 이벤트를 적용한다
+                        eventPointService.applyEventPoint(user.getBojHandle(), pb.getPoint());
 
                         // 팀의 점수를 올린다. (일반 문제)
                         teamService.increaseTeamScore(user.getTeam(), pb.getPoint());

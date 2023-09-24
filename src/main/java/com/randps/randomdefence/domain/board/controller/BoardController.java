@@ -26,7 +26,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    /*
+    /**
      * 모든 게시글 조회 (테스트)
      */
     @GetMapping("/all/raw")
@@ -34,7 +34,7 @@ public class BoardController {
         return boardService.findAll();
     }
 
-    /*
+    /**
      * 모든 게시글 페이징 조회
      */
     @GetMapping("/all")
@@ -42,7 +42,7 @@ public class BoardController {
         return boardService.findAllSimple(pageable);
     }
 
-    /*
+    /**
      * type에 따른 게시글 페이징 조회
      */
     @GetMapping("/all/type")
@@ -50,7 +50,7 @@ public class BoardController {
         return boardService.findAllSimpleByType(type, pageable);
     }
 
-    /*
+    /**
      * 특정 게시글 디테일 조회
      */
     @GetMapping("/detail")
@@ -58,7 +58,7 @@ public class BoardController {
         return boardService.findDetailByBoardId(boardId);
     }
 
-    /*
+    /**
      * 게시글 생성
      */
     @PostMapping("/publish")
@@ -70,7 +70,7 @@ public class BoardController {
                         ,boardPublishRequest.getImageUUIDs());
     }
 
-    /*
+    /**
      * 게시글 수정
      */
     @PutMapping("/publish")
@@ -83,7 +83,7 @@ public class BoardController {
                 ,boardUpdateRequest.getImageUUIDs());
     }
 
-    /*
+    /**
      * 게시글 삭제
      */
     @DeleteMapping("/delete")

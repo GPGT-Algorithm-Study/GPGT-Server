@@ -1,5 +1,6 @@
 package com.randps.randomdefence.domain.user.service;
 
+import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.item.service.RandomStreakFreezeItemUseServiceImpl;
 import com.randps.randomdefence.domain.log.domain.PointLogRepository;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
@@ -46,6 +47,8 @@ public class UserRandomStreakService {
     private final TeamService teamService;
 
     private final RandomStreakFreezeItemUseServiceImpl randomStreakFreezeItemUseService;
+
+    private final EventPointService eventPointService;
 
     /*
      * 유저 랜덤 스트릭 생성하기 (유저 생성 시 사용)
@@ -241,6 +244,9 @@ public class UserRandomStreakService {
                 user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
                 pointLogSaveService.savePointLog(bojHandle, randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " points are earned by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
 
+                // 이벤트를 적용한다
+                eventPointService.applyEventPoint(bojHandle, randomProblem.getLevel());
+
                 // 팀의 점수를 올린다. (랜덤 문제)
                 teamService.increaseTeamScore(user.getTeam(), randomProblem.getLevel() * 2);
                 // 유저 통계를 반영한다. (랜덤 문제)
@@ -286,6 +292,9 @@ public class UserRandomStreakService {
                     // 유저의 정보 갱신
                     userCur.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
                     pointLogSaveService.savePointLog(userCur.getBojHandle(), randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " points are earned by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+
+                    // 이벤트를 적용한다
+                    eventPointService.applyEventPoint(userCur.getBojHandle(), randomProblem.getLevel());
 
                     // 팀의 점수를 올린다. (랜덤 문제)
                     teamService.increaseTeamScore(userCur.getTeam(), randomProblem.getLevel() * 2);

@@ -33,6 +33,11 @@ public class Item extends BaseTimeEntity {
         this.maxItemCount = maxItemCount;
     }
 
+    public Item updatePrice(Integer itemValue) {
+        this.itemValue = itemValue;
+        return this;
+    }
+
     public ItemDto toDto() {
         return ItemDto.builder()
                 .id(this.id)
