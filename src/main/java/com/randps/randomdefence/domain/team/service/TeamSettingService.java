@@ -39,19 +39,29 @@ public class TeamSettingService {
         teamUserIndexes.add(new ArrayList<User>());
         teamUserIndexes.add(new ArrayList<User>());
 
+        // 경고가 4개인 유저들은 팀에서 제외한다.
+        List<User> liveUsers = new ArrayList<>();
+        for (User user : users) {
+            if (user.getWarning() == 4) {
+                user.setTeamNumber(null);
+            } else {
+                liveUsers.add(user);
+            }
+        }
+
         // 두 팀중 한명이 더 많은 팀을 랜덤하게 정한다.
-        Integer smallSize = users.size() / 2;
+        Integer smallSize = liveUsers.size() / 2;
         Integer size;
         if (r.nextInt(2) == 1) {
             size = smallSize;
         } else {
-            size = users.size() - smallSize;
+            size = liveUsers.size() - smallSize;
         }
 
         // [0,size)범위의 랜덤한 숫자 2/size개를 뽑는다.
         // 이 숫자에 뽑힌 유저의 인덱스가 0번팀
         while (firstTeamUserIndexes.size() < size) {
-            Integer randIdx = r.nextInt(users.size());
+            Integer randIdx = r.nextInt(liveUsers.size());
             if (!firstTeamUserIndexes.contains(randIdx)) {
                 firstTeamUserIndexes.add(randIdx);
                 System.out.print(randIdx + ", ");
@@ -59,7 +69,7 @@ public class TeamSettingService {
         }
 
         // 1번팀의 유저들을 명시적으로 리스트에 넣는다.
-        for (Integer i=0;i<users.size();i++) {
+        for (Integer i=0;i<liveUsers.size();i++) {
             if (firstTeamUserIndexes.contains(i)) continue;
             else secondTeamUserIndexes.add(i);
         }
@@ -73,7 +83,7 @@ public class TeamSettingService {
 
         // 뽑힌 유저를 첫 번째 팀에 할당한다.
         for (Integer i=0;i<firstTeamUserIndexes.size();i++) {
-            User user = users.get(firstTeamUserIndexes.get(i));
+            User user = liveUsers.get(firstTeamUserIndexes.get(i));
             user.setTeamNumber(0);
             userRepository.save(user);
             teamUserIndexes.get(0).add(user);
@@ -86,7 +96,7 @@ public class TeamSettingService {
 
         // 뽑히지 않은 유저를 두 번째 팀에 할당한다.
         for (Integer i=0;i<secondTeamUserIndexes.size();i++) {
-            User user = users.get(secondTeamUserIndexes.get(i));
+            User user = liveUsers.get(secondTeamUserIndexes.get(i));
             user.setTeamNumber(1);
             userRepository.save(user);
             teamUserIndexes.get(1).add(user);

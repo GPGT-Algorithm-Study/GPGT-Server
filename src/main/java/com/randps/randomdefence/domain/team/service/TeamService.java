@@ -25,6 +25,9 @@ public class TeamService {
      * 팀의 점수를 올린다.
      */
     public void increaseTeamScore(Integer teamNumber, Integer point) {
+        // 팀이 할당되지 않았다면 넘어간다.
+        if (teamNumber == null) return;
+
         Optional<Team> team = teamRepository.findByTeamNumber(teamNumber);
 
         // 팀이 없다면 팀 스코어를 올리지 않는다.
@@ -50,13 +53,13 @@ public class TeamService {
             teamName = firstTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = 5 + (Integer) (firstTeam.getTeamPoint() / winingTeamUsers.size());
+            winingPoint = (5 + (Integer) (firstTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
         } else {
             winingTeamUsers = userRepository.findAllByTeam(1);
             teamName = secondTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = 5 + (Integer) (secondTeam.getTeamPoint() / winingTeamUsers.size());
+            winingPoint = (5 + (Integer) (secondTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
         }
 
         // 승리한 팀의 유저들에게 포인트를 지급한다.
