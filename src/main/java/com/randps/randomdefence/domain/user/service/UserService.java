@@ -6,12 +6,14 @@ import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
+import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -92,4 +94,13 @@ public class UserService {
 
         userRepository.delete(user);
     }
+
+    /**
+     * 모든 유저의 마지막 로그인 기록을 조회한다.
+     */
+    @Transactional
+    public List<UserLastLoginLogDto> findAllLastLoginLog() {
+        return userRepository.findAllLastLoginDto();
+    }
+
 }

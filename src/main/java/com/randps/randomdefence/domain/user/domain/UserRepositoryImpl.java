@@ -6,12 +6,16 @@ import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
 import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
+import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
+import com.randps.randomdefence.global.jwt.domain.QRefreshToken;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.randps.randomdefence.domain.user.domain.QUser.user;
 import static com.randps.randomdefence.domain.user.domain.QUserRandomStreak.userRandomStreak;
+import static com.randps.randomdefence.global.jwt.domain.QRefreshToken.refreshToken1;
 
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
@@ -105,6 +109,28 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 ))
                 .from(user)
                 .where(user.isYesterdaySolved.eq(false))
+                .fetch();
+
+        return result;
+    }
+
+    /*
+     * 모든 유저의 마지막 로그인 기록을 DTO로 조회한다.
+     */
+    @Override
+    public List<UserLastLoginLogDto> findAllLastLoginDto() {
+        List<UserLastLoginLogDto> result = queryFactory
+                .select(Projections.fields(
+                        UserLastLoginLogDto.class,
+                        user.bojHandle,
+                        user.notionId,
+                        user.emoji,
+                        user.profileImg,
+                        refreshToken1.modifiedDate.as("lastLoginDate")
+                        ))
+                .from(user)
+                .leftJoin(refreshToken1).on(user.bojHandle.eq(refreshToken1.bojHandle))
+                .orderBy(refreshToken1.modifiedDate.desc())
                 .fetch();
 
         return result;

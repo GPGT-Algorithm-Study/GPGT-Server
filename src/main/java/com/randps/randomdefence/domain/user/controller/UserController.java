@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
+import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
 import com.randps.randomdefence.domain.user.service.*;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
@@ -265,4 +266,13 @@ public class UserController {
         map.put("message", bojHandles.size() + "명의 유저 리스트를 성공적으로 생성했습니다.");
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
+
+    /**
+     * 모든 유저의 마지막 로그인 일시를 조회합니다.
+     */
+    @GetMapping("/log/login")
+    public List<UserLastLoginLogDto> findAllUsersLastLoginLog() {
+        return userService.findAllLastLoginLog();
+    }
+
 }
