@@ -1,5 +1,6 @@
 package com.randps.randomdefence.domain.user.controller;
 
+import com.randps.randomdefence.domain.recommendation.dto.RecommendationResponse;
 import com.randps.randomdefence.domain.user.dto.UserRandomStreakResponse;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.UserGrassDto;
@@ -116,5 +117,13 @@ public class UserStreakController {
         map.put("code", "200");
         map.put("message", "요청이 성공했습니다.");
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+    /**
+     * 일정 포인트를 지불해서 오늘의 랜덤 문제를 재할당한다.
+     */
+    @PostMapping("/reroll")
+    public RecommendationResponse rerollRandomProblem(@Param("bojHandle") String bojHandle) {
+        return userRandomStreakService.payReroll(bojHandle);
     }
 }

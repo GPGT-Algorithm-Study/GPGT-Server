@@ -138,6 +138,27 @@ public class UserRandomStreakService {
         return userRandomStreakResponses;
     }
 
+    /**
+     * 리롤이 가능한지 체크하고 리롤비용을 지불한다.
+     */
+    @Transactional
+    public RecommendationResponse payReroll(String bojHandle) {
+        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+        // 리롤비용 5원이 없다면 리롤에 실패
+        if (user.getPoint() < 5) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+
+        // 5포인트 사용
+        user.decreasePoint(5);
+        pointLogSaveService.savePointLog(bojHandle, -5, "-5 points, purchase \'" + "랜덤 문제 다시뽑기" + "\'", true);
+        userRepository.save(user);
+
+        // 랜덤문제 추천
+        return makeUpUserRandomProblem(bojHandle);
+    }
+
     /*
      * 특정 유저의 랜덤 문제를 1문제를 뽑아 저장한다.
      */
