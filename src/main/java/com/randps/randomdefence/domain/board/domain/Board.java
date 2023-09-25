@@ -22,6 +22,9 @@ public class Board extends BaseTimeEntity {
 
     private String title;
 
+    @Lob
+    @Column
+
     private String content;
 
     @Builder
