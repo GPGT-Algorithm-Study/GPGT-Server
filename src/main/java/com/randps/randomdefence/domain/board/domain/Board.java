@@ -22,9 +22,7 @@ public class Board extends BaseTimeEntity {
 
     private String title;
 
-    @Lob
-    @Column
-
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     @Builder
