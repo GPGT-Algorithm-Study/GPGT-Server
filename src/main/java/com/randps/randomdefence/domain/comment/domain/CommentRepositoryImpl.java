@@ -28,13 +28,13 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         comment.createdDate,
                         comment.modifiedDate,
                         comment.boardId,
-                        comment.bojhandle,
+                        comment.bojHandle,
                         user.emoji,
                         comment.parentCommentId,
                         comment.content
                 ))
                 .from(comment)
-                .join(user).on(comment.bojhandle.eq(user.bojHandle))
+                .join(user).on(comment.bojHandle.eq(user.bojHandle))
                 .where(comment.boardId.eq(boardId))
                 .orderBy(comment.id.asc())
                 .fetch();

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class CommentPublishRequest {
     private Long boardId;
 
-    private String bojhandle;
+    private String bojHandle;
 
     private Long parentCommentId;
 

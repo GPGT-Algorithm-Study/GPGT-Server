@@ -25,7 +25,7 @@ public class CommentService {
     public Comment save(CommentPublishRequest commentPublishRequest) {
         Comment comment = Comment.builder()
                 .boardId(commentPublishRequest.getBoardId())
-                .bojhandle(commentPublishRequest.getBojhandle())
+                .bojHandle(commentPublishRequest.getBojHandle())
                 .parentCommentId(commentPublishRequest.getParentCommentId())
                 .content(commentPublishRequest.getContent())
                 .build();
@@ -44,7 +44,7 @@ public class CommentService {
 
         // 수정
         comment.update(commentUpdateRequest.getBoardId(),
-                commentUpdateRequest.getBojhandle(),
+                commentUpdateRequest.getBojHandle(),
                 commentUpdateRequest.getParentCommentId(),
                 commentUpdateRequest.getContent());
         commentRepository.save(comment);

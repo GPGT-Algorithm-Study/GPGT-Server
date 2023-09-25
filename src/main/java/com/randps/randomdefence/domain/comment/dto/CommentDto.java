@@ -22,7 +22,7 @@ public class CommentDto {
 
     private Long boardId;
 
-    private String bojhandle;
+    private String bojHandle;
 
     private String emoji;
 

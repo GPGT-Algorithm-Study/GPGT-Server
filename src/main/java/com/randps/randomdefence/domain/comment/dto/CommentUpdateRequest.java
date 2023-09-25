@@ -14,7 +14,7 @@ public class CommentUpdateRequest {
 
     private Long boardId;
 
-    private String bojhandle;
+    private String bojHandle;
 
     private Long parentCommentId;
 

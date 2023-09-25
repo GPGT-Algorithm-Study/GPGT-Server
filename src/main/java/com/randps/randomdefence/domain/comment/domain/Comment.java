@@ -18,23 +18,23 @@ public class Comment extends BaseTimeEntity {
 
     private Long boardId;
 
-    private String bojhandle;
+    private String bojHandle;
 
     private Long parentCommentId;
 
     private String content;
 
     @Builder
-    public Comment(Long boardId, String bojhandle, Long parentCommentId, String content) {
+    public Comment(Long boardId, String bojHandle, Long parentCommentId, String content) {
         this.boardId = boardId;
-        this.bojhandle = bojhandle;
+        this.bojHandle = bojHandle;
         this.parentCommentId = parentCommentId;
         this.content = content;
     }
 
-    public Comment update(Long boardId, String bojhandle, Long parentCommentId, String content) {
+    public Comment update(Long boardId, String bojHandle, Long parentCommentId, String content) {
         this.boardId = boardId;
-        this.bojhandle = bojhandle;
+        this.bojHandle = bojHandle;
         this.parentCommentId = parentCommentId;
         this.content = content;
 
