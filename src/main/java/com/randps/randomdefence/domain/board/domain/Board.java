@@ -25,18 +25,22 @@ public class Board extends BaseTimeEntity {
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
+    private Integer problemId;
+
     @Builder
-    public Board(String type, String bojHandle, String title, String content) {
+    public Board(String type, String bojHandle, String title, String content, Integer problemId) {
         this.type = type;
         this.bojHandle = bojHandle;
         this.title = title;
         this.content = content;
+        this.problemId = problemId;
     }
 
-    public void update(String type, String bojHandle, String title, String content) {
+    public void update(String type, String bojHandle, String title, String content, Integer problemId) {
         this.type = type;
         this.bojHandle = bojHandle;
         this.title = title;
         this.content = content;
+        this.problemId = problemId;
     }
 }

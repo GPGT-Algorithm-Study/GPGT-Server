@@ -18,5 +18,7 @@ public class BoardPublishRequest {
 
     private String content;
 
+    private Integer problemId;
+
     private String imageUUIDs;
 }

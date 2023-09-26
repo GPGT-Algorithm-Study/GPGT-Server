@@ -83,6 +83,7 @@ public class BoardController {
                         ,boardPublishRequest.getBojHandle()
                         ,boardPublishRequest.getTitle()
                         ,boardPublishRequest.getContent()
+                        ,boardPublishRequest.getProblemId()
                         ,boardPublishRequest.getImageUUIDs());
     }
 
@@ -96,6 +97,7 @@ public class BoardController {
                 ,boardUpdateRequest.getBojHandle()
                 ,boardUpdateRequest.getTitle()
                 ,boardUpdateRequest.getContent()
+                ,boardUpdateRequest.getProblemId()
                 ,boardUpdateRequest.getImageUUIDs());
     }
 

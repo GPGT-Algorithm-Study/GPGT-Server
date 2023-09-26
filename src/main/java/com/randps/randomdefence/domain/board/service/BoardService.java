@@ -38,12 +38,13 @@ public class BoardService {
      * 게시글 저장
      */
     @Transactional
-    public Board save(String type, String bojHandle, String title, String content, String images) {
+    public Board save(String type, String bojHandle, String title, String content, Integer problemId, String images) {
         Board board = Board.builder()
                 .type(type)
                 .bojHandle(bojHandle)
                 .title(title)
-                .content(content).build();
+                .content(content)
+                .problemId(problemId).build();
 
         boardRepository.save(board);
 
@@ -74,12 +75,12 @@ public class BoardService {
      * 게시글 수정
      */
     @Transactional
-    public Board update(Long boardId, String type, String bojHandle, String title, String content, String images) {
+    public Board update(Long boardId, String type, String bojHandle, String title, String content, Integer problemId, String images) {
         // 업데이트 할 게시글 조회
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new NotFoundException("존재하지 않는 게시글입니다."));
 
         // 내용 업데이트
-        board.update(type, bojHandle, title, content);
+        board.update(type, bojHandle, title, content, problemId);
 
         // 업데이트 저장
         boardRepository.save(board);

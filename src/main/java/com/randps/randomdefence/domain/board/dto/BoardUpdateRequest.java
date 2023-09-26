@@ -20,5 +20,7 @@ public class BoardUpdateRequest {
 
     private String content;
 
+    private Integer problemId;
+
     private String imageUUIDs;
 }

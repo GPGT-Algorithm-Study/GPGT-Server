@@ -32,5 +32,7 @@ public class BoardSimple {
 
     private String content;
 
+    private Integer problemId;
+
     private Long commentCount;
 }

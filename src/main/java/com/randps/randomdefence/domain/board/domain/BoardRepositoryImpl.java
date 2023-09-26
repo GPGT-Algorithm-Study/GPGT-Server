@@ -48,6 +48,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         user.profileImg,
                         board.title,
                         board.content,
+                        board.problemId,
                         ExpressionUtils.as(
                                 JPAExpressions.select(comment.count())
                                         .from(comment)
@@ -87,6 +88,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         user.profileImg,
                         board.title,
                         board.content,
+                        board.problemId,
                         ExpressionUtils.as(
                                 JPAExpressions.select(comment.count())
                                         .from(comment)
@@ -128,6 +130,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         user.profileImg,
                         board.title,
                         board.content,
+                        board.problemId,
                         ExpressionUtils.as(
                                 JPAExpressions.select(comment.count())
                                         .from(comment)
@@ -160,6 +163,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         user.profileImg,
                         board.title,
                         board.content,
+                        board.problemId,
                         ExpressionUtils.as(
                                 JPAExpressions.select(comment.count())
                                         .from(comment)
@@ -201,6 +205,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         user.profileImg,
                         board.title,
                         board.content,
+                        board.problemId,
                         ExpressionUtils.as(
                                 JPAExpressions.select(comment.count())
                                         .from(comment)

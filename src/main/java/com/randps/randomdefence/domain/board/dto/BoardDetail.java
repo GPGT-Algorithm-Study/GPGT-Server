@@ -33,5 +33,7 @@ public class BoardDetail {
 
     private String content;
 
+    private Integer problemId;
+
     private Long commentCount;
 }
