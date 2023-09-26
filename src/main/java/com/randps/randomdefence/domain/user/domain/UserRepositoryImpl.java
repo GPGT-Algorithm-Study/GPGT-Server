@@ -7,6 +7,7 @@ import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
 import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
+import com.randps.randomdefence.domain.user.dto.UserMentionDto;
 import com.randps.randomdefence.global.jwt.domain.QRefreshToken;
 
 import javax.persistence.EntityManager;
@@ -131,6 +132,23 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .from(user)
                 .leftJoin(refreshToken1).on(user.bojHandle.eq(refreshToken1.bojHandle))
                 .orderBy(refreshToken1.modifiedDate.desc())
+                .fetch();
+
+        return result;
+    }
+
+    /*
+     * Mention을 위해 모든 User의 Dto를 반환한다.
+     */
+    @Override
+    public List<UserMentionDto> findAllUserMentionDto() {
+        List<UserMentionDto> result = queryFactory
+                .select(Projections.fields(
+                        UserMentionDto.class,
+                        user.notionId
+                ))
+                .from(user)
+                .orderBy(user.notionId.asc())
                 .fetch();
 
         return result;

@@ -5,11 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
-import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
-import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
+import com.randps.randomdefence.domain.user.dto.*;
 import com.randps.randomdefence.domain.user.service.*;
-import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -273,6 +270,14 @@ public class UserController {
     @GetMapping("/log/login")
     public List<UserLastLoginLogDto> findAllUsersLastLoginLog() {
         return userService.findAllLastLoginLog();
+    }
+
+    /**
+     * Mention을 위해 모든 유저의 notionId를 조회합니다.
+     */
+    @GetMapping("/mention/list")
+    public List<UserMentionDto> findAllUserMentionList() {
+        return userService.findAllMentionDto();
     }
 
 }

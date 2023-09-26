@@ -5,6 +5,7 @@ import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
 import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
+import com.randps.randomdefence.domain.user.dto.UserMentionDto;
 
 import java.util.List;
 
@@ -23,4 +24,7 @@ public interface UserRepositoryCustom {
 
     // 모든 유저의 로그인 기록 DTO를 조회해서 반환한다.
     List<UserLastLoginLogDto> findAllLastLoginDto();
+
+    // mention을 위해 모든 유저의 notionId DTO를 조회해서 반환한다.
+    List<UserMentionDto> findAllUserMentionDto();
 }

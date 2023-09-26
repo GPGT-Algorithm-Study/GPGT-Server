@@ -7,6 +7,7 @@ import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
+import com.randps.randomdefence.domain.user.dto.UserMentionDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -98,9 +99,14 @@ public class UserService {
     /**
      * 모든 유저의 마지막 로그인 기록을 조회한다.
      */
-    @Transactional
     public List<UserLastLoginLogDto> findAllLastLoginLog() {
         return userRepository.findAllLastLoginDto();
     }
 
+    /**
+     * Mention을 위해 모든 유저의 NotionId를 조회한다.
+     */
+    public List<UserMentionDto> findAllMentionDto() {
+        return userRepository.findAllUserMentionDto();
+    }
 }
