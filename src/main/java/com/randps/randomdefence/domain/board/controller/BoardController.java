@@ -64,7 +64,7 @@ public class BoardController {
     }
 
     /**
-     * findAllSimpleByCondition
+     * 컨디션에 따른 동적 쿼리로 게시글 페이징 조회
      */
     @PostMapping("/all/condition")
     public Page<BoardSimple> findAllSimpleByCondition(@RequestBody SearchCondition condition, Pageable pageable) {
