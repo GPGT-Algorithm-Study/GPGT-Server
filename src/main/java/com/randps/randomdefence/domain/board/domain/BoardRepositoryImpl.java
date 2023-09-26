@@ -45,6 +45,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.bojHandle,
                         user.notionId,
                         user.emoji,
+                        user.profileImg,
                         board.title,
                         board.content,
                         ExpressionUtils.as(
@@ -83,6 +84,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.bojHandle,
                         user.notionId,
                         user.emoji,
+                        user.profileImg,
                         board.title,
                         board.content,
                         ExpressionUtils.as(
@@ -123,6 +125,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.bojHandle,
                         user.notionId,
                         user.emoji,
+                        user.profileImg,
                         board.title,
                         board.content,
                         ExpressionUtils.as(
@@ -154,6 +157,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.bojHandle,
                         user.notionId,
                         user.emoji,
+                        user.profileImg,
                         board.title,
                         board.content,
                         ExpressionUtils.as(
@@ -194,6 +198,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.bojHandle,
                         user.notionId,
                         user.emoji,
+                        user.profileImg,
                         board.title,
                         board.content,
                         ExpressionUtils.as(

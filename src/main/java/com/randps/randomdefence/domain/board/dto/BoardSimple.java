@@ -26,6 +26,8 @@ public class BoardSimple {
 
     private String emoji;
 
+    private String profileImg;
+
     private String title;
 
     private String content;
