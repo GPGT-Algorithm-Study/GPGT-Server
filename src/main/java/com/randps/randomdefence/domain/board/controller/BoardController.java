@@ -66,7 +66,7 @@ public class BoardController {
     /**
      * findAllSimpleByCondition
      */
-    @GetMapping("/all/condition")
+    @PostMapping("/all/condition")
     public Page<BoardSimple> findAllSimpleByCondition(@RequestBody SearchCondition condition, Pageable pageable) {
         return boardService.findAllSimpleByCondition(condition, pageable);
     }
