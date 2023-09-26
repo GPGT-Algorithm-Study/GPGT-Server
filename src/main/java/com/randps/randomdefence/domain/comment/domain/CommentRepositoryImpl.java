@@ -29,7 +29,9 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         comment.modifiedDate,
                         comment.boardId,
                         comment.bojHandle,
+                        user.notionId,
                         user.emoji,
+                        user.profileImg,
                         comment.parentCommentId,
                         comment.content
                 ))

@@ -24,7 +24,11 @@ public class CommentDto {
 
     private String bojHandle;
 
+    private String notionId;
+
     private String emoji;
+
+    private String profileImg;
 
     private Long parentCommentId;
 
