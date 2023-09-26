@@ -17,4 +17,10 @@ public interface BoardRepositoryCustom {
 
     // 특정 게시글 디테일 조회
     BoardDetail findBoardDetail(Long boardId);
+
+    // 내가 쓴 글 페이징 조회
+    Page<BoardSimple> findAllUserBoardSimplePaging(String bojHandle, Pageable pageable);
+
+    // 제목으로 게시글 조회 (페이징)
+    Page<BoardSimple> findAllBoardSimpleByQueryPaging(String query, Pageable pageable);
 }

@@ -23,9 +23,13 @@ public class BoardDetail {
 
     private String bojHandle;
 
+    private String notionId;
+
     private String emoji;
 
     private String title;
 
     private String content;
+
+    private Long commentCount;
 }

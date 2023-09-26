@@ -1,5 +1,6 @@
 package com.randps.randomdefence.domain.board.domain;
 
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.querydsl.core.types.ExpressionUtils.count;
 import static com.randps.randomdefence.domain.board.domain.QBoard.board;
+import static com.randps.randomdefence.domain.comment.domain.QComment.comment;
 import static com.randps.randomdefence.domain.image.domain.QBoardImage.boardImage;
 import static com.randps.randomdefence.domain.image.domain.QImage.image;
 import static com.randps.randomdefence.domain.user.domain.QUser.user;
@@ -40,12 +43,20 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.modifiedDate,
                         board.type,
                         board.bojHandle,
+                        user.notionId,
+                        user.emoji,
                         board.title,
-                        board.content
+                        board.content,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(comment.count())
+                                        .from(comment)
+                                        .where(comment.boardId.eq(board.id)), "commentCount")
                 ))
                  .from(board)
+                 .join(user).on(user.bojHandle.eq(board.bojHandle))
                  .offset(pageable.getOffset())
                  .limit(pageable.getPageSize())
+                 .orderBy(board.createdDate.desc())
                  .fetch();
 
         Long count = queryFactory
@@ -61,6 +72,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
      */
     @Override
     public Page<BoardSimple> findAllBoardSimpleByTypePaging(String type, Pageable pageable) {
+        Long count;
         List<BoardSimple> result = queryFactory
                 .select(Projections.fields(
                         BoardSimple.class,
@@ -69,16 +81,24 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.modifiedDate,
                         board.type,
                         board.bojHandle,
+                        user.notionId,
+                        user.emoji,
                         board.title,
-                        board.content
+                        board.content,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(comment.count())
+                                        .from(comment)
+                                        .where(comment.boardId.eq(board.id)), "commentCount")
                 ))
                 .from(board)
+                .join(user).on(user.bojHandle.eq(board.bojHandle))
                 .where(board.type.eq(type))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(board.createdDate.desc())
                 .fetch();
 
-        Long count = queryFactory
+        count = queryFactory
                 .select(board.count())
                 .from(board)
                 .where(board.type.eq(type))
@@ -101,9 +121,14 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                         board.modifiedDate,
                         board.type,
                         board.bojHandle,
+                        user.notionId,
                         user.emoji,
                         board.title,
-                        board.content
+                        board.content,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(comment.count())
+                                        .from(comment)
+                                        .where(comment.boardId.eq(board.id)), "commentCount")
                 ))
                 .from(board)
                 .join(user).on(board.bojHandle.eq(user.bojHandle))
@@ -111,5 +136,85 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .fetchOne();
 
         return result;
+    }
+
+    /**
+     * 특정 유저의 아이디로 모든 글 페이징 조회
+     */
+    @Override
+    public Page<BoardSimple> findAllUserBoardSimplePaging(String bojHandle, Pageable pageable) {
+        Long count;
+        List<BoardSimple> result = queryFactory
+                .select(Projections.fields(
+                        BoardSimple.class,
+                        board.id,
+                        board.createdDate,
+                        board.modifiedDate,
+                        board.type,
+                        board.bojHandle,
+                        user.notionId,
+                        user.emoji,
+                        board.title,
+                        board.content,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(comment.count())
+                                        .from(comment)
+                                        .where(comment.boardId.eq(board.id)), "commentCount")
+                ))
+                .from(board)
+                .join(user).on(user.bojHandle.eq(board.bojHandle))
+                .where(board.bojHandle.eq(bojHandle))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(board.createdDate.desc())
+                .fetch();
+
+        count = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(board.bojHandle.eq(bojHandle))
+                .fetchOne();
+
+        return new PageImpl<>(result, pageable, count);
+    }
+
+    /**
+     * 유저의 질의에 따른 like-query 조회
+     */
+    @Override
+    public Page<BoardSimple> findAllBoardSimpleByQueryPaging(String query, Pageable pageable) {
+        Long count;
+        List<BoardSimple> result = queryFactory
+                .select(Projections.fields(
+                        BoardSimple.class,
+                        board.id,
+                        board.createdDate,
+                        board.modifiedDate,
+                        board.type,
+                        board.bojHandle,
+                        user.notionId,
+                        user.emoji,
+                        board.title,
+                        board.content,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(comment.count())
+                                        .from(comment)
+                                        .where(comment.boardId.eq(board.id)), "commentCount")
+                ))
+                .from(board)
+                .join(user).on(user.bojHandle.eq(board.bojHandle))
+                .where(board.title.contains(query))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(board.createdDate.desc())
+                .fetch();
+
+        count = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(board.title.contains(query))
+                .fetchOne();
+
+        return new PageImpl<>(result, pageable, count);
     }
 }

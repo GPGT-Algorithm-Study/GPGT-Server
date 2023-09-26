@@ -51,6 +51,22 @@ public class BoardController {
     }
 
     /**
+     * bojHandle에 따른 게시글 페이징 조회
+     */
+    @GetMapping("/all/user")
+    public Page<BoardSimple> findAllSimpleByUser(@Param("bojHandle") String bojHandle, Pageable pageable) {
+        return boardService.findAllSimpleByUser(bojHandle, pageable);
+    }
+
+    /**
+     * qeury에 따른 게시글 제목으로 페이징 조회
+     */
+    @GetMapping("/all/query/title")
+    public Page<BoardSimple> findAllSimpleByQuery(@Param("query") String query, Pageable pageable) {
+        return boardService.findAllSimpleByQuery(query, pageable);
+    }
+
+    /**
      * 특정 게시글 디테일 조회
      */
     @GetMapping("/detail")

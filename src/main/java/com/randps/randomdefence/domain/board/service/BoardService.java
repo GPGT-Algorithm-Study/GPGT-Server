@@ -200,4 +200,17 @@ public class BoardService {
         return boardRepository.findBoardDetail(boardId);
     }
 
+    /**
+     * 특정 유저의 bojHandle로 게시글 조회 (페이징)
+     */
+    public Page<BoardSimple> findAllSimpleByUser(String bojHandle, Pageable pageable) {
+        return boardRepository.findAllUserBoardSimplePaging(bojHandle, pageable);
+    }
+
+    /**
+     * 특정 질의(Qeury)에 따라 제목에 질의를 포함하는 게시글 조회 (페이징)
+     */
+    public Page<BoardSimple> findAllSimpleByQuery(String query, Pageable pageable) {
+        return boardRepository.findAllBoardSimpleByQueryPaging(query, pageable);
+    }
 }
