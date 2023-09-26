@@ -5,6 +5,7 @@ import com.randps.randomdefence.domain.board.domain.Board;
 import com.randps.randomdefence.domain.board.domain.BoardRepository;
 import com.randps.randomdefence.domain.board.dto.BoardDetail;
 import com.randps.randomdefence.domain.board.dto.BoardSimple;
+import com.randps.randomdefence.domain.board.dto.SearchCondition;
 import com.randps.randomdefence.domain.image.domain.BoardImage;
 import com.randps.randomdefence.domain.image.domain.BoardImageRepository;
 import com.randps.randomdefence.domain.image.domain.Image;
@@ -214,4 +215,12 @@ public class BoardService {
     public Page<BoardSimple> findAllSimpleByQuery(String query, Pageable pageable) {
         return boardRepository.findAllBoardSimpleByQueryPaging(query, pageable);
     }
+
+    /**
+     * SearchCondition에 따른 게시글 동적 조회 (페이징)
+     */
+    public Page<BoardSimple> findAllSimpleByCondition(SearchCondition condition, Pageable pageable) {
+        return boardRepository.findAllBoardSimpleByConditionPaging(condition, pageable);
+    }
+
 }

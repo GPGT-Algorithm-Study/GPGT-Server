@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.board.domain;
 
 import com.randps.randomdefence.domain.board.dto.BoardDetail;
 import com.randps.randomdefence.domain.board.dto.BoardSimple;
+import com.randps.randomdefence.domain.board.dto.SearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,4 +24,7 @@ public interface BoardRepositoryCustom {
 
     // 제목으로 게시글 조회 (페이징)
     Page<BoardSimple> findAllBoardSimpleByQueryPaging(String query, Pageable pageable);
+
+    // 게시글 조건 합쳐서 페이징 조회 (페이징)
+    Page<BoardSimple> findAllBoardSimpleByConditionPaging(SearchCondition condition, Pageable pageable);
 }

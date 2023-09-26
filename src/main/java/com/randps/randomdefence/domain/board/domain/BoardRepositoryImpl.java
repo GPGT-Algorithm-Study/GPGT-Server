@@ -1,11 +1,13 @@
 package com.randps.randomdefence.domain.board.domain;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.randps.randomdefence.domain.board.dto.BoardDetail;
 import com.randps.randomdefence.domain.board.dto.BoardSimple;
+import com.randps.randomdefence.domain.board.dto.SearchCondition;
 import com.randps.randomdefence.domain.image.domain.QBoardImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -227,4 +229,65 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
         return new PageImpl<>(result, pageable, count);
     }
+
+    /**
+     * 게시글 조회에서 사용하는 동적 쿼리를 위한 불리언 빌더
+     */
+    BooleanBuilder searchBuilder(SearchCondition condition) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (!condition.type.isEmpty() && !condition.type.isBlank())
+            builder.and(board.type.eq(condition.type));
+
+        if (!condition.bojHandle.isEmpty() && !condition.bojHandle.isBlank())
+            builder.and(board.bojHandle.eq(condition.bojHandle));
+
+        if (!condition.query.isEmpty() && !condition.query.isBlank())
+            builder.and(board.title.contains(condition.query));
+
+        return builder;
+    }
+
+    /**
+     * 모든 조건에 따른 동적 페이징 조회
+     */
+    @Override
+    public Page<BoardSimple> findAllBoardSimpleByConditionPaging(SearchCondition condition, Pageable pageable) {
+        Long count;
+        List<BoardSimple> result = queryFactory
+                .select(Projections.fields(
+                        BoardSimple.class,
+                        board.id,
+                        board.createdDate,
+                        board.modifiedDate,
+                        board.type,
+                        board.bojHandle,
+                        user.notionId,
+                        user.emoji,
+                        user.profileImg,
+                        board.title,
+                        board.content,
+                        board.problemId,
+                        ExpressionUtils.as(
+                                JPAExpressions.select(comment.count())
+                                        .from(comment)
+                                        .where(comment.boardId.eq(board.id)), "commentCount")
+                ))
+                .from(board)
+                .join(user).on(user.bojHandle.eq(board.bojHandle))
+                .where(searchBuilder(condition))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(board.createdDate.desc())
+                .fetch();
+
+        count = queryFactory
+                .select(board.count())
+                .from(board)
+                .where(searchBuilder(condition))
+                .fetchOne();
+
+        return new PageImpl<>(result, pageable, count);
+    }
+
 }

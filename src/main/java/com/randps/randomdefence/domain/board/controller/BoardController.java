@@ -1,10 +1,7 @@
 package com.randps.randomdefence.domain.board.controller;
 
 import com.randps.randomdefence.domain.board.domain.Board;
-import com.randps.randomdefence.domain.board.dto.BoardDetail;
-import com.randps.randomdefence.domain.board.dto.BoardPublishRequest;
-import com.randps.randomdefence.domain.board.dto.BoardSimple;
-import com.randps.randomdefence.domain.board.dto.BoardUpdateRequest;
+import com.randps.randomdefence.domain.board.dto.*;
 import com.randps.randomdefence.domain.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -64,6 +61,14 @@ public class BoardController {
     @GetMapping("/all/query/title")
     public Page<BoardSimple> findAllSimpleByQuery(@Param("query") String query, Pageable pageable) {
         return boardService.findAllSimpleByQuery(query, pageable);
+    }
+
+    /**
+     * findAllSimpleByCondition
+     */
+    @GetMapping("/all/condition")
+    public Page<BoardSimple> findAllSimpleByCondition(@RequestBody SearchCondition condition, Pageable pageable) {
+        return boardService.findAllSimpleByCondition(condition, pageable);
     }
 
     /**
