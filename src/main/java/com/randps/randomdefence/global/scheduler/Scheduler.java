@@ -9,6 +9,7 @@ import com.randps.randomdefence.domain.user.service.UserGrassService;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
 import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
+import com.randps.randomdefence.global.aws.s3.service.S3BatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -35,6 +36,8 @@ public class Scheduler {
 
     private final TeamService teamService;
 
+    private final S3BatchService s3BatchService;
+
     /*
      * 정해진 시간마다 실행되는 스크래핑 메서드 (매 20분 간격)
      */
@@ -45,6 +48,7 @@ public class Scheduler {
         userInfoService.crawlUserInfoAll(); // 모든 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
         userRandomStreakService.solvedCheckAll(); // 모든 유저의 오늘의 추첨 랜덤 문제 풀었는지 여부를 체크하고 DB를 업데이트한다.
         userInfoService.updateAllUserInfo(); // 모든 유저의 문제 풀었는지 여부를 체크해서 저장한다.
+        s3BatchService.deleteDetachedImages(); // 게시글과 이어지지 않고 기준시간(6시간)이상 지난 모든 이미지를 삭제한다.
     }
 
     /*
