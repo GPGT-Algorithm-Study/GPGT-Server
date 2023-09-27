@@ -22,6 +22,7 @@ public class Comment extends BaseTimeEntity {
 
     private Long parentCommentId;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     @Builder
