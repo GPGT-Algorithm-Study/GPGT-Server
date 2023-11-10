@@ -5,13 +5,11 @@ import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolved;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolvedRepository;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.global.component.parser.BojParserImpl;
 import com.randps.randomdefence.global.component.parser.BojProfileParserImpl;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service

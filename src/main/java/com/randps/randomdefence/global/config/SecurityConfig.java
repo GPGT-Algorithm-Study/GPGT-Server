@@ -2,8 +2,6 @@ package com.randps.randomdefence.global.config;
 
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
-import com.randps.randomdefence.global.config.filter.JwtAuthenticationFilter;
-import com.randps.randomdefence.global.config.filter.JwtAuthorizationFilter;
 import com.randps.randomdefence.global.config.filter.JwtRefreshAuthFilter;
 import com.randps.randomdefence.global.jwt.JwtProvider;
 import com.randps.randomdefence.global.jwt.JwtRefreshUtil;
