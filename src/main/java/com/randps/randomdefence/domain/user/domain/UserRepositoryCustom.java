@@ -6,7 +6,6 @@ import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import com.randps.randomdefence.domain.user.dto.UserMentionDto;
-
 import java.util.List;
 
 public interface UserRepositoryCustom {

@@ -25,21 +25,21 @@ public class RoadmapProblem {
 
     private Long week;
 
-    private Long index;
+    private Long idx;
 
     @Builder
-    public RoadmapProblem(Long roadmapId, Integer problemId, Long week, Long index) {
+    public RoadmapProblem(Long roadmapId, Integer problemId, Long week, Long idx) {
         this.roadmapId = roadmapId;
         this.problemId = problemId;
         this.week = week;
-        this.index = index;
+        this.idx = idx;
     }
 
-    public void update(Long roadmapId, Integer problemId, Long week, Long index) {
+    public void update(Long roadmapId, Integer problemId, Long week, Long idx) {
         this.roadmapId = roadmapId;
         this.problemId = problemId;
         this.week = week;
-        this.index = index;
+        this.idx = idx;
     }
 
     public RoadmapProblemDto toDto() {
@@ -48,7 +48,7 @@ public class RoadmapProblem {
                 .roadmapId(this.roadmapId)
                 .problemId(this.problemId)
                 .week(this.week)
-                .index(this.index)
+                .index(this.idx)
                 .build();
     }
 }

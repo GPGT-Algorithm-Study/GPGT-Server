@@ -1,5 +1,9 @@
 package com.randps.randomdefence.domain.user.domain;
 
+import static com.randps.randomdefence.domain.user.domain.QUser.user;
+import static com.randps.randomdefence.domain.user.domain.QUserRandomStreak.userRandomStreak;
+import static com.randps.randomdefence.global.jwt.domain.QRefreshToken.refreshToken1;
+
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
@@ -8,15 +12,8 @@ import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import com.randps.randomdefence.domain.user.dto.UserMentionDto;
-import com.randps.randomdefence.global.jwt.domain.QRefreshToken;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static com.randps.randomdefence.domain.user.domain.QUser.user;
-import static com.randps.randomdefence.domain.user.domain.QUserRandomStreak.userRandomStreak;
-import static com.randps.randomdefence.global.jwt.domain.QRefreshToken.refreshToken1;
+import javax.persistence.EntityManager;
 
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
