@@ -20,7 +20,7 @@ public class RoadmapProblemSearchService {
      */
     @Transactional
     public List<RoadmapProblemDto> searchTotalRoadmapProblems(Long roadmapId) {
-        List<RoadmapProblem> roadmapProblems = roadmapProblemRepository.findAllByRoadmapIdOrderByIndexAsc(roadmapId);
+        List<RoadmapProblem> roadmapProblems = roadmapProblemRepository.findAllByRoadmapIdOrderByIdxAsc(roadmapId);
         List<RoadmapProblemDto> roadmapProblemDtos = new ArrayList<>();
 
         for (RoadmapProblem roadmapProblem : roadmapProblems) {
@@ -35,7 +35,7 @@ public class RoadmapProblemSearchService {
      */
     @Transactional
     public List<RoadmapProblemDto> searchWeeklyRoadmapProblems(Long roadmapId, Long week) {
-        List<RoadmapProblem> roadmapProblems = roadmapProblemRepository.findAllByRoadmapIdAndWeekOrderByIndexAsc(roadmapId, week);
+        List<RoadmapProblem> roadmapProblems = roadmapProblemRepository.findAllByRoadmapIdAndWeekOrderByIdxAsc(roadmapId, week);
         List<RoadmapProblemDto> roadmapProblemDtos = new ArrayList<>();
 
         for (RoadmapProblem roadmapProblem : roadmapProblems) {

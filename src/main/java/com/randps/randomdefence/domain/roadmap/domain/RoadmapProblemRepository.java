@@ -11,6 +11,6 @@ public interface RoadmapProblemRepository extends JpaRepository<RoadmapProblem, 
 
     void deleteAllByRoadmapId(Long roadmapId);
 
-    List<RoadmapProblem> findAllByRoadmapIdOrderByIndexAsc(Long roadmapId);
-    List<RoadmapProblem> findAllByRoadmapIdAndWeekOrderByIndexAsc(Long roadmapId, Long week);
+    List<RoadmapProblem> findAllByRoadmapIdOrderByIdxAsc(Long roadmapId);
+    List<RoadmapProblem> findAllByRoadmapIdAndWeekOrderByIdxAsc(Long roadmapId, Long week);
 }
