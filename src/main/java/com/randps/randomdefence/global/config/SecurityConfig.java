@@ -56,7 +56,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
 //                .anyRequest().permitAll()
-                .antMatchers("/api/v1/user/auth/login", "/api/v1/user/auth/logout", "/api/v1/user/add/all").permitAll()
+                .antMatchers("/api/v1/user/auth/login", "/api/v1/user/auth/logout", "/api/v1/user/add/all", "/api/v1/user/admin/init").permitAll()
                 .antMatchers("/api/v1/user/add", "/api/v1/user/del", "/api/v1/scraping/*", "api/v1/admin/*").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
