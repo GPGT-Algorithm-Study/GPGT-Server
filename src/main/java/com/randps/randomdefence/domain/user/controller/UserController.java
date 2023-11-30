@@ -5,19 +5,31 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.dto.*;
-import com.randps.randomdefence.domain.user.service.*;
+import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
+import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
+import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
+import com.randps.randomdefence.domain.user.dto.UserMentionDto;
+import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
+import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
+import com.randps.randomdefence.domain.user.service.UserGrassService;
+import com.randps.randomdefence.domain.user.service.UserInfoService;
+import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
+import com.randps.randomdefence.domain.user.service.UserService;
+import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -263,6 +275,24 @@ public class UserController {
         map.put("message", bojHandles.size() + "명의 유저 리스트를 성공적으로 생성했습니다.");
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
+
+    /**
+     * admin을 생성한다.
+     */
+    @PostMapping("/admin/init")
+    public ResponseEntity<Map<String, String>> initAdmin() throws JsonProcessingException {
+        userService.save("fin", "fin", "fin", 1L, "🛠️");
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", "관리자 계정을 성공적으로 생성했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
 
     /**
      * 모든 유저의 마지막 로그인 일시를 조회합니다.
