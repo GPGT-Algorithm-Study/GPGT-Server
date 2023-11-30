@@ -57,7 +57,7 @@ jobs:
      uses: appleboy/ssh-action@master
      with:
       host: ${{ secrets.HOST_IP }}
-      username: ubuntu
+      username: ec2-user
       key: ${{ secrets.PRIVATE_KEY }}
       script: |
        sudo docker rm -f $(sudo docker ps -qa)
