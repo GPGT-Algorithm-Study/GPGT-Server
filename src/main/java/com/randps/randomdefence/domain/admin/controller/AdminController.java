@@ -1,19 +1,25 @@
 package com.randps.randomdefence.domain.admin.controller;
 
 import com.randps.randomdefence.domain.admin.service.AdminService;
+import com.randps.randomdefence.domain.admin.service.AdminStreakService;
 import com.randps.randomdefence.domain.event.dto.EventPointPublishRequest;
 import com.randps.randomdefence.domain.event.dto.EventPointUpdateRequest;
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.item.dto.ItemDto;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,6 +27,8 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
+
+    private final AdminStreakService adminStreakService;
 
     private final EventPointService eventPointService;
 
