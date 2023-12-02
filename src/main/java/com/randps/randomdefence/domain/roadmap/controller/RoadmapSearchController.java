@@ -40,4 +40,12 @@ public class RoadmapSearchController {
         return roadmapSearchService.searchRoadmapSimple(roadmapId);
     }
 
+    /**
+     * 특정 classification에 따른 모든 로드맵 조회 (simple)
+     */
+    @GetMapping("/all/classification")
+    public List<RoadmapSimpleDto> searchAllRoadmapSimpleByClassification(@Param("query") String query) {
+        return roadmapSearchService.searchAllRoadmapByClassificationSimple(query);
+    }
+
 }

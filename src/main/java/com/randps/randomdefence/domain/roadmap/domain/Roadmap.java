@@ -23,6 +23,8 @@ public class Roadmap {
 
     private String name;
 
+    private String classification;
+
     private String description;
 
     private String difficulty;
@@ -30,17 +32,19 @@ public class Roadmap {
     private Long totalProblemCount;
 
     @Builder
-    public Roadmap(String lectureId, String name, String description, String difficulty, Long totalProblemCount) {
+    public Roadmap(String lectureId, String name, String classification, String description, String difficulty, Long totalProblemCount) {
         this.lectureId = lectureId;
         this.name = name;
+        this.classification = classification;
         this.description = description;
         this.difficulty = difficulty;
         this.totalProblemCount = totalProblemCount;
     }
 
-    public void update(String lectureId, String name, String description, String difficulty) {
+    public void update(String lectureId, String name, String classification, String description, String difficulty) {
         this.lectureId = lectureId;
         this.name = name;
+        this.classification = classification;
         this.description = description;
         this.difficulty = difficulty;
     }
@@ -59,6 +63,7 @@ public class Roadmap {
                 .id(this.id)
                 .lectureId(this.lectureId)
                 .name(this.name)
+                .classification(this.classification)
                 .description(this.description)
                 .difficulty(this.difficulty)
                 .totalProblemCount(this.totalProblemCount)

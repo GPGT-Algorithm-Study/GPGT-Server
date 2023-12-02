@@ -13,6 +13,8 @@ public class RoadmapDto {
 
     private String name;
 
+    private String classification;
+
     private String description;
 
     private String difficulty;

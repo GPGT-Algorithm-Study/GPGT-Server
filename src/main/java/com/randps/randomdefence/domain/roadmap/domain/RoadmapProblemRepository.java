@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RoadmapProblemRepository extends JpaRepository<RoadmapProblem, Long> {
 
     Optional<RoadmapProblem> findByProblemId(Integer problemId);
+
+    Optional<RoadmapProblem> findByRoadmapIdAndProblemId(Long roadmapId, Integer problemId);
     List<RoadmapProblem> findAllByRoadmapId(Long roadmapId);
 
     void deleteAllByRoadmapId(Long roadmapId);
