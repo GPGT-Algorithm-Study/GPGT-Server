@@ -60,4 +60,20 @@ public class RoadmapSearchService {
         List<RoadmapTagDto> tagDtos = roadmapTagSearchService.searchRoadmapTagsByCountDesc(roadmap.getId());
         return new RoadmapSimpleDto(roadmap, tagDtos);
     }
+
+    /**
+     * classification 로 모든 로드맵을 조회한다. (simple)
+     */
+    @Transactional
+    public List<RoadmapSimpleDto> searchAllRoadmapByClassificationSimple(String classification) {
+        List<Roadmap> roadmaps = roadmapRepository.findAllByClassificationContaining(classification);
+        List<RoadmapSimpleDto> roadmapSimpleDtos = new ArrayList<>();
+
+        for (Roadmap roadmap : roadmaps) {
+            List<RoadmapTagDto> tagDtos = roadmapTagSearchService.searchRoadmapTagsByCountDesc(roadmap.getId());
+            roadmapSimpleDtos.add(new RoadmapSimpleDto(roadmap, tagDtos));
+        }
+
+        return roadmapSimpleDtos;
+    }
 }

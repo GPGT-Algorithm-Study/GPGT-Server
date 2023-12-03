@@ -25,7 +25,7 @@ public class RoadmapProblemService {
     @Transactional
     public void save(Long roadmapId, Integer problemId, Long week, Long index) {
         Roadmap roadmap = roadmapRepository.findById(roadmapId).orElseThrow(() -> new IllegalArgumentException("roadmap not found"));
-        Optional<RoadmapProblem> dupProblem = roadmapProblemRepository.findByProblemId(problemId);
+        Optional<RoadmapProblem> dupProblem = roadmapProblemRepository.findByRoadmapIdAndProblemId(roadmapId, problemId);
         if (dupProblem.isPresent()) {
             throw new IllegalArgumentException("duplicate problem found: " + dupProblem.get());
         }
