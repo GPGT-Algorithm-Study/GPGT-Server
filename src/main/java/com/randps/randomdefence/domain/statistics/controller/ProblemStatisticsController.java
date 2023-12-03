@@ -33,4 +33,12 @@ public class ProblemStatisticsController {
         problemStatisticsService.incrementAllProblemSolvedCount();
     }
 
+    /*
+     * 모든 유저가 푼 문제에 대해서 풀이 횟수를 카운팅한다.
+     */
+    @PostMapping("/calculate/already")
+    public void incrementAllProblemSolvedCountByAlreadyData() throws JsonProcessingException {
+        problemStatisticsService.incrementAllProblemSolvedCountByAlreadyData();
+    }
+
 }
