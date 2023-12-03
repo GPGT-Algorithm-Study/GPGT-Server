@@ -21,12 +21,8 @@ public class BojSejongParserImpl implements SejongParser {
     @Override
     public List<Object> getAllUserList() throws JsonProcessingException {
         List<Object> users = new ArrayList<>();
-        UriComponents uri = UriComponentsBuilder.newInstance()
-                .scheme("https").host("www.acmicpc.net").path("/school/ranklist/313")
-                .build();
+        UriComponents uri;
 
-        bojSejongWebCrawler.setUrl(uri.toUriString());
-        users.addAll(bojSejongWebCrawler.process());
         for (int i = 1; i <= 11; i++) {
             uri = UriComponentsBuilder.newInstance()
                     .scheme("https").host("www.acmicpc.net").path("/school/ranklist/313")

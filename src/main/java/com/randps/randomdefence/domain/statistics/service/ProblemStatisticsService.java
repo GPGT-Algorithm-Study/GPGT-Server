@@ -69,4 +69,20 @@ public class ProblemStatisticsService {
         }
     }
 
+
+    /*
+     * 모든 유저가 푼 문제에 대해서 풀이 횟수를 카운팅한다.
+     */
+    @Transactional
+    public void incrementAllProblemSolvedCountByAlreadyData() {
+        problemStatisticsRepository.deleteAll();
+        List<UserAlreadySolved> alreadySolvedProblems = userAlreadySolvedRepository.findAll();
+
+        for (UserAlreadySolved alreadySolvedProblem : alreadySolvedProblems) {
+            List<Integer> problemIds = alreadySolvedProblem.getAlreadySolvedList();
+            for (Integer problemId : problemIds) {
+                incrementProblemSolvedCount(problemId);
+            }
+        }
+    }
 }
