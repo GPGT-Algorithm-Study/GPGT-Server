@@ -3,12 +3,14 @@ package com.randps.randomdefence.domain.statistics.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.statistics.domain.ProblemStatistics;
 import com.randps.randomdefence.domain.statistics.domain.ProblemStatisticsRepository;
+import com.randps.randomdefence.domain.statistics.dto.MostSolvedProblemDto;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolved;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolvedRepository;
 import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.domain.UserSolvedProblem;
 import com.randps.randomdefence.domain.user.domain.UserSolvedProblemRepository;
 import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +42,35 @@ public class ProblemStatisticsService {
     }
 
     /*
+     * 모든 문제의 풀이 횟수를 각각 카운팅된대로 늘린다.
+     */
+    @Transactional
+    public void incrementProblemSolvedCount(int[] problemCount) {
+        List<ProblemStatistics> problemStatistics = new ArrayList<>();
+
+        for (int i = 1000; i < problemCount.length; i++) {
+            if (problemCount[i] == 0) continue;
+            problemStatistics.add(new ProblemStatistics(i, (long) problemCount[i]));
+        }
+        problemStatisticsRepository.saveAll(problemStatistics);
+    }
+
+    /*
      * 가장 많은 유저가 푼 순서대로 문제 리스트를 반환한다.
      */
     @Transactional
-    public List<ProblemStatistics> findMostSolvedProblems() {
-        return problemStatisticsRepository.findAllByOrderBySolvedCountDesc();
+    public List<MostSolvedProblemDto> findMostSolvedProblems() {
+        List<ProblemStatistics> problems = problemStatisticsRepository.findTop50ByOrderBySolvedCountDesc();
+        List<MostSolvedProblemDto> mostSolvedProblems = new ArrayList<>();
+
+        for (ProblemStatistics problem : problems) {
+            mostSolvedProblems.add(MostSolvedProblemDto.builder()
+                    .problemId(problem.getProblemId())
+                    .solvedCount(problem.getSolvedCount())
+                    .build());
+        }
+
+        return mostSolvedProblems;
     }
 
     /*
@@ -77,12 +103,14 @@ public class ProblemStatisticsService {
     public void incrementAllProblemSolvedCountByAlreadyData() {
         problemStatisticsRepository.deleteAll();
         List<UserAlreadySolved> alreadySolvedProblems = userAlreadySolvedRepository.findAll();
+        int[] problemCount = new int[35000];
 
         for (UserAlreadySolved alreadySolvedProblem : alreadySolvedProblems) {
             List<Integer> problemIds = alreadySolvedProblem.getAlreadySolvedList();
             for (Integer problemId : problemIds) {
-                incrementProblemSolvedCount(problemId);
+                problemCount[problemId]++;
             }
         }
+        incrementProblemSolvedCount(problemCount);
     }
 }
