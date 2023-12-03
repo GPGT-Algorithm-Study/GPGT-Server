@@ -68,27 +68,26 @@ public class UserSejongCrawlingService {
     }
 
     /*
-     * 모든 세종대학교 유저의 정보를 저장한다.
+     * 모든 세종대학교 유저의 정보를 저장한다. (solevedac)
      */
     @Transactional
-    public Integer saveAllUserInfoInSejong(Integer half) throws JsonProcessingException {
+    public Integer saveAllUserInfoInSejong(Integer idx, Integer total) throws JsonProcessingException {
         List<UserSejong> users = userSejongRepository.findAll();
         Integer size = users.size();
-        if (half == 0) {
-            users = users.subList(0, size/2);
-        } else {
-            users = users.subList(size/2, size);
-        }
+        if (size < size/total * (idx + 1))
+            users = users.subList(size/total * idx, size);
+        else
+            users = users.subList(size/total * idx, size/total * (idx + 1));
 
         for (UserSejong user : users) {
             saveSolvedacUserSejongInfo(user);
         }
 
-        return size/2;
+        return size/total;
     }
 
     /*
-     * 한 세종대학교 유저의 정보를 요청하고 저장한다.
+     * 한 세종대학교 유저의 정보를 요청하고 저장한다. (solevedac)
      */
     @Transactional
     public void saveSolvedacUserSejongInfo(UserSejong user) {

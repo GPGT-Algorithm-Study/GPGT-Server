@@ -49,8 +49,8 @@ public class UserSejongController {
     }
 
     @PostMapping("/init/all/info")
-    public ResponseEntity<Map<String, String>> initAllSejongUsersInfo(@Param("half") Integer half) throws JsonProcessingException {
-        Integer userNumber = userSejongCrawlingService.saveAllUserInfoInSejong(half);
+    public ResponseEntity<Map<String, String>> initAllSejongUsersInfo(@Param("idx") Integer idx, @Param("total") Integer total) throws JsonProcessingException {
+        Integer userNumber = userSejongCrawlingService.saveAllUserInfoInSejong(idx, total);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;
