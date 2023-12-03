@@ -1,7 +1,7 @@
 package com.randps.randomdefence.domain.statistics.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.randps.randomdefence.domain.statistics.domain.ProblemStatistics;
+import com.randps.randomdefence.domain.statistics.dto.MostSolvedProblemDto;
 import com.randps.randomdefence.domain.statistics.service.ProblemStatisticsService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class ProblemStatisticsController {
      * 가장 많은 사람이 푼 문제 순으로 문제 리스트를 반환한다.
      */
     @GetMapping("/most-solved")
-    public List<ProblemStatistics> findMostSolvedProblems() {
+    public List<MostSolvedProblemDto> findMostSolvedProblems() {
         return problemStatisticsService.findMostSolvedProblems();
     }
 
