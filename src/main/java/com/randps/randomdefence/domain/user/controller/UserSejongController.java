@@ -48,9 +48,23 @@ public class UserSejongController {
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 
-    @PostMapping("/init/all/info")
-    public ResponseEntity<Map<String, String>> initAllSejongUsersInfo(@Param("idx") Integer idx, @Param("total") Integer total) throws JsonProcessingException {
+    @PostMapping("/save/all/info")
+    public ResponseEntity<Map<String, String>> saveAllSejongUsersInfo(@Param("idx") Integer idx, @Param("total") Integer total) throws JsonProcessingException {
         Integer userNumber = userSejongCrawlingService.saveAllUserInfoInSejong(idx, total);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("type", httpStatus.getReasonPhrase());
+        map.put("code", "200");
+        map.put("message", userNumber + "명의 유저를 성공적으로 저장했습니다.");
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+    @PostMapping("/init/all/info")
+    public ResponseEntity<Map<String, String>> initAllSejongUsersInfo() throws JsonProcessingException {
+        Integer userNumber = userSejongCrawlingService.crawlingAllSejongUserInfo();
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

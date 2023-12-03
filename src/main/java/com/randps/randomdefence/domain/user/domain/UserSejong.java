@@ -43,6 +43,17 @@ public class UserSejong extends BaseTimeEntity {
         this.totalSolved = totalSolved;
     }
 
+    public void update(UserSejongDto userSejongDto) {
+        this.bojHandle = userSejongDto.getBojHandle();
+        this.profileImg = userSejongDto.getProfileImg();
+        this.tier = userSejongDto.getTier();
+        this.totalSolved = userSejongDto.getTotalSolved();
+    }
+
+    public void updateTotalSolved(Integer totalSolved) {
+        this.totalSolved = totalSolved;
+    }
+
     public UserSejongDto toDto() {
         return UserSejongDto.builder()
                 .bojHandle(this.bojHandle)
