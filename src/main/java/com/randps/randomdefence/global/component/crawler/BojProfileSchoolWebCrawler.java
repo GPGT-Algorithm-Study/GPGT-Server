@@ -16,7 +16,7 @@ public class BojProfileSchoolWebCrawler extends WebCrawler {
         Elements selects = document.select("table#statics tbody");	//⭐⭐⭐ HTML의 table의 tbody의 tr태그의 값을 가져온다.
         //select 메서드 안에 css selector를 작성하여 Elements를 가져올 수 있다.
         Integer idx = selects.size();
-        selects = selects.get(idx - 1).select("td");
+        selects = selects.get(idx - 1).select("td a");
 
         for (Element select : selects) {
             list.add(select.text());
