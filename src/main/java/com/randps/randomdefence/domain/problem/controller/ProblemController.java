@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.problem.controller;
 
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
+import com.randps.randomdefence.domain.problem.dto.ProblemSolveJudgedDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
@@ -21,6 +22,14 @@ public class ProblemController {
     @GetMapping("/find")
     public ProblemDto findByProblemId(@Param("problemId") Integer problemId) {
         return problemService.findProblem(problemId);
+    }
+
+    /**
+     * 유저 bojHandle과 문제Id로 문제 조회 (문제 해결 여부 포함)
+     */
+    @GetMapping("/user/find")
+    public ProblemSolveJudgedDto findByProblemIdAndBojHandle(@Param("bojHandle") String bojHandle, @Param("problemId") Integer problemId) {
+        return problemService.findProblemByBojHandle(bojHandle, problemId);
     }
 
 }
