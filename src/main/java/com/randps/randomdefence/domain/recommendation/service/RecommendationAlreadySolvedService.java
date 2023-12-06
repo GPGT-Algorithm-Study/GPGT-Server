@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class RecommendationAlreadySolvedService {
                 entity, // {요청할 때 보낼 데이터}
                 String.class // {요청시 반환되는 데이터 타입}
         );
-        return response;
+        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
     }
 
     @Transactional
@@ -82,6 +83,7 @@ public class RecommendationAlreadySolvedService {
                 entity, // {요청할 때 보낼 데이터}
                 String.class // {요청시 반환되는 데이터 타입}
         );
-        return response;
+
+        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
     }
 }
