@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.user.dto.UserSejongRegisterRequest;
 import com.randps.randomdefence.domain.user.service.UserSejongRegisterService;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -80,10 +82,10 @@ public class UserSejongRegisterController {
      * 회원을 등록한다.
      */
     @PostMapping("/user")
-    public ResponseEntity<Map<String, String>> registerUser(@Param("bojHandle") String bojHandle, @Param("password") String password)
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody UserSejongRegisterRequest request)
             throws JsonProcessingException, IllegalAccessException {
 
-        userSejongRegisterService.registerUser(bojHandle, password);
+        userSejongRegisterService.registerUser(request.getBojHandle(), request.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;
