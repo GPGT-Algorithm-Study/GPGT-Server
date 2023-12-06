@@ -91,10 +91,17 @@ public class UserSejongRegisterService {
     }
 
     /*
-     *
+     * 검증에 성공한 유저를 생성한다.
      */
     @Transactional
-    public UserInfoResponse registerUser(String bojHandle, String password) throws JsonProcessingException {
+    public UserInfoResponse registerUser(String bojHandle, String password)
+            throws JsonProcessingException, IllegalAccessException {
+        UserRegister userRegister = userRegisterRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalAccessException("검증되지 않은 유저입니다."));
+        if (!userRegister.isValid())
+            throw new IllegalAccessException("검증되지 않은 유저입니다.");
+        Optional<User> existUser = userRepository.findByBojHandle(bojHandle);
+        if (existUser.isPresent())
+            throw new IllegalAccessException("이미 존재하는 유저입니다.");
         User user = userService.save(bojHandle, password, UUID.randomUUID().toString(), 0L, "");
 
         return user.toUserInfoResponse();

@@ -81,7 +81,7 @@ public class UserSejongRegisterController {
      */
     @PostMapping("/user")
     public ResponseEntity<Map<String, String>> registerUser(@Param("bojHandle") String bojHandle, @Param("password") String password)
-            throws JsonProcessingException {
+            throws JsonProcessingException, IllegalAccessException {
 
         userSejongRegisterService.registerUser(bojHandle, password);
 
