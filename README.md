@@ -15,6 +15,9 @@ https://randps.kr
 
 These features help you manage your study and increase the motivation of your study members to learn algorithms.
 
+## Architecture
+![272810489-f20933c0-cea4-43d0-8307-d22f1e3d9ed7](https://github.com/fing9/ProblemRandomDefence/assets/44383895/963d7da3-17d8-4e7f-abec-74a5300939be)
+
 
 ## Dependencies
 - OpenJDK11
