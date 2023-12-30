@@ -1,21 +1,19 @@
 package com.randps.randomdefence.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import com.randps.randomdefence.domain.user.dto.UserMentionDto;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.EntityExistsException;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.EntityExistsException;
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -53,7 +51,7 @@ public class UserService {
                 .notionId(notionId)
                 .password(passwordEncoder.encode(password)) // encoder로 암호화 후 넣기
                 .roles(manager==1?"ROLE_USER,ROLE_ADMIN":"ROLE_USER") // 유저의 권한 설정
-                .manager(manager==1?true:false)
+                .manager(manager == 1)
                 .warning(0)
                 .profileImg("")
                 .emoji(emoji)

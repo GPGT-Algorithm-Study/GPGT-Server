@@ -4,10 +4,9 @@ import com.randps.randomdefence.domain.item.domain.Item;
 import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItemRepository;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import org.springframework.stereotype.Service;
-
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TestItemUseServiceImpl extends ItemUseService{

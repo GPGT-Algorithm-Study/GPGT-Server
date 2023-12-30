@@ -1,8 +1,9 @@
 package com.randps.randomdefence.domain.user.service;
 
+import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
+
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.item.service.RandomStreakFreezeItemUseServiceImpl;
-import com.randps.randomdefence.domain.log.domain.PointLogRepository;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
@@ -10,17 +11,19 @@ import com.randps.randomdefence.domain.recommendation.dto.RecommendationResponse
 import com.randps.randomdefence.domain.recommendation.service.RecommendationService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
-import com.randps.randomdefence.domain.user.domain.*;
+import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserGrass;
+import com.randps.randomdefence.domain.user.domain.UserGrassRepository;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserRandomStreakResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service

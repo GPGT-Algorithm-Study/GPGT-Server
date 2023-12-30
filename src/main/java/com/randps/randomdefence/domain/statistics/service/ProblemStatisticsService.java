@@ -6,7 +6,6 @@ import com.randps.randomdefence.domain.statistics.domain.ProblemStatisticsReposi
 import com.randps.randomdefence.domain.statistics.dto.MostSolvedProblemDto;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolved;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolvedRepository;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.domain.UserSolvedProblem;
 import com.randps.randomdefence.domain.user.domain.UserSolvedProblemRepository;
 import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
@@ -19,8 +18,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class ProblemStatisticsService {
-
-    private final UserRepository userRepository;
 
     private final UserAlreadySolvedRepository userAlreadySolvedRepository;
 

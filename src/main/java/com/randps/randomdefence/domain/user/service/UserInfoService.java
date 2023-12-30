@@ -3,20 +3,16 @@ package com.randps.randomdefence.domain.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
-import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.global.component.parser.BojParserImpl;
 import com.randps.randomdefence.global.component.parser.SolvedacParserImpl;
-import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -49,9 +45,8 @@ public class UserInfoService {
      */
     @Transactional
     public List<UserInfoResponse> getAllInfo() {
-        List<UserInfoResponse> userInfoResponses = userRepository.findAllUserResponse();
 
-        return userInfoResponses;
+        return userRepository.findAllUserResponse();
     }
 
     /*
@@ -125,7 +120,7 @@ public class UserInfoService {
             if (!userSolvedProblemService.isYesterdaySolved(user.getBojHandle())) {
                 // 유저가 어제 문제를 풀었는지 여부를 갱신한다.
                 user.checkYesterdayRandomSolvedNo();
-                Boolean isSuccess = user.increaseWarning();
+                boolean isSuccess = user.increaseWarning();
                 // 경고 로그를 저장한다.
                 if (isSuccess)
                     warningLogSaveService.saveWarningLog(user.getBojHandle(), 1, "[" + user.getBojHandle() + "]" + "'s warnings increased by 1" + " - 사유: 스트릭 끊김 " + "[" + (user.getWarning() - 1) + "->" + user.getWarning() + "]", true);

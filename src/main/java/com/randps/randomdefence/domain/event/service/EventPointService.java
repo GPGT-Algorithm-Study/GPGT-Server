@@ -7,12 +7,11 @@ import com.randps.randomdefence.domain.event.dto.EventPointPublishRequest;
 import com.randps.randomdefence.domain.event.dto.EventPointUpdateRequest;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

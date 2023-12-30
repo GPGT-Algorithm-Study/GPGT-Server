@@ -5,10 +5,9 @@ import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItemRepository;
 import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import org.springframework.stereotype.Service;
-
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DeleteWarningItemUseServiceImpl extends ItemUseService {
@@ -34,7 +33,7 @@ public class DeleteWarningItemUseServiceImpl extends ItemUseService {
         }
 
         // 경고를 차감하고 저장한다.
-        Boolean isSuccess = user.decreaseWarning();
+        boolean isSuccess = user.decreaseWarning();
         // 경고 로그를 저장한다.
         if (isSuccess)
             warningLogSaveService.saveWarningLog(user.getBojHandle(), -1, "[" + user.getBojHandle() + "]" + "'s warnings decreased by 1" + " - 사유: 경고 차감 아이템 사용 " + "[" + (user.getWarning() + 1) + "->" + user.getWarning() + "]", true);

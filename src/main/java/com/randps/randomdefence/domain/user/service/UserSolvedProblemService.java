@@ -1,27 +1,31 @@
 package com.randps.randomdefence.domain.user.service;
 
+import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
+import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.event.service.EventPointService;
-import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
-import com.randps.randomdefence.domain.team.service.TeamService;
-import com.randps.randomdefence.domain.user.domain.*;
-import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
-import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
-import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
-import com.randps.randomdefence.global.component.parser.BojParserImpl;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
+import com.randps.randomdefence.domain.team.service.TeamService;
+import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
+import com.randps.randomdefence.domain.user.domain.UserSolvedProblem;
+import com.randps.randomdefence.domain.user.domain.UserSolvedProblemRepository;
+import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
+import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
+import com.randps.randomdefence.global.component.parser.BojParserImpl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
-import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -53,7 +57,7 @@ public class UserSolvedProblemService {
     @Transactional
     public List<SolvedProblemDto> findAllUserSolvedProblem(String bojHandle) {
         List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(bojHandle);
-        List<SolvedProblemDto> solvedProblems = new ArrayList<SolvedProblemDto>();
+        List<SolvedProblemDto> solvedProblems = new ArrayList<>();
 
         for (UserSolvedProblem problem : userSolvedProblems) {
             SolvedProblemDto solvedProblemDto = problem.toDto();
@@ -89,7 +93,7 @@ public class UserSolvedProblemService {
 
         // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
         for (UserSolvedProblem problem : userSolvedProblems) {
-            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+            LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
             if (startOfDateTime.isBefore(target)) {
                 SolvedProblemDto solvedProblemDto = problem.toDto();
@@ -131,7 +135,7 @@ public class UserSolvedProblemService {
 
             // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
             for (UserSolvedProblem problem : userSolvedProblems) {
-                LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0, 4)), Integer.valueOf(problem.getDateTime().substring(5, 7)), Integer.valueOf(problem.getDateTime().substring(8, 10)), Integer.valueOf(problem.getDateTime().substring(11, 13)), Integer.valueOf(problem.getDateTime().substring(14, 16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+                LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0, 4)), Integer.parseInt(problem.getDateTime().substring(5, 7)), Integer.parseInt(problem.getDateTime().substring(8, 10)), Integer.parseInt(problem.getDateTime().substring(11, 13)), Integer.parseInt(problem.getDateTime().substring(14, 16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
                 if (startOfDateTime.isBefore(target)) {
                     SolvedProblemDto solvedProblemDto = problem.toDto();
@@ -173,7 +177,7 @@ public class UserSolvedProblemService {
                     .language(pair.getLanguage())
                     .build();
             // 중복 제거 로직
-            Boolean isAlreadyExist = false;
+            boolean isAlreadyExist = false;
             for (UserSolvedProblem alreadySolvedProblem : userSolvedProblems){
                 if (alreadySolvedProblem.getProblemId().equals(userSolvedProblem.getProblemId())) {
                     isAlreadyExist = true;
@@ -233,7 +237,7 @@ public class UserSolvedProblemService {
                         .language(pair.getLanguage())
                         .build();
                 // 중복 제거 로직
-                Boolean isAlreadyExist = false;
+                boolean isAlreadyExist = false;
                 for (UserSolvedProblem alreadySolvedProblem : userSolvedProblems) {
                     if (alreadySolvedProblem.getProblemId().equals(userSolvedProblem.getProblemId())) {
                         isAlreadyExist = true;
@@ -291,7 +295,7 @@ public class UserSolvedProblemService {
 
         // DB문제의 푼 날짜를 비교해서 오늘 푼 문제가 한개라도 있다면 true를 반환한다.
         for (UserSolvedProblem problem : userSolvedProblems) {
-            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+            LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
             if (startOfDateTime.isBefore(target)) {
                 return true;
@@ -327,7 +331,7 @@ public class UserSolvedProblemService {
 
         // DB문제의 푼 날짜를 비교해서 어제 푼 문제가 한개라도 있다면 true를 반환한다.
         for (UserSolvedProblem problem : userSolvedProblems) {
-            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+            LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
             if (target.isAfter(startOfDateTime) && target.isBefore(endOfDateTime)) {
                 return true;
             }
@@ -356,7 +360,7 @@ public class UserSolvedProblemService {
         Integer cnt = 0;
         // DB문제의 푼 날짜를 비교해서 오늘 푼 문제의 개수를 새고 반환한다.
         for (UserSolvedProblem problem : userSolvedProblems) {
-            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+            LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
             if (startOfDateTime.isBefore(target)) {
                 cnt++;
@@ -393,7 +397,7 @@ public class UserSolvedProblemService {
         Integer cnt = 0;
         // DB문제의 푼 날짜를 비교해서 어제 푼 문제의 개수를 새고 반환한다.
         for (UserSolvedProblem problem : userSolvedProblems) {
-            LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+            LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
             if (target.isAfter(startOfDateTime) && target.isBefore(endOfDateTime)) {
                 cnt++;

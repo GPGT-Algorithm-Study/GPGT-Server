@@ -1,15 +1,19 @@
 package com.randps.randomdefence.domain.user.service;
 
-import com.randps.randomdefence.domain.user.domain.*;
+import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserGrass;
+import com.randps.randomdefence.domain.user.domain.UserGrassRepository;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.UserGrassDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -72,7 +76,7 @@ public class UserGrassService {
         List<User> users = userRepository.findAll();
 
         for (User user : users) {
-            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(user.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));;
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(user.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
             Optional<UserGrass> isExistTodayUserGrass = userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, today);
 
             if (isExistTodayUserGrass.isPresent()) return;

@@ -5,10 +5,9 @@ import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItem;
 import com.randps.randomdefence.domain.item.domain.UserItemRepository;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.Optional;
+import javax.transaction.Transactional;
 
 public abstract class ItemUseService {
 
@@ -34,7 +33,7 @@ public abstract class ItemUseService {
         Optional<UserItem> userItem = userItemRepository.findByBojHandleAndItem(bojHandle, item);
 
         // 아이템이 없다면 사용에 실패한다.
-        if (!userItem.isPresent()) {
+        if (userItem.isEmpty()) {
             return false;
         }
 
@@ -64,7 +63,7 @@ public abstract class ItemUseService {
         Optional<UserItem> userItem = userItemRepository.findByBojHandleAndItem(user.getBojHandle(), item);
 
         // 아이템이 없다면 사용에 실패한다.
-        if (!userItem.isPresent()) {
+        if (userItem.isEmpty()) {
             return false;
         }
 

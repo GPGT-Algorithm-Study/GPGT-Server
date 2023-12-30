@@ -3,17 +3,16 @@ package com.randps.randomdefence.global.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import javax.annotation.PostConstruct;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
+import javax.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,16 +39,13 @@ public class JwtProvider {
 
         Date tokenExpiration = new Date(System.currentTimeMillis() + (EXPIRE_TIME));
 
-
-        String jwtToken = JWT.create()
+        return JWT.create()
                 .withSubject(bojHandle) //토큰 이름
                 .withExpiresAt(tokenExpiration)
                 .withClaim("id", id)
                 .withClaim("bojHandle", bojHandle)
                 .withClaim("notionId", notionId)
                 .sign(this.getSign());
-
-        return jwtToken;
     }
 
     /**
@@ -77,9 +73,7 @@ public class JwtProvider {
                 return null;
             }
 
-            User tokenUser = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저의 토큰입니다."));
-
-            return tokenUser;
+            return userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저의 토큰입니다."));
 
         } catch (Exception e){
             e.printStackTrace();

@@ -1,6 +1,5 @@
 package com.randps.randomdefence.domain.statistics.service;
 
-import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.dto.TeamStatisticsDto;
 import com.randps.randomdefence.domain.statistics.dto.TeamStatisticsResponse;
@@ -8,16 +7,10 @@ import com.randps.randomdefence.domain.statistics.dto.UserTeamStatisticsDto;
 import com.randps.randomdefence.domain.statistics.dto.UserUserStatisticsPairDto;
 import com.randps.randomdefence.domain.team.domain.Team;
 import com.randps.randomdefence.domain.team.domain.TeamRepository;
-import com.randps.randomdefence.domain.team.service.TeamService;
-import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.domain.user.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -26,8 +19,6 @@ public class TeamStatisticsService {
     private final UserStatisticsRepository userStatisticsRepository;
 
     private final TeamRepository teamRepository;
-
-    private final UserRepository userRepository;
 
     /**
      * 전체 팀 통계를 조회한다. (Querydsl)
@@ -38,8 +29,8 @@ public class TeamStatisticsService {
         List<UserUserStatisticsPairDto> users1 = userStatisticsRepository.findAllByTeam(0);
         List<UserTeamStatisticsDto> userStatDtos1 = new ArrayList<>(); // 팀에 소속된 팀원들
         UserTeamStatisticsDto topContributor1 = new UserTeamStatisticsDto(); // 한 주간 팀에 가장 많이 기여한 사람
-        Integer solved1 = 0; // 한 주간 팀이 푼 전체 문제 수
-        Integer score1 = 0; // 팀 포인트
+        int solved1 = 0; // 한 주간 팀이 푼 전체 문제 수
+        int score1 = 0; // 팀 포인트
 
         // 유저 팀 통계 dto로 변환
         for (UserUserStatisticsPairDto user : users1) {
@@ -82,8 +73,8 @@ public class TeamStatisticsService {
         List<UserUserStatisticsPairDto> users2 = userStatisticsRepository.findAllByTeam(1);
         List<UserTeamStatisticsDto> userStatDtos2 = new ArrayList<>(); // 팀에 소속된 팀원들
         UserTeamStatisticsDto topContributor2 = new UserTeamStatisticsDto(); // 한 주간 팀에 가장 많이 기여한 사람
-        Integer solved2 = 0; // 한 주간 팀이 푼 전체 문제 수
-        Integer score2 = 0; // 팀 포인트
+        int solved2 = 0; // 한 주간 팀이 푼 전체 문제 수
+        int score2 = 0; // 팀 포인트
 
         // 유저 팀 통계 dto로 변환
         for (UserUserStatisticsPairDto user : users2) {
@@ -139,9 +130,7 @@ public class TeamStatisticsService {
         teamStatisticsDtos.add(secondTeam);
 
         // 팀 통게 합치기
-        TeamStatisticsResponse teamStatisticsResponse = TeamStatisticsResponse.builder().teams(teamStatisticsDtos).build();
-
-        return teamStatisticsResponse;
+        return TeamStatisticsResponse.builder().teams(teamStatisticsDtos).build();
     }
 
 }

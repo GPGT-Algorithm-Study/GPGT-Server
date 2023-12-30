@@ -4,11 +4,10 @@ import com.randps.randomdefence.domain.team.domain.Team;
 import com.randps.randomdefence.domain.team.domain.TeamRepository;
 import com.randps.randomdefence.domain.team.dto.TeamInfoResponse;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -25,12 +24,10 @@ public class TeamSearchService {
         Team team = teamRepository.findByTeamNumber(teamNumber).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
         List<User> users = userRepository.findAllByTeam(team.getTeamNumber());
 
-        TeamInfoResponse teamInfoResponse = TeamInfoResponse.builder()
+        return TeamInfoResponse.builder()
                 .name(team.getTeamName())
                 .point(team.getTeamPoint())
                 .teamList(users)
                 .build();
-
-        return teamInfoResponse;
     }
 }

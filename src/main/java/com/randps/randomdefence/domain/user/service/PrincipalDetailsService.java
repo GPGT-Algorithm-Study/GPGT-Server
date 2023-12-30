@@ -1,8 +1,8 @@
 package com.randps.randomdefence.domain.user.service;
 
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.dto.authDto.PrincipalDetails;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

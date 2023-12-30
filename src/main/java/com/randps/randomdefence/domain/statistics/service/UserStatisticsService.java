@@ -1,26 +1,27 @@
 package com.randps.randomdefence.domain.statistics.service;
 
+import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
+
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.statistics.domain.UserProblemStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserProblemStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
-import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
-import com.randps.randomdefence.domain.user.domain.*;
+import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
+import com.randps.randomdefence.domain.user.domain.UserSolvedProblem;
+import com.randps.randomdefence.domain.user.domain.UserSolvedProblemRepository;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
-import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
-import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -186,7 +187,7 @@ public class UserStatisticsService {
 
             // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
             for (UserSolvedProblem problem : userSolvedProblems) {
-                LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+                LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
                 if (startOfDateTime.isBefore(target)) {
                     SolvedProblemDto solvedProblemDto = problem.toDto();
@@ -225,7 +226,7 @@ public class UserStatisticsService {
 
             // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
             for (UserSolvedProblem problem : userSolvedProblems) {
-                LocalDateTime target = LocalDateTime.of(Integer.valueOf(problem.getDateTime().substring(0,4)), Integer.valueOf(problem.getDateTime().substring(5,7)), Integer.valueOf(problem.getDateTime().substring(8,10)), Integer.valueOf(problem.getDateTime().substring(11,13)), Integer.valueOf(problem.getDateTime().substring(14,16)), Integer.valueOf(problem.getDateTime().substring(18)), 0);
+                LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
                 if (startOfDateTime.isBefore(target)) {
                     SolvedProblemDto solvedProblemDto = problem.toDto();

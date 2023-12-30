@@ -1,16 +1,19 @@
 package com.randps.randomdefence.domain.user.domain;
 
+import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
-import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
@@ -69,7 +72,8 @@ public class User extends BaseTimeEntity {
     }
 
     @Builder
-    public User(String bojHandle, String password, String roles, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Boolean isYesterdaySolved, Integer todaySolvedProblemCount) {
+    public User(Long id, String bojHandle, String password, String roles, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Boolean isYesterdaySolved, Integer todaySolvedProblemCount) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.password = password;
         this.roles = roles;

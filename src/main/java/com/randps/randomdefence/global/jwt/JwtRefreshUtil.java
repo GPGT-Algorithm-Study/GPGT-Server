@@ -2,11 +2,17 @@ package com.randps.randomdefence.global.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.global.jwt.dto.TokenDto;
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
 import com.randps.randomdefence.global.jwt.domain.RefreshToken;
 import com.randps.randomdefence.global.jwt.domain.RefreshTokenRepository;
+import com.randps.randomdefence.global.jwt.dto.TokenDto;
+import java.security.cert.CertificateExpiredException;
+import java.util.Base64;
+import java.util.Date;
+import java.util.Optional;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,20 +21,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.security.cert.CertificateExpiredException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Optional;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtRefreshUtil {
-
-    private final UserRepository userRepository;
 
     private final PrincipalDetailsService principalDetailsService;
 

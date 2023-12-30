@@ -4,12 +4,16 @@ import com.randps.randomdefence.domain.item.domain.Item;
 import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItem;
 import com.randps.randomdefence.domain.item.domain.UserItemRepository;
-import com.randps.randomdefence.domain.user.domain.*;
+import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserGrass;
+import com.randps.randomdefence.domain.user.domain.UserGrassRepository;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.service.UserGrassService;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.Optional;
+import javax.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class RandomStreakFreezeItemUseServiceImpl extends ItemUseService {
@@ -37,11 +41,8 @@ public class RandomStreakFreezeItemUseServiceImpl extends ItemUseService {
         Optional<UserItem> userItem = userItemRepository.findByBojHandleAndItem(bojHandle, item);
 
         // 아이템이 없다면 false를 반환
-        if (!userItem.isPresent()) {
-            return false;
-        }
+        return userItem.isPresent();
         // 아이템이 있다면 true를 반환
-        return true;
     }
 
     /*
@@ -53,11 +54,8 @@ public class RandomStreakFreezeItemUseServiceImpl extends ItemUseService {
         Optional<UserItem> userItem = userItemRepository.findByBojHandleAndItem(user.getBojHandle(), item);
 
         // 아이템이 없다면 false를 반환
-        if (!userItem.isPresent()) {
-            return false;
-        }
+        return userItem.isPresent();
         // 아이템이 있다면 true를 반환
-        return true;
     }
 
     @Transactional

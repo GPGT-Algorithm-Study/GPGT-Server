@@ -4,12 +4,11 @@ import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.team.domain.Team;
 import com.randps.randomdefence.domain.team.domain.TeamRepository;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
@@ -31,7 +30,7 @@ public class TeamService {
         Optional<Team> team = teamRepository.findByTeamNumber(teamNumber);
 
         // 팀이 없다면 팀 스코어를 올리지 않는다.
-        if (!team.isPresent()) return;
+        if (team.isEmpty()) return;
 
         team.get().increasePoint(point);
         teamRepository.save(team.get());
@@ -53,13 +52,13 @@ public class TeamService {
             teamName = firstTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = (5 + (Integer) (firstTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
+            winingPoint = (5 + (firstTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
         } else {
             winingTeamUsers = userRepository.findAllByTeam(1);
             teamName = secondTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = (5 + (Integer) (secondTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
+            winingPoint = (5 + (secondTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
         }
 
         // 승리한 팀의 유저들에게 포인트를 지급한다.

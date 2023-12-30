@@ -5,22 +5,18 @@ import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.domain.Team;
 import com.randps.randomdefence.domain.team.domain.TeamRepository;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.domain.user.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class TeamSettingService {
 
     private final TeamRepository teamRepository;
-
-    private final UserService userService;
 
     private final UserStatisticsService userStatisticsService;
 
@@ -36,8 +32,8 @@ public class TeamSettingService {
         List<Integer> secondTeamUserIndexes = new ArrayList<>();
         // 결과를 반환할 리스트
         List<List<User>> teamUserIndexes = new ArrayList<>();
-        teamUserIndexes.add(new ArrayList<User>());
-        teamUserIndexes.add(new ArrayList<User>());
+        teamUserIndexes.add(new ArrayList<>());
+        teamUserIndexes.add(new ArrayList<>());
 
         // 경고가 4개인 유저들은 팀에서 제외한다.
         List<User> liveUsers = new ArrayList<>();
@@ -50,8 +46,8 @@ public class TeamSettingService {
         }
 
         // 두 팀중 한명이 더 많은 팀을 랜덤하게 정한다.
-        Integer smallSize = liveUsers.size() / 2;
-        Integer size;
+        int smallSize = liveUsers.size() / 2;
+        int size;
         if (r.nextInt(2) == 1) {
             size = smallSize;
         } else {
@@ -69,21 +65,26 @@ public class TeamSettingService {
         }
 
         // 1번팀의 유저들을 명시적으로 리스트에 넣는다.
-        for (Integer i=0;i<liveUsers.size();i++) {
-            if (firstTeamUserIndexes.contains(i)) continue;
-            else secondTeamUserIndexes.add(i);
+        for (Integer i = 0; i < liveUsers.size(); i++) {
+            if (firstTeamUserIndexes.contains(i)) {
+                continue;
+            } else {
+                secondTeamUserIndexes.add(i);
+            }
         }
 
         // 두 팀을 DB에서 뽑는다.
-        Team firstTeam = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
-        Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+        Team firstTeam = teamRepository.findByTeamNumber(0)
+                .orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+        Team secondTeam = teamRepository.findByTeamNumber(1)
+                .orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
 
         firstTeam.resetTeamPoint();
         secondTeam.resetTeamPoint();
 
         // 뽑힌 유저를 첫 번째 팀에 할당한다.
-        for (Integer i=0;i<firstTeamUserIndexes.size();i++) {
-            User user = liveUsers.get(firstTeamUserIndexes.get(i));
+        for (Integer firstTeamUserIndex : firstTeamUserIndexes) {
+            User user = liveUsers.get(firstTeamUserIndex);
             user.setTeamNumber(0);
             userRepository.save(user);
             teamUserIndexes.get(0).add(user);
@@ -95,8 +96,8 @@ public class TeamSettingService {
         }
 
         // 뽑히지 않은 유저를 두 번째 팀에 할당한다.
-        for (Integer i=0;i<secondTeamUserIndexes.size();i++) {
-            User user = liveUsers.get(secondTeamUserIndexes.get(i));
+        for (Integer secondTeamUserIndex : secondTeamUserIndexes) {
+            User user = liveUsers.get(secondTeamUserIndex);
             user.setTeamNumber(1);
             userRepository.save(user);
             teamUserIndexes.get(1).add(user);
@@ -117,9 +118,10 @@ public class TeamSettingService {
         List<User> firstTeamUsers = userRepository.findAllByTeam(0);
         List<User> secondTeamUsers = userRepository.findAllByTeam(1);
         Random r = new Random();
-        Integer randTeamIdx;
+        int randTeamIdx;
 
-        if ((firstTeamUsers.isEmpty() && secondTeamUsers.isEmpty()) || firstTeamUsers.size() == secondTeamUsers.size()) {
+        if ((firstTeamUsers.isEmpty() && secondTeamUsers.isEmpty())
+                || firstTeamUsers.size() == secondTeamUsers.size()) {
             // 두 팀중 랜덤한 팀에 배정된다.
             randTeamIdx = r.nextInt(2);
         } else if (secondTeamUsers.isEmpty() || firstTeamUsers.size() > secondTeamUsers.size()) {
@@ -131,7 +133,8 @@ public class TeamSettingService {
         }
 
         if (randTeamIdx == 0) {
-            Team firstTeam = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+            Team firstTeam = teamRepository.findByTeamNumber(0)
+                    .orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
 
             // 뽑힌 유저를 첫 번째 팀에 할당한다.
             user.setTeamNumber(0);
@@ -142,7 +145,8 @@ public class TeamSettingService {
             firstTeam.increasePoint(stat.getWeeklyEarningPoint());
             teamRepository.save(firstTeam);
         } else {
-            Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
+            Team secondTeam = teamRepository.findByTeamNumber(1)
+                    .orElseThrow(() -> new IllegalArgumentException("팀이 먼저 DB에 생성되어야 합니다."));
 
             // 뽑힌 유저를 두 번째 팀에 할당한다.
             user.setTeamNumber(1);
@@ -175,7 +179,9 @@ public class TeamSettingService {
         List<Team> teams = teamRepository.findAll();
 
         // 이미 두 개의 팀이 존재한다면 다시 생성하지 않는다.
-        if (teams.size() == 2) return ;
+        if (teams.size() == 2) {
+            return;
+        }
 
         // 팀을 생성 후 저장한다.
         Team firstTeam = Team.builder()
