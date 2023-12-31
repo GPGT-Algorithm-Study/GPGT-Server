@@ -34,11 +34,12 @@ dependencies {
 	implementation 'com.auth0:java-jwt:4.2.0'
 	implementation 'org.jsoup:jsoup:1.15.3'
 	implementation 'mysql:mysql-connector-java:8.0.32'
-	compileOnly 'org.projectlombok:lombok'
+    testImplementation 'org.projectlombok:lombok:1.18.28'
 	runtimeOnly 'com.h2database:h2'
 //	compile 'com.google.guava:guava'
 	implementation('com.google.guava:guava:32.0.0-android')
 	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor('org.projectlombok:lombok')
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 

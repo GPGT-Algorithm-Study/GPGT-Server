@@ -1,7 +1,7 @@
 package com.randps.randomdefence.domain.statistics.service;
 
-import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.dto.PointBarPair;
+import com.randps.randomdefence.domain.statistics.service.port.UserStatisticsRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

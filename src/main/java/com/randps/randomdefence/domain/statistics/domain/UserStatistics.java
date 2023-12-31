@@ -48,7 +48,8 @@ public class UserStatistics extends BaseTimeEntity {
     private Integer totalEarningPoint;
 
     @Builder
-    public UserStatistics(String bojHandle, Integer dailySolvedProblemCount, Integer dailySolvedMostDifficultProblemId, Integer dailySolvedMostDifficult, Integer dailyEarningPoint, Integer weeklySolvedProblemCount, Integer weeklySolvedMostDifficultProblemId, Integer weeklySolvedMostDifficult, Integer weeklyEarningPoint, Integer totalSolvedProblemCount, Integer totalSolvedMostDifficultProblemId, Integer totalSolvedMostDifficult, Integer totalEarningPoint) {
+    public UserStatistics(Long id, String bojHandle, Integer dailySolvedProblemCount, Integer dailySolvedMostDifficultProblemId, Integer dailySolvedMostDifficult, Integer dailyEarningPoint, Integer weeklySolvedProblemCount, Integer weeklySolvedMostDifficultProblemId, Integer weeklySolvedMostDifficult, Integer weeklyEarningPoint, Integer totalSolvedProblemCount, Integer totalSolvedMostDifficultProblemId, Integer totalSolvedMostDifficult, Integer totalEarningPoint) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.dailySolvedProblemCount = dailySolvedProblemCount;
         this.dailySolvedMostDifficultProblemId = dailySolvedMostDifficultProblemId;

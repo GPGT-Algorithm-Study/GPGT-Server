@@ -7,14 +7,17 @@ import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
-import com.randps.randomdefence.global.component.parser.BojParserImpl;
-import com.randps.randomdefence.global.component.parser.SolvedacParserImpl;
+import com.randps.randomdefence.global.component.parser.Parser;
+import com.randps.randomdefence.global.component.parser.SolvedacParser;
 import java.util.List;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class UserInfoService {
     private final UserRepository userRepository;
@@ -25,9 +28,10 @@ public class UserInfoService {
 
     private final UserSolvedProblemService userSolvedProblemService;
 
-    private final SolvedacParserImpl solvedacParser;
+    private final SolvedacParser solvedacParser;
 
-    private final BojParserImpl bojParser;
+    @Qualifier("bojParserToUse")
+    private final Parser bojParser;
 
     /*
      * 유저의 프로필 정보를 불러온다.

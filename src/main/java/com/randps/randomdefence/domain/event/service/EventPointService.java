@@ -2,18 +2,20 @@ package com.randps.randomdefence.domain.event.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.randps.randomdefence.domain.event.domain.EventPoint;
-import com.randps.randomdefence.domain.event.domain.EventPointRepository;
 import com.randps.randomdefence.domain.event.dto.EventPointPublishRequest;
 import com.randps.randomdefence.domain.event.dto.EventPointUpdateRequest;
+import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.List;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class EventPointService {
 

@@ -1,8 +1,8 @@
 package com.randps.randomdefence.domain.team.service;
 
 import com.randps.randomdefence.domain.team.domain.Team;
-import com.randps.randomdefence.domain.team.domain.TeamRepository;
 import com.randps.randomdefence.domain.team.dto.TeamInfoResponse;
+import com.randps.randomdefence.domain.team.service.port.TeamRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.List;

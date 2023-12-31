@@ -2,8 +2,8 @@ package com.randps.randomdefence.domain.item.service;
 
 import com.randps.randomdefence.domain.boolshit.service.BoolshitService;
 import com.randps.randomdefence.domain.item.domain.Item;
-import com.randps.randomdefence.domain.item.domain.ItemRepository;
-import com.randps.randomdefence.domain.item.domain.UserItemRepository;
+import com.randps.randomdefence.domain.item.service.port.ItemRepository;
+import com.randps.randomdefence.domain.item.service.port.UserItemRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,8 @@ public class BoolshitItemUseServiceImpl extends ItemUseService {
 
     private final BoolshitService boolshitService;
 
-    protected BoolshitItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository, UserItemRepository userItemRepository, BoolshitService boolshitService) {
+    protected BoolshitItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository,
+                                         UserItemRepository userItemRepository, BoolshitService boolshitService) {
         super(userRepository, itemRepository, userItemRepository);
         this.boolshitService = boolshitService;
     }

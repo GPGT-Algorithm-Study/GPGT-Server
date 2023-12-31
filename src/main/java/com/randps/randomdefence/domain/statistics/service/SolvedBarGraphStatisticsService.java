@@ -1,9 +1,9 @@
 package com.randps.randomdefence.domain.statistics.service;
 
 import com.randps.randomdefence.domain.statistics.domain.UserProblemStatistics;
-import com.randps.randomdefence.domain.statistics.domain.UserProblemStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.dto.SolvedBarDto;
 import com.randps.randomdefence.domain.statistics.dto.SolvedBarGraphStatisticsResponse;
+import com.randps.randomdefence.domain.statistics.service.port.UserProblemStatisticsRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
@@ -33,16 +33,14 @@ public class SolvedBarGraphStatisticsService {
         List<User> users = userRepository.findAll();
         for (User user : users) {
             // 유저의 문제 난이도 통계를 찾는다.
-            Optional<UserProblemStatistics> userProblemStatistics = userProblemStatisticsRepository.findByBojHandle(user.getBojHandle());
+            Optional<UserProblemStatistics> userProblemStatistics = userProblemStatisticsRepository.findByBojHandle(
+                    user.getBojHandle());
             UserProblemStatistics userStat;
 
             userStat = userProblemStatistics.orElseGet(() -> new UserProblemStatistics(user.getBojHandle()));
 
             // 유저와 문제 난이도 통계를 조합해서 결과에 추가한다.
-            SolvedBarDto solvedBar = SolvedBarDto.builder()
-                    .user(user)
-                    .userProblemStatistics(userStat)
-                    .build();
+            SolvedBarDto solvedBar = SolvedBarDto.builder().user(user).userProblemStatistics(userStat).build();
             userBars.add(solvedBar);
         }
 

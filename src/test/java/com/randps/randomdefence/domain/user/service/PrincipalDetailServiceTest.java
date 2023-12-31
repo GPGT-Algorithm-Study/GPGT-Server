@@ -3,8 +3,8 @@ package com.randps.randomdefence.domain.user.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.randps.randomdefence.domain.mock.FakeUserRepository;
 import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.mock.FakeUserRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;

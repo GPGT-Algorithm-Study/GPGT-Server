@@ -3,21 +3,25 @@ package com.randps.randomdefence.domain.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolved;
-import com.randps.randomdefence.domain.user.domain.UserAlreadySolvedRepository;
+import com.randps.randomdefence.domain.user.service.port.UserAlreadySolvedRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
-import com.randps.randomdefence.global.component.parser.BojProfileParserImpl;
+import com.randps.randomdefence.global.component.parser.Parser;
 import java.util.List;
 import java.util.Optional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class UserAlreadySolvedService {
 
     private final UserAlreadySolvedRepository userAlreadySolvedRepository;
 
-    private final BojProfileParserImpl bojProfileParser;
+    @Qualifier("bojProfileParserToUse")
+    private final Parser bojProfileParser;
 
     private final UserRepository userRepository;
 
@@ -34,10 +38,7 @@ public class UserAlreadySolvedService {
             target.setAlreadySolvedList(alreadySolvedList);
         } else {
             // 없다면 새로 만들어서 저장한다.
-            target = UserAlreadySolved.builder()
-                    .bojHandle(bojHandle)
-                    .alreadySolvedList(alreadySolvedList)
-                    .build();
+            target = UserAlreadySolved.builder().bojHandle(bojHandle).alreadySolvedList(alreadySolvedList).build();
         }
 
         userAlreadySolvedRepository.save(target);

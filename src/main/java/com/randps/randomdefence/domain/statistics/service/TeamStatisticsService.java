@@ -1,18 +1,20 @@
 package com.randps.randomdefence.domain.statistics.service;
 
-import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.dto.TeamStatisticsDto;
 import com.randps.randomdefence.domain.statistics.dto.TeamStatisticsResponse;
 import com.randps.randomdefence.domain.statistics.dto.UserTeamStatisticsDto;
 import com.randps.randomdefence.domain.statistics.dto.UserUserStatisticsPairDto;
+import com.randps.randomdefence.domain.statistics.service.port.UserStatisticsRepository;
 import com.randps.randomdefence.domain.team.domain.Team;
-import com.randps.randomdefence.domain.team.domain.TeamRepository;
+import com.randps.randomdefence.domain.team.service.port.TeamRepository;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class TeamStatisticsService {
 

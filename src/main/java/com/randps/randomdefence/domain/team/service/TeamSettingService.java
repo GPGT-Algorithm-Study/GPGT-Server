@@ -3,7 +3,7 @@ package com.randps.randomdefence.domain.team.service;
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.domain.Team;
-import com.randps.randomdefence.domain.team.domain.TeamRepository;
+import com.randps.randomdefence.domain.team.service.port.TeamRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;

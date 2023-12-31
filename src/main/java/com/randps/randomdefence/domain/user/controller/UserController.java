@@ -9,6 +9,7 @@ import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import com.randps.randomdefence.domain.user.dto.UserMentionDto;
+import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
 import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
 import com.randps.randomdefence.domain.user.service.UserGrassService;
@@ -58,7 +59,14 @@ public class UserController {
      */
     @PostMapping("/add")
     public ResponseEntity<Map<String, String>> userAdd(@Param("bojHandle") String bojHandle, @Param("password") String password, @Param("notionId") String notionId, @Param("manager") Long manager, @Param("emoji") String emoji) throws JsonProcessingException {
-        User user = userService.save(bojHandle, password, notionId, manager, emoji);
+        UserSave userSave = UserSave.builder()
+                .bojHandle(bojHandle)
+                .password(password)
+                .notionId(notionId)
+                .manager(manager)
+                .emoji(emoji)
+                .build();
+        User user = userService.save(userSave);
 
         // 팀 2개 생성 (있다면 추가로 생성되지 않는다. 초기 유저 생성의 경우 이 부분이 실행됨)
         teamSettingService.makeTeamInitialData();
@@ -257,7 +265,14 @@ public class UserController {
 
         for (int i=0;i< bojHandles.size();i++) {
             // 초기 비밀번호 백준 핸들로 설정
-            userService.save(bojHandles.get(i), bojHandles.get(i), notionIds.get(i), managers.get(i)?1L:0L, emojis.get(i));
+            UserSave userSave = UserSave.builder()
+                    .bojHandle(bojHandles.get(i))
+                    .password(bojHandles.get(i))
+                    .notionId(notionIds.get(i))
+                    .manager(managers.get(i)?1L:0L)
+                    .emoji(emojis.get(i))
+                    .build();
+            userService.save(userSave);
         }
 
         // 팀 2개 생성
@@ -281,7 +296,14 @@ public class UserController {
      */
     @PostMapping("/admin/init")
     public ResponseEntity<Map<String, String>> initAdmin() throws JsonProcessingException {
-        userService.save("fin", "fin", "fin", 1L, "🛠️");
+        UserSave userSave = UserSave.builder()
+                .bojHandle("fin")
+                .password("fin")
+                .notionId("fin")
+                .manager(1L)
+                .emoji("🛠️")
+                .build();
+        userService.save(userSave);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

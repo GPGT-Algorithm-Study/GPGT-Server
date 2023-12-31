@@ -4,7 +4,6 @@ import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
 import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepositoryImpl;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import com.randps.randomdefence.domain.user.dto.UserMentionDto;

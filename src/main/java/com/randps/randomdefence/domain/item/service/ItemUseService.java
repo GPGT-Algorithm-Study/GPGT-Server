@@ -1,9 +1,9 @@
 package com.randps.randomdefence.domain.item.service;
 
 import com.randps.randomdefence.domain.item.domain.Item;
-import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItem;
-import com.randps.randomdefence.domain.item.domain.UserItemRepository;
+import com.randps.randomdefence.domain.item.service.port.ItemRepository;
+import com.randps.randomdefence.domain.item.service.port.UserItemRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.Optional;
@@ -17,7 +17,8 @@ public abstract class ItemUseService {
 
     protected final UserItemRepository userItemRepository;
 
-    protected ItemUseService(UserRepository userRepository, ItemRepository itemRepository, UserItemRepository userItemRepository) {
+    protected ItemUseService(UserRepository userRepository, ItemRepository itemRepository,
+                             UserItemRepository userItemRepository) {
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.userItemRepository = userItemRepository;
@@ -28,7 +29,8 @@ public abstract class ItemUseService {
      */
     @Transactional
     public Boolean useItem(String bojHandle, Long itemId) {
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = userRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템입니다."));
         Optional<UserItem> userItem = userItemRepository.findByBojHandleAndItem(bojHandle, item);
 

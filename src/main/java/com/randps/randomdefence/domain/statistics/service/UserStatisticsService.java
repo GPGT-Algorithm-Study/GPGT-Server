@@ -5,25 +5,27 @@ import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.statistics.domain.UserProblemStatistics;
-import com.randps.randomdefence.domain.statistics.domain.UserProblemStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
-import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
+import com.randps.randomdefence.domain.statistics.service.port.UserProblemStatisticsRepository;
+import com.randps.randomdefence.domain.statistics.service.port.UserStatisticsRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
-import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.domain.UserSolvedProblem;
-import com.randps.randomdefence.domain.user.domain.UserSolvedProblemRepository;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
+import com.randps.randomdefence.domain.user.service.port.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.domain.user.service.port.UserSolvedProblemRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class UserStatisticsService {
 
@@ -46,26 +48,17 @@ public class UserStatisticsService {
      */
     @Transactional
     public UserStatistics save(String bojHandle) {
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = userRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         // 유저 난이도별 문제수 통계 생성
         userProblemStatisticsService.save(bojHandle);
 
-        return UserStatistics.builder()
-                .bojHandle(bojHandle)
-                .dailySolvedProblemCount(0)
-                .dailySolvedMostDifficult(0)
-                .dailySolvedMostDifficultProblemId(0)
-                .dailyEarningPoint(0)
-                .weeklySolvedProblemCount(0)
-                .weeklySolvedMostDifficult(0)
-                .weeklySolvedMostDifficultProblemId(0)
-                .weeklyEarningPoint(0)
-                .totalSolvedProblemCount(0)
-                .totalSolvedMostDifficult(0)
-                .totalSolvedMostDifficultProblemId(0)
-                .totalEarningPoint(0)
-                .build();
+        return UserStatistics.builder().bojHandle(bojHandle).dailySolvedProblemCount(0).dailySolvedMostDifficult(0)
+                .dailySolvedMostDifficultProblemId(0).dailyEarningPoint(0).weeklySolvedProblemCount(0)
+                .weeklySolvedMostDifficult(0).weeklySolvedMostDifficultProblemId(0).weeklyEarningPoint(0)
+                .totalSolvedProblemCount(0).totalSolvedMostDifficult(0).totalSolvedMostDifficultProblemId(0)
+                .totalEarningPoint(0).build();
     }
 
     /*
@@ -106,7 +99,9 @@ public class UserStatisticsService {
         UserStatistics userStat;
 
         // 존재한다면 통계 반환
-        if (stat.isPresent()) return stat.get();
+        if (stat.isPresent()) {
+            return stat.get();
+        }
 
         // 존재하지 않는다면 생성해서 저장 후 반환
         userStat = new UserStatistics(bojHandle);
@@ -165,9 +160,9 @@ public class UserStatisticsService {
         // 오늘의 기준을 만든다.
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfDateTime;
-        if (is6AmAfter(now.getHour()))
+        if (is6AmAfter(now.getHour())) {
             startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
-        else {
+        } else {
             now = now.minusDays(1);
             startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
         }
@@ -176,18 +171,24 @@ public class UserStatisticsService {
         List<UserProblemStatistics> userProblemStatistics = userProblemStatisticsRepository.findAll();
 
         // 각각 유저의 정보를 가져와서 통계를 만들고 저장한다.
-        for (UserProblemStatistics stat: userProblemStatistics) {
+        for (UserProblemStatistics stat : userProblemStatistics) {
             // 유저가 오늘 푼 문제 통계 초기화
             stat.initDaily();
 
             // 오늘 푼 문제들 통계 누적
             // 데이터를 DB에서 가져온다.
-            List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(stat.getBojHandle());
+            List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
+                    stat.getBojHandle());
             List<SolvedProblemDto> solvedProblems = new ArrayList<>();
 
             // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
             for (UserSolvedProblem problem : userSolvedProblems) {
-                LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
+                LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0, 4)),
+                        Integer.parseInt(problem.getDateTime().substring(5, 7)),
+                        Integer.parseInt(problem.getDateTime().substring(8, 10)),
+                        Integer.parseInt(problem.getDateTime().substring(11, 13)),
+                        Integer.parseInt(problem.getDateTime().substring(14, 16)),
+                        Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
                 if (startOfDateTime.isBefore(target)) {
                     SolvedProblemDto solvedProblemDto = problem.toDto();
@@ -212,21 +213,28 @@ public class UserStatisticsService {
         List<UserStatistics> userStatisticsList = userStatisticsRepository.findAll();
 
         // 각각 유저의 정보를 가져와서 통계를 만들고 저장한다.
-        for (UserStatistics stat: userStatisticsList) {
+        for (UserStatistics stat : userStatisticsList) {
             // 유저가 오늘 번 포인트 통계 초기화
             stat.initDaily();
 
             // 유저의 랜덤 스트릭 가져오기
-            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(stat.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(stat.getBojHandle())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
 
             // 오늘 푼 문제들 포인트 통계 누적
             // 데이터를 DB에서 가져온다.
-            List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(stat.getBojHandle());
+            List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
+                    stat.getBojHandle());
             List<SolvedProblemDto> solvedProblems = new ArrayList<>();
 
             // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
             for (UserSolvedProblem problem : userSolvedProblems) {
-                LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0,4)), Integer.parseInt(problem.getDateTime().substring(5,7)), Integer.parseInt(problem.getDateTime().substring(8,10)), Integer.parseInt(problem.getDateTime().substring(11,13)), Integer.parseInt(problem.getDateTime().substring(14,16)), Integer.parseInt(problem.getDateTime().substring(18)), 0);
+                LocalDateTime target = LocalDateTime.of(Integer.parseInt(problem.getDateTime().substring(0, 4)),
+                        Integer.parseInt(problem.getDateTime().substring(5, 7)),
+                        Integer.parseInt(problem.getDateTime().substring(8, 10)),
+                        Integer.parseInt(problem.getDateTime().substring(11, 13)),
+                        Integer.parseInt(problem.getDateTime().substring(14, 16)),
+                        Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
                 if (startOfDateTime.isBefore(target)) {
                     SolvedProblemDto solvedProblemDto = problem.toDto();

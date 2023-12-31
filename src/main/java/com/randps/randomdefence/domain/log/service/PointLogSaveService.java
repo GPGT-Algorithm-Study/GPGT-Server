@@ -1,14 +1,16 @@
 package com.randps.randomdefence.domain.log.service;
 
 import com.randps.randomdefence.domain.log.domain.PointLog;
-import com.randps.randomdefence.domain.log.domain.PointLogRepository;
+import com.randps.randomdefence.domain.log.service.port.PointLogRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class PointLogSaveService {
 

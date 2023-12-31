@@ -1,17 +1,18 @@
 package com.randps.randomdefence.domain.item.service;
 
 import com.randps.randomdefence.domain.item.domain.Item;
-import com.randps.randomdefence.domain.item.domain.ItemRepository;
-import com.randps.randomdefence.domain.item.domain.UserItemRepository;
+import com.randps.randomdefence.domain.item.service.port.ItemRepository;
+import com.randps.randomdefence.domain.item.service.port.UserItemRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TestItemUseServiceImpl extends ItemUseService{
+public class TestItemUseServiceImpl extends ItemUseService {
 
-    protected TestItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository, UserItemRepository userItemRepository) {
+    protected TestItemUseServiceImpl(UserRepository userRepository, ItemRepository itemRepository,
+                                     UserItemRepository userItemRepository) {
         super(userRepository, itemRepository, userItemRepository);
     }
 

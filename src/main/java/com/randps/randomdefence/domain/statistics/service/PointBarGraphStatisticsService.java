@@ -1,9 +1,9 @@
 package com.randps.randomdefence.domain.statistics.service;
 
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
-import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.dto.PointBarDto;
 import com.randps.randomdefence.domain.statistics.dto.PointBarGraphStatisticsResponse;
+import com.randps.randomdefence.domain.statistics.service.port.UserStatisticsRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
