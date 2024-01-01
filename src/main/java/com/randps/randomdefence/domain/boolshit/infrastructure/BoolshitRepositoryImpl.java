@@ -1,15 +1,16 @@
-package com.randps.randomdefence.domain.boolshit.domain;
-
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.randps.randomdefence.domain.boolshit.dto.BoolshitLastResponse;
-
-import javax.persistence.EntityManager;
-import java.util.Optional;
+package com.randps.randomdefence.domain.boolshit.infrastructure;
 
 import static com.randps.randomdefence.domain.boolshit.domain.QBoolshit.boolshit;
 import static com.randps.randomdefence.domain.user.domain.QUser.user;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.randps.randomdefence.domain.boolshit.dto.BoolshitLastResponse;
+import java.util.Optional;
+import javax.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class BoolshitRepositoryImpl implements BoolshitRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;

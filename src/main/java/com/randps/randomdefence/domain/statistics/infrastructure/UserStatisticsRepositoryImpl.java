@@ -6,7 +6,7 @@ import static com.randps.randomdefence.domain.user.domain.QUser.user;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.randps.randomdefence.domain.statistics.dto.PointBarPair;
-import com.randps.randomdefence.domain.statistics.dto.UserUserStatisticsPairDto;
+import com.randps.randomdefence.domain.statistics.dto.UserStatisticsPairDto;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -24,10 +24,10 @@ public class UserStatisticsRepositoryImpl implements UserStatisticsRepositoryCus
      * 팀번호로 팀 정보 조회
      */
     @Override
-    public List<UserUserStatisticsPairDto> findAllByTeam(Integer team) {
-        List<UserUserStatisticsPairDto> result = queryFactory
+    public List<UserStatisticsPairDto> findAllByTeam(Integer team) {
+        List<UserStatisticsPairDto> result = queryFactory
                 .select(Projections.fields(
-                        UserUserStatisticsPairDto.class,
+                        UserStatisticsPairDto.class,
                         user.bojHandle,
                         user.notionId,
                         user.profileImg,

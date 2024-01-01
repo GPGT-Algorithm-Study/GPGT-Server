@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class UserUserStatisticsPairDto {
+public class UserStatisticsPairDto {
 
     // User
     private String bojHandle;
@@ -23,7 +23,7 @@ public class UserUserStatisticsPairDto {
     private Integer weeklyEarningPoint;
 
     @Builder
-    public UserUserStatisticsPairDto(String bojHandle, String notionId, String profileImg, String emoji, Integer point, Integer weeklySolvedProblemCount, Integer weeklyEarningPoint) {
+    public UserStatisticsPairDto(String bojHandle, String notionId, String profileImg, String emoji, Integer point, Integer weeklySolvedProblemCount, Integer weeklyEarningPoint) {
         this.bojHandle = bojHandle;
         this.notionId = notionId;
         this.profileImg = profileImg;
@@ -33,6 +33,6 @@ public class UserUserStatisticsPairDto {
         this.weeklyEarningPoint = weeklyEarningPoint;
     }
 
-    public UserUserStatisticsPairDto() {}
+    public UserStatisticsPairDto() {}
 
 }

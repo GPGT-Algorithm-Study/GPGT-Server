@@ -35,6 +35,7 @@ dependencies {
 	implementation 'org.jsoup:jsoup:1.15.3'
 	implementation 'mysql:mysql-connector-java:8.0.32'
     testImplementation 'org.projectlombok:lombok:1.18.28'
+	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 //	compile 'com.google.guava:guava'
 	implementation('com.google.guava:guava:32.0.0-android')

@@ -1,10 +1,10 @@
-package com.randps.randomdefence.global.jwt;
+package com.randps.randomdefence.global.jwt.component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
+import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
 import com.randps.randomdefence.global.jwt.domain.RefreshToken;
-import com.randps.randomdefence.global.jwt.domain.RefreshTokenRepository;
 import com.randps.randomdefence.global.jwt.dto.TokenDto;
 import java.security.cert.CertificateExpiredException;
 import java.util.Base64;
@@ -31,7 +31,7 @@ public class JwtRefreshUtil {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private static final long ACCESS_TIME = 60L * 1000L;  // 만료 시간 1분
-//    private static final long REFRESH_TIME = 2L * 60L * 1000L; // 만료 시간 2분
+    //    private static final long REFRESH_TIME = 2L * 60L * 1000L; // 만료 시간 2분
     private static final long REFRESH_TIME = 24L * 60L * 60L * 1000L; // 만료 시간 24시간
     public static final String ACCESS_TOKEN = "Access_Token";
     public static final String REFRESH_TOKEN = "Refresh_Token";
@@ -39,7 +39,7 @@ public class JwtRefreshUtil {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    private Algorithm getSign(){
+    private Algorithm getSign() {
         return Algorithm.HMAC512(secretKey);
     }
 
@@ -50,10 +50,9 @@ public class JwtRefreshUtil {
     }
 
 
-
     // header 토큰을 가져오는 기능
     public String getHeaderToken(HttpServletRequest request, String type) {
-        return type.equals("Access") ? request.getHeader(ACCESS_TOKEN) :request.getHeader(REFRESH_TOKEN);
+        return type.equals("Access") ? request.getHeader(ACCESS_TOKEN) : request.getHeader(REFRESH_TOKEN);
     }
 
     // 토큰 생성
@@ -68,12 +67,8 @@ public class JwtRefreshUtil {
 
         long time = type.equals("Access") ? ACCESS_TIME : REFRESH_TIME;
 
-        return JWT.create()
-                .withSubject(nickname)
-                .withExpiresAt(new Date(System.currentTimeMillis() + time))
-                .withIssuedAt(date)
-                .withClaim("bojHandle", nickname)
-                .sign(this.getSign());
+        return JWT.create().withSubject(nickname).withExpiresAt(new Date(System.currentTimeMillis() + time))
+                .withIssuedAt(date).withClaim("bojHandle", nickname).sign(this.getSign());
     }
 
     // 토큰 검증
@@ -106,7 +101,9 @@ public class JwtRefreshUtil {
     public Boolean refreshTokenValidation(String token) {
 
         // 1차 토큰 검증
-        if(!tokenValidation(token)) return false;
+        if (!tokenValidation(token)) {
+            return false;
+        }
 
         // DB에 저장한 토큰 비교
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByBojHandle(getBojHandleFromToken(token));

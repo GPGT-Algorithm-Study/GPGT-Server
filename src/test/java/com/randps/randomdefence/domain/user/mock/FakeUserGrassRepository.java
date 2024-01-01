@@ -28,7 +28,7 @@ public class FakeUserGrassRepository implements UserGrassRepository {
         if (userGrass.getId() == null || userGrass.getId() == 0L) {
             autoIncreasingCount++;
             UserGrass newUserGrass = UserGrass.builder()
-                    .id(userGrass.getId())
+                    .id(autoIncreasingCount)
                     .problemId(userGrass.getProblemId())
                     .date(userGrass.getDate())
                     .grassInfo(userGrass.getGrassInfo())

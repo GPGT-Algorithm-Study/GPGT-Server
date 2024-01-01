@@ -3,9 +3,12 @@ package com.randps.randomdefence.domain.event.mock;
 import com.randps.randomdefence.domain.event.domain.EventPoint;
 import com.randps.randomdefence.domain.event.dto.EventPointDto;
 import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FakeEventPointRepository implements EventPointRepository {
 
@@ -17,26 +20,16 @@ public class FakeEventPointRepository implements EventPointRepository {
     public EventPoint save(EventPoint eventPoint) {
         if (eventPoint.getId() == null || eventPoint.getId() == 0L) {
             autoIncreasingCount++;
-            EventPoint newEventPoint = EventPoint.builder()
-                    .id(autoIncreasingCount)
-                    .eventName(eventPoint.getEventName())
-                    .description(eventPoint.getDescription())
-                    .startTime(eventPoint.getStartTime())
-                    .endTime(eventPoint.getEndTime())
-                    .percentage(eventPoint.getPercentage())
-                    .build();
+            EventPoint newEventPoint = EventPoint.builder().id(autoIncreasingCount).eventName(eventPoint.getEventName())
+                    .description(eventPoint.getDescription()).startTime(eventPoint.getStartTime())
+                    .endTime(eventPoint.getEndTime()).percentage(eventPoint.getPercentage()).build();
             data.add(newEventPoint);
             return newEventPoint;
         } else {
             data.removeIf(item -> item.getId().equals(eventPoint.getId()));
-            EventPoint newEventPoint = EventPoint.builder()
-                    .id(eventPoint.getId())
-                    .eventName(eventPoint.getEventName())
-                    .description(eventPoint.getDescription())
-                    .startTime(eventPoint.getStartTime())
-                    .endTime(eventPoint.getEndTime())
-                    .percentage(eventPoint.getPercentage())
-                    .build();
+            EventPoint newEventPoint = EventPoint.builder().id(eventPoint.getId()).eventName(eventPoint.getEventName())
+                    .description(eventPoint.getDescription()).startTime(eventPoint.getStartTime())
+                    .endTime(eventPoint.getEndTime()).percentage(eventPoint.getPercentage()).build();
             data.add(newEventPoint);
             return newEventPoint;
         }
@@ -54,16 +47,28 @@ public class FakeEventPointRepository implements EventPointRepository {
 
     @Override
     public List<EventPointDto> findAllByDto() {
-        return null;
+        return data.stream().sorted(Comparator.comparing(EventPoint::getStartTime))
+                .map(item -> EventPointDto.builder().id(item.getId()).eventName(item.getEventName())
+                        .description(item.getDescription()).startTime(item.getStartTime()).endTime(item.getEndTime())
+                        .percentage(item.getPercentage()).createdDate(item.getCreatedDate())
+                        .modifiedDate(item.getModifiedDate()).build()).collect(Collectors.toList());
     }
 
     @Override
     public List<EventPoint> findAllValidEvent() {
-        return null;
+        LocalDateTime now = LocalDateTime.now();
+        return data.stream().filter(item -> item.getStartTime().isBefore(now) && item.getEndTime().isAfter(now))
+                .sorted(Comparator.comparing(EventPoint::getStartTime)).collect(Collectors.toList());
     }
 
     @Override
     public List<EventPointDto> findAllValidEventByDto() {
-        return null;
+        LocalDateTime now = LocalDateTime.now();
+        return data.stream().filter(item -> item.getStartTime().isBefore(now) && item.getEndTime().isAfter(now))
+                .sorted(Comparator.comparing(EventPoint::getStartTime))
+                .map(item -> EventPointDto.builder().id(item.getId()).eventName(item.getEventName())
+                        .description(item.getDescription()).startTime(item.getStartTime()).endTime(item.getEndTime())
+                        .percentage(item.getPercentage()).createdDate(item.getCreatedDate())
+                        .modifiedDate(item.getModifiedDate()).build()).collect(Collectors.toList());
     }
 }

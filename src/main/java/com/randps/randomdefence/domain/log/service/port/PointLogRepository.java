@@ -18,4 +18,6 @@ public interface PointLogRepository {
     Optional<PointLog> findById(Long id);
 
     List<PointLog> findAll();
+
+    void deleteAllByBojHandle(String bojHandle);
 }

@@ -12,6 +12,7 @@ import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
+import java.util.List;
 import javax.persistence.EntityExistsException;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -148,6 +149,65 @@ public class UserServiceTest {
         assertThatThrownBy(() -> {
             testContainer.userService.save(userSave);
         }).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void delete를_이용해_유저를_bojHandle로_삭제할_수_있다() throws JsonProcessingException {
+        // given
+        UserScrapingInfoDto userScrapingInfoDto = UserScrapingInfoDto.builder()
+                .tier(15)
+                .profileImg("https://static.solved.ac/uploads/profile/64x64/fin-picture-1665752455693.png")
+                .currentStreak(252)
+                .totalSolved(1067)
+                .isTodaySolved(true)
+                .todaySolvedProblemCount(1)
+                .build();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        TestContainer testContainer = TestContainer.builder()
+                .parser(new FakeParserImpl())
+                .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
+                .passwordEncoder(passwordEncoder)
+                .build();
+        UserSave userSave = UserSave.builder()
+                .bojHandle("fin")
+                .password("q1w2e3r4!")
+                .notionId("성민")
+                .manager(1L)
+                .emoji("🛠️")
+                .build();
+        testContainer.userService.save(userSave);
+
+        // when
+        testContainer.userService.delete("fin");
+        List<User> userResults = testContainer.userRepository.findAll();
+
+        // then
+        assertThat(userResults.size()).isEqualTo(0);
+        // 유저 프로필 정보 삭제
+        assertThatThrownBy(() -> {
+            testContainer.userInfoService.getInfo("fin");
+        }).isInstanceOf(IllegalArgumentException.class);
+        // 유저 랜덤 스트릭 삭제 & 유저 랜덤 스트릭 잔디 삭제
+        assertThatThrownBy(() -> {
+            testContainer.userRandomStreakService.findUserRandomStreak("fin");
+        }).isInstanceOf(IllegalArgumentException.class);
+        // 유저 오늘 푼 문제 삭제
+        assertThatThrownBy(() -> {
+            testContainer.userSolvedProblemService.findAllUserSolvedProblem("fin");
+        }).isInstanceOf(IllegalArgumentException.class);
+        // 유저 통계 삭제
+        assertThat(testContainer.userStatisticsRepository.findByBojHandle("fin")).isNull();
+        // 유저 JWT 토큰 삭제
+        assertThat(testContainer.refreshTokenRepository.findByBojHandle("fin")).isNull();
+        // 유저 나의 한마디 삭제
+        assertThat(testContainer.boolshitRepository.findAll().size()).isEqualTo(0);
+        // 유저 포인트 로그 삭제
+        assertThat(testContainer.pointLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
+        // 유저 경고 로그 삭제
+        assertThat(testContainer.warningLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
+        // 유저 아이템 삭제
+        assertThat(testContainer.userItemRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
+        // 유저 게시글 삭제?
     }
 
 }

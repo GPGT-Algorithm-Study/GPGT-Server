@@ -2,7 +2,7 @@ package com.randps.randomdefence.domain.statistics.infrastructure;
 
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.dto.PointBarPair;
-import com.randps.randomdefence.domain.statistics.dto.UserUserStatisticsPairDto;
+import com.randps.randomdefence.domain.statistics.dto.UserStatisticsPairDto;
 import com.randps.randomdefence.domain.statistics.service.port.UserStatisticsRepository;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class UserStatisticsRepositoryAdapter implements UserStatisticsRepository
     }
 
     @Override
-    public List<UserUserStatisticsPairDto> findAllByTeam(Integer team) {
+    public List<UserStatisticsPairDto> findAllByTeam(Integer team) {
         return userStatisticsRepository.findAllByTeam(team);
     }
 

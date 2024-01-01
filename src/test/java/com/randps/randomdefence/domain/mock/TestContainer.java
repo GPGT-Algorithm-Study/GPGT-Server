@@ -1,6 +1,8 @@
 package com.randps.randomdefence.domain.mock;
 
 
+import com.randps.randomdefence.domain.boolshit.mock.FakeBoolshitRepository;
+import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
 import com.randps.randomdefence.domain.event.mock.FakeEventPointRepository;
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
@@ -33,7 +35,9 @@ import com.randps.randomdefence.domain.user.mock.FakeUserGrassRepository;
 import com.randps.randomdefence.domain.user.mock.FakeUserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.mock.FakeUserRepository;
 import com.randps.randomdefence.domain.user.mock.FakeUserSolvedProblemRepository;
+import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
 import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
+import com.randps.randomdefence.domain.user.service.UserAuthService;
 import com.randps.randomdefence.domain.user.service.UserGrassService;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
@@ -47,6 +51,9 @@ import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.domain.user.service.port.UserSolvedProblemRepository;
 import com.randps.randomdefence.global.component.parser.Parser;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
+import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
+import com.randps.randomdefence.global.jwt.mock.FakeRefreshTokenRepository;
 import lombok.Builder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -66,8 +73,16 @@ public class TestContainer {
     public final UserItemRepository userItemRepository;
     public final ItemRepository itemRepository;
     public final WarningLogRepository warningLogRepository;
+
+    public final RefreshTokenRepository refreshTokenRepository;
+
+    public final BoolshitRepository boolshitRepository;
+
     public final Parser parserHolder;
     public final SolvedacParser solvedacParserHolder;
+
+    public final JwtRefreshUtil jwtUtil;
+
     public final UserAlreadySolvedService userAlreadySolvedService;
     public final UserSolvedJudgeService userSolvedJudgeService;
     public final UserGrassService userGrassService;
@@ -85,6 +100,10 @@ public class TestContainer {
     public final UserInfoService userInfoService;
     public final UserService userService;
 
+    public final PrincipalDetailsService principalDetailsService;
+
+    public final UserAuthService userAuthService;
+
     @Builder
     public TestContainer(Parser parser, SolvedacParser solvedacParser, BCryptPasswordEncoder passwordEncoder) {
         userRepository = new FakeUserRepository();
@@ -101,6 +120,8 @@ public class TestContainer {
         userItemRepository = new FakeUserItemRepository();
         itemRepository = new FakeItemRepository();
         warningLogRepository = new FakeWarningLogRepository();
+        refreshTokenRepository = new FakeRefreshTokenRepository();
+        boolshitRepository = new FakeBoolshitRepository(userRepository);
         parserHolder = parser;
         solvedacParserHolder = solvedacParser;
         userAlreadySolvedService = UserAlreadySolvedService.builder()
@@ -203,6 +224,16 @@ public class TestContainer {
                 .userInfoService(userInfoService)
                 .userRandomStreakService(userRandomStreakService)
                 .userSolvedProblemService(userSolvedProblemService)
+                .build();
+        principalDetailsService = PrincipalDetailsService.builder()
+                .userRepository(userRepository)
+                .build();
+        jwtUtil = new JwtRefreshUtil(principalDetailsService, refreshTokenRepository);
+        userAuthService = UserAuthService.builder()
+                .passwordEncoder(passwordEncoder)
+                .userRepository(userRepository)
+                .refreshTokenRepository(refreshTokenRepository)
+                .jwtUtil(jwtUtil)
                 .build();
     }
 

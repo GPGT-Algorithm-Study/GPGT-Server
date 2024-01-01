@@ -23,12 +23,8 @@ public class PointLogSaveService {
      */
     @Transactional
     public PointLog savePointLog(String bojHandle, Integer changedValue, String description, Boolean state) {
-        PointLog pointLog = PointLog.builder()
-                .bojHandle(bojHandle)
-                .changedValue(changedValue)
-                .description(description)
-                .state(state)
-                .build();
+        PointLog pointLog = PointLog.builder().bojHandle(bojHandle).changedValue(changedValue).description(description)
+                .state(state).build();
         pointLogRepository.save(pointLog);
 
         return pointLog;
@@ -39,7 +35,8 @@ public class PointLogSaveService {
      */
     @Transactional
     public PointLog saveAndApplyPointLog(String bojHandle, Integer changedValue, String description, Boolean state) {
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = userRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         Boolean result;
 
         if (changedValue > 0) {
@@ -52,12 +49,8 @@ public class PointLogSaveService {
         }
         userRepository.save(user);
 
-        PointLog pointLog = PointLog.builder()
-                .bojHandle(bojHandle)
-                .changedValue(changedValue)
-                .description(description)
-                .state(state)
-                .build();
+        PointLog pointLog = PointLog.builder().bojHandle(bojHandle).changedValue(changedValue).description(description)
+                .state(state).build();
         pointLogRepository.save(pointLog);
 
         return pointLog;
@@ -68,8 +61,10 @@ public class PointLogSaveService {
      */
     @Transactional
     public PointLog rollbackPointLog(Long logId) {
-        PointLog pointLog = pointLogRepository.findById(logId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로그입니다."));
-        User user = userRepository.findByBojHandle(pointLog.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        PointLog pointLog = pointLogRepository.findById(logId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 로그입니다."));
+        User user = userRepository.findByBojHandle(pointLog.getBojHandle())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         // 유저의 포인트 변화를 되돌린다.
         user.decreasePoint(pointLog.getChangedValue());
@@ -80,5 +75,13 @@ public class PointLogSaveService {
         pointLogRepository.save(pointLog);
 
         return pointLog;
+    }
+
+    /*
+     * 특정 유저의 모든 포인트 로그를 삭제한다.
+     */
+    @Transactional
+    public void deleteAllPointLog(String bojHandle) {
+        pointLogRepository.deleteAllByBojHandle(bojHandle);
     }
 }

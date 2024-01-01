@@ -2,7 +2,7 @@ package com.randps.randomdefence.domain.statistics.mock;
 
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.dto.PointBarPair;
-import com.randps.randomdefence.domain.statistics.dto.UserUserStatisticsPairDto;
+import com.randps.randomdefence.domain.statistics.dto.UserStatisticsPairDto;
 import com.randps.randomdefence.domain.statistics.service.port.UserStatisticsRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,9 +69,9 @@ public class FakeUserStatisticsRepository implements UserStatisticsRepository {
         return data;
     }
 
-    // TODO : implement
+    // TODO : implement this method
     @Override
-    public List<UserUserStatisticsPairDto> findAllByTeam(Integer team) {
+    public List<UserStatisticsPairDto> findAllByTeam(Integer team) {
         return null;
     }
 

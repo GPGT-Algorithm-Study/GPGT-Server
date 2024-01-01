@@ -44,4 +44,10 @@ public class PointLogRepositoryAdapter implements PointLogRepository {
     public List<PointLog> findAll() {
         return pointLogJpaRepository.findAll();
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        List<PointLog> pointLogs = pointLogJpaRepository.findAllByBojHandle(bojHandle);
+        pointLogJpaRepository.deleteAll(pointLogs);
+    }
 }

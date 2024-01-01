@@ -1,7 +1,7 @@
 package com.randps.randomdefence.domain.boolshit.service;
 
-import com.randps.randomdefence.domain.boolshit.domain.BoolshitRepository;
 import com.randps.randomdefence.domain.boolshit.dto.BoolshitLastResponse;
+import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

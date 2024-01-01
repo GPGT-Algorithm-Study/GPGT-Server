@@ -1,8 +1,8 @@
 package com.randps.randomdefence.domain.boolshit.service;
 
 import com.randps.randomdefence.domain.boolshit.domain.Boolshit;
-import com.randps.randomdefence.domain.boolshit.domain.BoolshitRepository;
 import com.randps.randomdefence.domain.boolshit.dto.BoolshitResponse;
+import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;

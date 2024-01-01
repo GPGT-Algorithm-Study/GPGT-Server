@@ -1,4 +1,4 @@
-package com.randps.randomdefence.global.jwt;
+package com.randps.randomdefence.global.jwt.component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

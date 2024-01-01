@@ -10,20 +10,22 @@ import com.randps.randomdefence.domain.user.dto.authDto.LogoutResponse;
 import com.randps.randomdefence.domain.user.dto.authDto.ParseDto;
 import com.randps.randomdefence.domain.user.dto.authDto.RefreshDto;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
-import com.randps.randomdefence.global.jwt.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
 import com.randps.randomdefence.global.jwt.domain.RefreshToken;
-import com.randps.randomdefence.global.jwt.domain.RefreshTokenRepository;
 import com.randps.randomdefence.global.jwt.dto.TokenDto;
 import java.security.cert.CertificateExpiredException;
 import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class UserAuthService {
 
@@ -59,7 +61,10 @@ public class UserAuthService {
         if(refreshToken.isPresent()) {
             refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
         }else {
-            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), loginReqDto.getBojHandle());
+            RefreshToken newToken = RefreshToken.builder()
+                    .token(tokenDto.getRefreshToken())
+                    .bojHandle(loginReqDto.getBojHandle())
+                    .build();
             refreshTokenRepository.save(newToken);
         }
 
@@ -168,24 +173,5 @@ public class UserAuthService {
         response.addHeader(JwtRefreshUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
         response.addHeader(JwtRefreshUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
     }
-
-    // 기존 로그인 방법
-//    @Transactional
-//    public Object login(String bojHandle, String password) {
-//        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new UsernameNotFoundException("잘못된 아이디입니다."));
-//
-//        // 비밀번호 일치 여부 확인
-//        if(passwordEncoder.matches(password, user.getPassword())){
-//            return LoginSuccessResponse.builder()
-//                    .bojHandle(bojHandle)
-//                    .password(password)
-//                    // 첫번째는 엑세스토큰이고, 두번째는 리프레시토큰
-//                    .jwt(new TokenDto(jwtProvider.generateJwtToken(user.getId(), user.getBojHandle(), user.getNotionId()), jwtProvider.generateJwtToken(user.getId(), user.getBojHandle(), user.getNotionId())))
-//                    .build();
-//        }
-//
-//        // 비밀번호 매칭 실패
-//        return LoginFailureResponse.builder().message("비밀번호가 일치하지 않습니다.").build();
-//    }
 
 }
