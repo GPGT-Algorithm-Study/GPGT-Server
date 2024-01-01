@@ -9,6 +9,8 @@ public interface CommentRepository {
 
     List<Comment> findAll();
 
+    List<Comment> findAllByBojHandle(String bojHandle);
+
     Optional<Comment> findById(Long id);
 
     Comment save(Comment comment);

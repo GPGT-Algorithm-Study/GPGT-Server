@@ -20,6 +20,11 @@ public class FakeCommentRepository implements CommentRepository {
     }
 
     @Override
+    public List<Comment> findAllByBojHandle(String bojHandle) {
+        return data.stream().filter(item -> item.getBojHandle().equals(bojHandle)).collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<Comment> findById(Long id) {
         return data.stream().filter(item -> item.getId().equals(id)).findAny();
     }

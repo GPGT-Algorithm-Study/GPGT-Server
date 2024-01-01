@@ -22,6 +22,11 @@ public class CommentJpaRepositoryAdapter implements CommentRepository {
     }
 
     @Override
+    public List<Comment> findAllByBojHandle(String bojHandle) {
+        return commentJpaRepository.findAllByBojHandle(bojHandle);
+    }
+
+    @Override
     public Optional<Comment> findById(Long id) {
         return commentJpaRepository.findById(id);
     }
