@@ -211,4 +211,14 @@ public class UserServiceTest {
         assertThat(testContainer.boardRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
     }
 
+    @Test
+    public void delete를_이용해_존재하지_않는_유저를_삭제하면_예외를_던진다() {
+        // given
+
+        // when
+
+        // then
+
+    }
+
 }
