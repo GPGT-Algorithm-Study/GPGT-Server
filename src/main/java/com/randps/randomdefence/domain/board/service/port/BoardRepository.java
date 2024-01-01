@@ -1,14 +1,25 @@
-package com.randps.randomdefence.domain.board.domain;
+package com.randps.randomdefence.domain.board.service.port;
 
+import com.randps.randomdefence.domain.board.domain.Board;
 import com.randps.randomdefence.domain.board.dto.BoardDetail;
 import com.randps.randomdefence.domain.board.dto.BoardSimple;
 import com.randps.randomdefence.domain.board.dto.SearchCondition;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+public interface BoardRepository {
 
-public interface BoardRepositoryCustom {
+    Optional<Board> findById(Long id);
+
+    List<Board> findAll();
+
+    Board save(Board board);
+
+    void delete(Board board);
+
+    List<Board> findAllByBojHandle(String bojHandle);
 
     // 모든 게시글 페이징 조회
     Page<BoardSimple> findAllBoardSimplePaging(Pageable pageable);
@@ -27,4 +38,5 @@ public interface BoardRepositoryCustom {
 
     // 게시글 조건 합쳐서 페이징 조회 (페이징)
     Page<BoardSimple> findAllBoardSimpleByConditionPaging(SearchCondition condition, Pageable pageable);
+
 }

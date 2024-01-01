@@ -1,7 +1,7 @@
-package com.randps.randomdefence.domain.comment.domain;
+package com.randps.randomdefence.domain.comment.infrastructure;
 
+import com.randps.randomdefence.domain.comment.domain.Comment;
 import com.randps.randomdefence.domain.comment.dto.CommentDto;
-
 import java.util.List;
 
 public interface CommentRepositoryCustom {

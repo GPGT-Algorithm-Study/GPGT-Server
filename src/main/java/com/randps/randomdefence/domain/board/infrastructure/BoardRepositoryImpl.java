@@ -1,4 +1,8 @@
-package com.randps.randomdefence.domain.board.domain;
+package com.randps.randomdefence.domain.board.infrastructure;
+
+import static com.randps.randomdefence.domain.board.domain.QBoard.board;
+import static com.randps.randomdefence.domain.comment.domain.QComment.comment;
+import static com.randps.randomdefence.domain.user.domain.QUser.user;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.ExpressionUtils;
@@ -8,22 +12,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.randps.randomdefence.domain.board.dto.BoardDetail;
 import com.randps.randomdefence.domain.board.dto.BoardSimple;
 import com.randps.randomdefence.domain.board.dto.SearchCondition;
-import com.randps.randomdefence.domain.image.domain.QBoardImage;
+import java.util.List;
+import javax.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static com.querydsl.core.types.ExpressionUtils.count;
-import static com.randps.randomdefence.domain.board.domain.QBoard.board;
-import static com.randps.randomdefence.domain.comment.domain.QComment.comment;
-import static com.randps.randomdefence.domain.image.domain.QBoardImage.boardImage;
-import static com.randps.randomdefence.domain.image.domain.QImage.image;
-import static com.randps.randomdefence.domain.user.domain.QUser.user;
-import static com.randps.randomdefence.domain.user.domain.QUserRandomStreak.userRandomStreak;
-
+@Repository
 public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;

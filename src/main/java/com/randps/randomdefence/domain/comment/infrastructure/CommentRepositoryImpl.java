@@ -1,16 +1,17 @@
-package com.randps.randomdefence.domain.comment.domain;
-
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.randps.randomdefence.domain.comment.domain.CommentRepositoryCustom;
-import com.randps.randomdefence.domain.comment.dto.CommentDto;
-
-import javax.persistence.EntityManager;
-import java.util.List;
+package com.randps.randomdefence.domain.comment.infrastructure;
 
 import static com.randps.randomdefence.domain.comment.domain.QComment.comment;
 import static com.randps.randomdefence.domain.user.domain.QUser.user;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.randps.randomdefence.domain.comment.domain.Comment;
+import com.randps.randomdefence.domain.comment.dto.CommentDto;
+import java.util.List;
+import javax.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;

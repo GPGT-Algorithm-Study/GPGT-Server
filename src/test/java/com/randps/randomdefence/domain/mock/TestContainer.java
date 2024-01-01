@@ -1,8 +1,12 @@
 package com.randps.randomdefence.domain.mock;
 
 
+import com.randps.randomdefence.domain.board.mock.FakeBoardRepository;
+import com.randps.randomdefence.domain.board.service.port.BoardRepository;
 import com.randps.randomdefence.domain.boolshit.mock.FakeBoolshitRepository;
 import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
+import com.randps.randomdefence.domain.comment.mock.FakeCommentRepository;
+import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
 import com.randps.randomdefence.domain.event.mock.FakeEventPointRepository;
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
@@ -78,6 +82,10 @@ public class TestContainer {
 
     public final BoolshitRepository boolshitRepository;
 
+    public final CommentRepository commentRepository;
+
+    public final BoardRepository boardRepository;
+
     public final Parser parserHolder;
     public final SolvedacParser solvedacParserHolder;
 
@@ -122,6 +130,8 @@ public class TestContainer {
         warningLogRepository = new FakeWarningLogRepository();
         refreshTokenRepository = new FakeRefreshTokenRepository();
         boolshitRepository = new FakeBoolshitRepository(userRepository);
+        commentRepository = new FakeCommentRepository();
+        boardRepository = new FakeBoardRepository(userRepository, commentRepository);
         parserHolder = parser;
         solvedacParserHolder = solvedacParser;
         userAlreadySolvedService = UserAlreadySolvedService.builder()

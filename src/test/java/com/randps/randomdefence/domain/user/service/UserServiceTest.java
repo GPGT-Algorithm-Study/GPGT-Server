@@ -207,7 +207,8 @@ public class UserServiceTest {
         assertThat(testContainer.warningLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
         // 유저 아이템 삭제
         assertThat(testContainer.userItemRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
-        // 유저 게시글 삭제?
+        // 유저 게시글 삭제
+        assertThat(testContainer.boardRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
     }
 
 }

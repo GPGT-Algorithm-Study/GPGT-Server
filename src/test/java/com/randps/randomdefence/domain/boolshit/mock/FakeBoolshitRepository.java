@@ -11,7 +11,7 @@ import lombok.Builder;
 
 public class FakeBoolshitRepository implements BoolshitRepository {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     private final List<Boolshit> data = new ArrayList<>();
 
