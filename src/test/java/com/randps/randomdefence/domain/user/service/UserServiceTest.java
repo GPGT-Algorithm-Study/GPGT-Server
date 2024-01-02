@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
+import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
@@ -178,8 +179,9 @@ public class UserServiceTest {
         testContainer.userService.save(userSave);
 
         // when
-        testContainer.userService.delete("fin");
+        testContainer.userDeleteService.delete("fin");
         List<User> userResults = testContainer.userRepository.findAll();
+        List<SolvedProblemDto> userSolvedProblemResults = testContainer.userSolvedProblemService.findAllUserSolvedProblem("fin");
 
         // then
         assertThat(userResults.size()).isEqualTo(0);
@@ -191,10 +193,8 @@ public class UserServiceTest {
         assertThatThrownBy(() -> {
             testContainer.userRandomStreakService.findUserRandomStreak("fin");
         }).isInstanceOf(IllegalArgumentException.class);
-//        // 유저 오늘 푼 문제 삭제
-//        assertThatThrownBy(() -> {
-//            testContainer.userSolvedProblemService.findAllUserSolvedProblem("fin");
-//        }).isInstanceOf(IllegalArgumentException.class);
+        // 유저 오늘 푼 문제 삭제
+        assertThat(userSolvedProblemResults.size()).isEqualTo(0);
 //        // 유저 통계 삭제
 //        assertThat(testContainer.userStatisticsRepository.findByBojHandle("fin")).isNull();
 //        // 유저 JWT 토큰 삭제

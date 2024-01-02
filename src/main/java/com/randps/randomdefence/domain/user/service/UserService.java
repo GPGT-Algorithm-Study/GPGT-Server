@@ -88,17 +88,6 @@ public class UserService {
         return user;
     }
 
-    /*
-     * 유저를 DB에서 삭제한다.
-     */
-    @Transactional
-    public void delete(String bojHandle) {
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        userRandomStreakService.deleteUserRandomStreak(bojHandle);
-
-        userRepository.delete(user);
-    }
-
     /**
      * 모든 유저의 마지막 로그인 기록을 조회한다.
      */

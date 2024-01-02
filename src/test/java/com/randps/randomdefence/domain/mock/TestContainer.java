@@ -42,6 +42,7 @@ import com.randps.randomdefence.domain.user.mock.FakeUserSolvedProblemRepository
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
 import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
 import com.randps.randomdefence.domain.user.service.UserAuthService;
+import com.randps.randomdefence.domain.user.service.UserDeleteService;
 import com.randps.randomdefence.domain.user.service.UserGrassService;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
@@ -107,6 +108,7 @@ public class TestContainer {
     public final WarningLogSaveService warningLogSaveService;
     public final UserInfoService userInfoService;
     public final UserService userService;
+    public final UserDeleteService userDeleteService;
 
     public final PrincipalDetailsService principalDetailsService;
 
@@ -232,6 +234,11 @@ public class TestContainer {
                 .userRandomStreakRepository(userRandomStreakRepository)
                 .userGrassService(userGrassService)
                 .userInfoService(userInfoService)
+                .userRandomStreakService(userRandomStreakService)
+                .userSolvedProblemService(userSolvedProblemService)
+                .build();
+        userDeleteService = UserDeleteService.builder()
+                .userRepository(userRepository)
                 .userRandomStreakService(userRandomStreakService)
                 .userSolvedProblemService(userSolvedProblemService)
                 .build();

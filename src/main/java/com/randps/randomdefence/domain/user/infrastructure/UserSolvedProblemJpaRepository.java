@@ -10,4 +10,5 @@ public interface UserSolvedProblemJpaRepository extends JpaRepository<UserSolved
 
     Optional<UserSolvedProblem> findByBojHandleAndProblemId(String bojHandle, Integer problemId);
 
+    void deleteAllByBojHandle(String bojHandle);
 }

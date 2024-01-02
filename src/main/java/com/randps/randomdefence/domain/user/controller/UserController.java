@@ -2,7 +2,6 @@ package com.randps.randomdefence.domain.user.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
@@ -12,9 +11,8 @@ import com.randps.randomdefence.domain.user.dto.UserMentionDto;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.domain.user.dto.UserSolvedProblemPairDto;
 import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
-import com.randps.randomdefence.domain.user.service.UserGrassService;
+import com.randps.randomdefence.domain.user.service.UserDeleteService;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
-import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
 import com.randps.randomdefence.domain.user.service.UserService;
 import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
 import java.util.ArrayList;
@@ -45,13 +43,9 @@ public class UserController {
 
     private final UserAlreadySolvedService userAlreadySolvedService;
 
-    private final UserRandomStreakService userRandomStreakService;
-
-    private final UserGrassService userGrassService;
+    private final UserDeleteService userDeleteService;
 
     private final TeamSettingService teamSettingService;
-
-    private final TeamService teamService;
 
     //TODO: useradd, userdel은 jwt 토큰을 헤더에 넣어야지 접근가능하게 설정
     /*
@@ -89,7 +83,7 @@ public class UserController {
      */
     @DeleteMapping("/del")
     public ResponseEntity<Map<String, String>> userDel(@Param("bojHandle") String bojHandle) {
-        userService.delete(bojHandle);
+        userDeleteService.delete(bojHandle);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

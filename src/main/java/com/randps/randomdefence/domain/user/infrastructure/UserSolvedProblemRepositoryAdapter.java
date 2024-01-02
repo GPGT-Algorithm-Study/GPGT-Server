@@ -32,4 +32,9 @@ public class UserSolvedProblemRepositoryAdapter implements UserSolvedProblemRepo
     public List<UserSolvedProblem> saveAll(List<UserSolvedProblem> userSolvedProblems) {
         return userSolvedProblemJpaRepository.saveAll(userSolvedProblems);
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        userSolvedProblemJpaRepository.deleteAllByBojHandle(bojHandle);
+    }
 }

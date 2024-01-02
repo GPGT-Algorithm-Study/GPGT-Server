@@ -441,4 +441,13 @@ public class UserSolvedProblemService {
 
         return cnt;
     }
+
+    /*
+     * 유저의 모든 푼 문제를 삭제한다.
+     */
+    @Transactional
+    public void deleteAllByBojHandle(String bojHandle) {
+        userSolvedProblemRepository.deleteAllByBojHandle(bojHandle);
+    }
+
 }

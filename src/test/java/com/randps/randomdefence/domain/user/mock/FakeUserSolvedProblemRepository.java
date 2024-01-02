@@ -60,4 +60,9 @@ public class FakeUserSolvedProblemRepository implements UserSolvedProblemReposit
         }
         return result;
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        data.removeIf(item -> item.getBojHandle().equals(bojHandle));
+    }
 }

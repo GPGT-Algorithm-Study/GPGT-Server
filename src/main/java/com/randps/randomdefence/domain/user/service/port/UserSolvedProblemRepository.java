@@ -11,4 +11,6 @@ public interface UserSolvedProblemRepository {
     List<UserSolvedProblem> findAll();
     List<UserSolvedProblem> saveAll(List<UserSolvedProblem> userSolvedProblems);
 
+    void deleteAllByBojHandle(String bojHandle);
+
 }
