@@ -79,4 +79,9 @@ public class FakeUserStatisticsRepository implements UserStatisticsRepository {
     public List<PointBarPair> findAllUserAndUserStat() {
         return null;
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        data.removeIf(item -> item.getBojHandle().equals(bojHandle));
+    }
 }

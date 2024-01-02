@@ -241,6 +241,7 @@ public class TestContainer {
                 .userRepository(userRepository)
                 .userRandomStreakService(userRandomStreakService)
                 .userSolvedProblemService(userSolvedProblemService)
+                .userStatisticsService(userStatisticsService)
                 .build();
         principalDetailsService = PrincipalDetailsService.builder()
                 .userRepository(userRepository)

@@ -19,4 +19,7 @@ public interface UserStatisticsRepository {
 
     // 모든 유저에 대해 유저와 유저의 포인트 통계를 함께 조회
     List<PointBarPair> findAllUserAndUserStat();
+
+    void deleteAllByBojHandle(String bojHandle);
+
 }

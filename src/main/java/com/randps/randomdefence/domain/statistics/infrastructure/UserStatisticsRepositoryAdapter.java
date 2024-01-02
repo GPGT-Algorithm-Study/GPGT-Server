@@ -41,4 +41,9 @@ public class UserStatisticsRepositoryAdapter implements UserStatisticsRepository
     public List<PointBarPair> findAllUserAndUserStat() {
         return userStatisticsRepository.findAllUserAndUserStat();
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        userStatisticsJpaRepository.deleteAllByBojHandle(bojHandle);
+    }
 }

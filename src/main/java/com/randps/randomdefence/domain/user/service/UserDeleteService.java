@@ -1,5 +1,6 @@
 package com.randps.randomdefence.domain.user.service;
 
+import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import javax.transaction.Transactional;
@@ -18,6 +19,8 @@ public class UserDeleteService {
 
     private final UserSolvedProblemService userSolvedProblemService;
 
+    private final UserStatisticsService userStatisticsService;
+
     /*
      * 유저를 DB에서 삭제한다.
      */
@@ -29,6 +32,7 @@ public class UserDeleteService {
         // 유저 오늘 푼 문제 삭제
         userSolvedProblemService.deleteAllByBojHandle(bojHandle);
         // 유저 통계 삭제
+        userStatisticsService.deleteAllByBojHandle(bojHandle);
         // 유저 JWT 토큰 삭제
         // 유저 나의 한마디 삭제
         // 유저 포인트 로그 삭제

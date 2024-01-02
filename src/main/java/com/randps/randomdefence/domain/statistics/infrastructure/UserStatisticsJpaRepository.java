@@ -8,4 +8,6 @@ public interface UserStatisticsJpaRepository extends JpaRepository<UserStatistic
 
     Optional<UserStatistics> findByBojHandle(String bojHandle);
 
+    void deleteAllByBojHandle(String bojHandle);
+
 }

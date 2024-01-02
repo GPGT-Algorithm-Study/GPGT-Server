@@ -260,4 +260,12 @@ public class UserStatisticsService {
             userStatisticsRepository.save(stat);
         }
     }
+
+    /*
+     * 특정 유저 통계 삭제
+     */
+    @Transactional
+    public void deleteAllByBojHandle(String bojHandle) {
+        userStatisticsRepository.deleteAllByBojHandle(bojHandle);
+    }
 }
