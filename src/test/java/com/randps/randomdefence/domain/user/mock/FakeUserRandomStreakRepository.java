@@ -56,4 +56,9 @@ public class FakeUserRandomStreakRepository implements UserRandomStreakRepositor
     public List<UserRandomStreak> findAll() {
         return data;
     }
+
+    @Override
+    public void delete(UserRandomStreak userRandomStreak) {
+        data.removeIf(item -> item.getId().equals(userRandomStreak.getId()));
+    }
 }

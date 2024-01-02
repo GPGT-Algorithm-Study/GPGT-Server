@@ -32,6 +32,7 @@ public class FakeUserGrassRepository implements UserGrassRepository {
                     .problemId(userGrass.getProblemId())
                     .date(userGrass.getDate())
                     .grassInfo(userGrass.getGrassInfo())
+                    .userRandomStreak(userGrass.getUserRandomStreak())
                     .build();
             data.add(newUserGrass);
             return newUserGrass;
@@ -42,9 +43,21 @@ public class FakeUserGrassRepository implements UserGrassRepository {
                     .problemId(userGrass.getProblemId())
                     .date(userGrass.getDate())
                     .grassInfo(userGrass.getGrassInfo())
+                    .userRandomStreak(userGrass.getUserRandomStreak())
                     .build();
             data.add(newUserGrass);
             return newUserGrass;
         }
     }
+
+    @Override
+    public List<UserGrass> findAllByUserRandomStreak(UserRandomStreak userRandomStreak) {
+        return data.stream().filter(item -> item.getUserRandomStreak().getId().equals(userRandomStreak.getId())).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAll(List<UserGrass> userGrasses) {
+        data.removeAll(userGrasses);
+    }
+
 }

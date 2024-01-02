@@ -11,4 +11,7 @@ public interface UserGrassRepository {
     List<UserGrass> findAllByUserRandomStreakAndGrassInfo(UserRandomStreak userRandomStreak, Boolean grassInfo);
     UserGrass save(UserGrass userGrass);
 
+    List<UserGrass> findAllByUserRandomStreak(UserRandomStreak userRandomStreak);
+
+    void deleteAll(List<UserGrass> userGrasses);
 }

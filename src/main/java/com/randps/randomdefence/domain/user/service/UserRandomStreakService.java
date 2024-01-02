@@ -99,6 +99,17 @@ public class UserRandomStreakService {
     }
 
     /*
+     * 특정 유저의 랜덤 스트릭을 삭제한다.
+     */
+    @Transactional
+    public void deleteUserRandomStreak(String bojHandle) {
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        userGrassService.deleteAllByUserRandomStreak(userRandomStreak);
+        userRandomStreakRepository.delete(userRandomStreak);
+    }
+
+    /*
      * 특정 유저의 랜덤 스트릭 정보를 불러온다. (문제를 문제의 아이디만 가진 형태)
      */
     @Transactional

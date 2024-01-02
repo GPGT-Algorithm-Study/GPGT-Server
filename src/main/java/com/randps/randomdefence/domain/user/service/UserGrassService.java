@@ -144,4 +144,14 @@ public class UserGrassService {
         return userGrassRepository.findByUserRandomStreakAndDate(userRandomStreak, yesterday)
                 .orElseThrow(() -> new IllegalArgumentException("아직 존재하지 않는 스트릭입니다."));
     }
+
+    /*
+     * 유저의 잔디를 모두 삭제한다.
+     */
+    @Transactional
+    public void deleteAllByUserRandomStreak(UserRandomStreak userRandomStreak) {
+        List<UserGrass> userGrasses = userGrassRepository.findAllByUserRandomStreak(userRandomStreak);
+
+        userGrassRepository.deleteAll(userGrasses);
+    }
 }

@@ -10,4 +10,6 @@ public interface UserRandomStreakRepository {
     UserRandomStreak save(UserRandomStreak userRandomStreak);
 
     List<UserRandomStreak> findAll();
+
+    void delete(UserRandomStreak userRandomStreak);
 }

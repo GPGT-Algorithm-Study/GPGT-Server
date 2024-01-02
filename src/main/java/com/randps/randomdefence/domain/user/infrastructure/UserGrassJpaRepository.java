@@ -9,4 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserGrassJpaRepository extends JpaRepository<UserGrass, Long> {
     Optional<UserGrass> findByUserRandomStreakAndDate(UserRandomStreak userRandomStreak, String date);
     List<UserGrass> findAllByUserRandomStreakAndGrassInfo(UserRandomStreak userRandomStreak, Boolean grassInfo);
+
+    List<UserGrass> findAllByUserRandomStreak(UserRandomStreak userRandomStreak);
+
+    void deleteAll(List<UserGrass> userGrasses);
 }

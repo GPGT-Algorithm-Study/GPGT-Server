@@ -27,4 +27,9 @@ public class UserRandomStreakRepositoryAdapter implements UserRandomStreakReposi
     public List<UserRandomStreak> findAll() {
         return userRandomStreakJpaRepository.findAll();
     }
+
+    @Override
+    public void delete(UserRandomStreak userRandomStreak) {
+        userRandomStreakJpaRepository.delete(userRandomStreak);
+    }
 }

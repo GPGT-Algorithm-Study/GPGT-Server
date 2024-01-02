@@ -29,4 +29,14 @@ public class UserGrassRepositoryAdapter implements UserGrassRepository {
     public UserGrass save(UserGrass userGrass) {
         return userGrassJpaRepository.save(userGrass);
     }
+
+    @Override
+    public List<UserGrass> findAllByUserRandomStreak(UserRandomStreak userRandomStreak) {
+        return userGrassJpaRepository.findAllByUserRandomStreak(userRandomStreak);
+    }
+
+    @Override
+    public void deleteAll(List<UserGrass> userGrasses) {
+        userGrassJpaRepository.deleteAll(userGrasses);
+    }
 }

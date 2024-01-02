@@ -94,6 +94,7 @@ public class UserService {
     @Transactional
     public void delete(String bojHandle) {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        userRandomStreakService.deleteUserRandomStreak(bojHandle);
 
         userRepository.delete(user);
     }

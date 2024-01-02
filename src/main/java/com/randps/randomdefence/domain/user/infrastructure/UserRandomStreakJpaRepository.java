@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRandomStreakJpaRepository extends JpaRepository<UserRandomStreak, Long> {
     Optional<UserRandomStreak> findByBojHandle(String bojHandle);
+
+    void delete(UserRandomStreak userRandomStreak);
 }
