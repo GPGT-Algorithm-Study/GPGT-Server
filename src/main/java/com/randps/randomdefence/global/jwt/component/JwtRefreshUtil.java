@@ -10,7 +10,6 @@ import java.security.cert.CertificateExpiredException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,24 +30,22 @@ public class JwtRefreshUtil {
     private final RefreshTokenRepository refreshTokenRepository;
 
     private static final long ACCESS_TIME = 60L * 1000L;  // 만료 시간 1분
-    //    private static final long REFRESH_TIME = 2L * 60L * 1000L; // 만료 시간 2분
     private static final long REFRESH_TIME = 24L * 60L * 60L * 1000L; // 만료 시간 24시간
     public static final String ACCESS_TOKEN = "Access_Token";
     public static final String REFRESH_TOKEN = "Refresh_Token";
 
     @Value("${jwt.secret}")
-    private String secretKey;
+    private final String secretKey;
 
     private Algorithm getSign() {
-        return Algorithm.HMAC512(secretKey);
+        return Algorithm.HMAC512(Base64.getEncoder().encodeToString(this.secretKey.getBytes()));
     }
 
-    //객체 초기화, secretKey를 Base64로 인코딩한다.
-    @PostConstruct
-    protected void init() {
-        this.secretKey = Base64.getEncoder().encodeToString(this.secretKey.getBytes());
-    }
-
+//    //객체 초기화, secretKey를 Base64로 인코딩한다.
+//    @PostConstruct
+//    protected void init() {
+//        this.encodedSecretKey = Base64.getEncoder().encodeToString(this.secretKey.getBytes());
+//    }
 
     // header 토큰을 가져오는 기능
     public String getHeaderToken(HttpServletRequest request, String type) {
@@ -131,5 +128,10 @@ public class JwtRefreshUtil {
     // 리프레시 토큰 헤더 설정
     public void setHeaderRefreshToken(HttpServletResponse response, String refreshToken) {
         response.setHeader("Refresh_Token", refreshToken);
+    }
+
+    // 리프레쉬 토큰 삭제
+    public void deleteRefreshToken(String bojHandle) {
+        refreshTokenRepository.deleteByBojHandle(bojHandle);
     }
 }

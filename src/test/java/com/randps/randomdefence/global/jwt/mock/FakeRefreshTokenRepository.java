@@ -44,4 +44,9 @@ public class FakeRefreshTokenRepository implements RefreshTokenRepository {
     public void delete(RefreshToken refreshToken) {
         data.removeIf(item -> item.getBojHandle().equals(refreshToken.getBojHandle()));
     }
+
+    @Override
+    public void deleteByBojHandle(String bojHandle) {
+        data.removeIf(item -> item.getBojHandle().equals(bojHandle));
+    }
 }

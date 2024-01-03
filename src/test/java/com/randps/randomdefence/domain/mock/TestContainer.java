@@ -237,21 +237,22 @@ public class TestContainer {
                 .userRandomStreakService(userRandomStreakService)
                 .userSolvedProblemService(userSolvedProblemService)
                 .build();
-        userDeleteService = UserDeleteService.builder()
-                .userRepository(userRepository)
-                .userRandomStreakService(userRandomStreakService)
-                .userSolvedProblemService(userSolvedProblemService)
-                .userStatisticsService(userStatisticsService)
-                .build();
         principalDetailsService = PrincipalDetailsService.builder()
                 .userRepository(userRepository)
                 .build();
-        jwtUtil = new JwtRefreshUtil(principalDetailsService, refreshTokenRepository);
+        jwtUtil = new JwtRefreshUtil(principalDetailsService, refreshTokenRepository, "secret");
         userAuthService = UserAuthService.builder()
                 .passwordEncoder(passwordEncoder)
                 .userRepository(userRepository)
                 .refreshTokenRepository(refreshTokenRepository)
                 .jwtUtil(jwtUtil)
+                .build();
+        userDeleteService = UserDeleteService.builder()
+                .userRepository(userRepository)
+                .userRandomStreakService(userRandomStreakService)
+                .userSolvedProblemService(userSolvedProblemService)
+                .userStatisticsService(userStatisticsService)
+                .userAuthService(userAuthService)
                 .build();
     }
 

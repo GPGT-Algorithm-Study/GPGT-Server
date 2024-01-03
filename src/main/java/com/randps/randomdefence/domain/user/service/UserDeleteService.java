@@ -21,6 +21,8 @@ public class UserDeleteService {
 
     private final UserStatisticsService userStatisticsService;
 
+    private final UserAuthService userAuthService;
+
     /*
      * 유저를 DB에서 삭제한다.
      */
@@ -34,6 +36,7 @@ public class UserDeleteService {
         // 유저 통계 삭제
         userStatisticsService.deleteAllByBojHandle(bojHandle);
         // 유저 JWT 토큰 삭제
+        userAuthService.deleteRefreshToken(bojHandle);
         // 유저 나의 한마디 삭제
         // 유저 포인트 로그 삭제
         // 유저 경고 로그 삭제

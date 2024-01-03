@@ -16,7 +16,6 @@ import com.randps.randomdefence.global.jwt.domain.RefreshToken;
 import com.randps.randomdefence.global.jwt.dto.TokenDto;
 import java.security.cert.CertificateExpiredException;
 import java.util.Optional;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -168,10 +167,11 @@ public class UserAuthService {
         return ParseDto.builder().claim(jwtUtil.getBojHandle(token)).manager(user.getManager()).build();
     }
 
-
-    private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
-        response.addHeader(JwtRefreshUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
-        response.addHeader(JwtRefreshUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
+    /*
+     * 리프레쉬 토큰 삭제
+     */
+    @Transactional
+    public void deleteRefreshToken(String bojHandle) {
+        refreshTokenRepository.deleteByBojHandle(bojHandle);
     }
-
 }

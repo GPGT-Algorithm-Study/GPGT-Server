@@ -11,4 +11,5 @@ public interface RefreshTokenRepository {
 
     void delete(RefreshToken refreshToken);
 
+    void deleteByBojHandle(String bojHandle);
 }

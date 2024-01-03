@@ -8,6 +8,7 @@ import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserSave;
+import com.randps.randomdefence.domain.user.dto.authDto.LoginRequest;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
@@ -42,6 +43,10 @@ public class UserDeleteServiceTest {
                 .emoji("🛠️")
                 .build();
         testContainer.userService.save(userSave);
+        testContainer.userAuthService.login(LoginRequest.builder()
+                .bojHandle("fin")
+                .password("q1w2e3r4!")
+                .build());
 
         // when
         testContainer.userDeleteService.delete("fin");
@@ -62,8 +67,8 @@ public class UserDeleteServiceTest {
         assertThat(userSolvedProblemResults.size()).isEqualTo(0);
         // 유저 통계 삭제
         assertThat(testContainer.userStatisticsRepository.findByBojHandle("fin")).isEmpty();
-//        // 유저 JWT 토큰 삭제
-//        assertThat(testContainer.refreshTokenRepository.findByBojHandle("fin")).isNull();
+        // 유저 JWT 토큰 삭제
+        assertThat(testContainer.refreshTokenRepository.findByBojHandle("fin")).isEmpty();
 //        // 유저 나의 한마디 삭제
 //        assertThat(testContainer.boolshitRepository.findAll().size()).isEqualTo(0);
 //        // 유저 포인트 로그 삭제

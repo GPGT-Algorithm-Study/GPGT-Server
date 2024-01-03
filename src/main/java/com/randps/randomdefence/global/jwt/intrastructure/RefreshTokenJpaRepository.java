@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RefreshTokenJpaRepository extends JpaRepository<RefreshToken, Long> {
     Optional<RefreshToken> findByBojHandle(String bojHandle);
+
+    void deleteByBojHandle(String bojHandle);
 }

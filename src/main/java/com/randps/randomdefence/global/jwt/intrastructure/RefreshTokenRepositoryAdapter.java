@@ -27,4 +27,9 @@ public class RefreshTokenRepositoryAdapter implements RefreshTokenRepository {
         refreshTokenJpaRepository.delete(refreshToken);
     }
 
+    @Override
+    public void deleteByBojHandle(String bojHandle) {
+        refreshTokenJpaRepository.deleteByBojHandle(bojHandle);
+    }
+
 }
