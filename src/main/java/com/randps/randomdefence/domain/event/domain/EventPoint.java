@@ -1,12 +1,15 @@
 package com.randps.randomdefence.domain.event.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -28,7 +31,8 @@ public class EventPoint extends BaseTimeEntity {
     private Double percentage;
 
     @Builder
-    public EventPoint(String eventName, String description, LocalDateTime startTime, LocalDateTime endTime, Double percentage) {
+    public EventPoint(Long id, String eventName, String description, LocalDateTime startTime, LocalDateTime endTime, Double percentage) {
+        this.id = id;
         this.eventName = eventName;
         this.description = description;
         this.startTime = startTime;

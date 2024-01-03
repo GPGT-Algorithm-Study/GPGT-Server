@@ -1,20 +1,21 @@
 package com.randps.randomdefence.domain.recommendation.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.randps.randomdefence.global.component.query.Query;
-import com.randps.randomdefence.global.component.query.SolvedacQueryImpl;
 import com.randps.randomdefence.domain.recommendation.dto.RecommendationResponse;
 import com.randps.randomdefence.domain.recommendation.dto.TitleDto;
+import com.randps.randomdefence.global.component.query.Query;
+import com.randps.randomdefence.global.component.query.SolvedacQueryImpl;
+import java.util.ArrayList;
+import java.util.List;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class RecommendationService {
 

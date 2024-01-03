@@ -1,16 +1,16 @@
 package com.randps.randomdefence.domain.log.service;
 
-import com.randps.randomdefence.domain.log.domain.PointLog;
 import com.randps.randomdefence.domain.log.domain.WarningLog;
-import com.randps.randomdefence.domain.log.domain.WarningLogRepository;
+import com.randps.randomdefence.domain.log.service.port.WarningLogRepository;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class WarningLogSaveService {
 
@@ -40,7 +40,7 @@ public class WarningLogSaveService {
     @Transactional
     public WarningLog saveAndApplyWarningLog(String bojHandle, Integer changedValue, String description, Boolean state) {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        Boolean result;
+        boolean result;
 
         if (changedValue > 0) {
             result = user.increaseWarning();

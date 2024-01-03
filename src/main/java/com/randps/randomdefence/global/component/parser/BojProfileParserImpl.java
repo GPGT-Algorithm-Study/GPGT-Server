@@ -5,12 +5,14 @@ import com.randps.randomdefence.global.component.crawler.BojProfileWebCrawler;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 @Component
+@Qualifier("bojProfileParserToUse")
 public class BojProfileParserImpl implements Parser {
 
     private final BojProfileWebCrawler bojProfileWebCrawler;

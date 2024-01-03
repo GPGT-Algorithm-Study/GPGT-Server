@@ -2,11 +2,16 @@ package com.randps.randomdefence.domain.user.domain;
 
 import com.randps.randomdefence.domain.user.dto.UserGrassDto;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -27,7 +32,8 @@ public class UserGrass extends BaseTimeEntity {
     private UserRandomStreak userRandomStreak;
 
     @Builder
-    public UserGrass(Integer problemId, String date, Boolean grassInfo, UserRandomStreak userRandomStreak) {
+    public UserGrass(Long id, Integer problemId, String date, Boolean grassInfo, UserRandomStreak userRandomStreak) {
+        this.id = id;
         this.problemId = problemId;
         this.date = date;
         this.grassInfo = grassInfo;

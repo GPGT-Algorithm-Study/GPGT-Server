@@ -4,8 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRegister;
 import com.randps.randomdefence.domain.user.domain.UserRegisterRepository;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
+import com.randps.randomdefence.domain.user.dto.UserSave;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.global.component.parser.BojProfileMessageParserImpl;
 import com.randps.randomdefence.global.component.parser.BojProfileSchoolParserImpl;
 import java.util.List;
@@ -102,7 +103,14 @@ public class UserSejongRegisterService {
         Optional<User> existUser = userRepository.findByBojHandle(bojHandle);
         if (existUser.isPresent())
             throw new IllegalAccessException("이미 존재하는 유저입니다.");
-        User user = userService.save(bojHandle, password, UUID.randomUUID().toString(), 0L, "");
+        UserSave userSave = UserSave.builder()
+                .bojHandle(bojHandle)
+                .password(password)
+                .notionId(UUID.randomUUID().toString())
+                .manager(0L)
+                .emoji("")
+                .build();
+        User user = userService.save(userSave);
 
         return user.toUserInfoResponse();
     }

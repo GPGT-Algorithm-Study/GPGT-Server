@@ -1,5 +1,6 @@
 package com.randps.randomdefence.domain.user.dto;
 
+import com.randps.randomdefence.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -61,6 +62,25 @@ public class UserInfoResponse {
         this.maxRandomStreak = maxRandomStreak;
     }
 
+    public UserInfoResponse(User user) {
+        this.bojHandle = user.getBojHandle();
+        this.notionId = user.getNotionId();
+        this.manager = user.getManager();
+        this.warning = user.getWarning();
+        this.profileImg = user.getProfileImg();
+        this.emoji = user.getEmoji();
+        this.tier = user.getTier();
+        this.totalSolved = user.getTotalSolved();
+        this.currentStreak = user.getCurrentStreak();
+        this.currentRandomStreak = user.getCurrentRandomStreak();
+        this.team = user.getTeam();
+        this.point = user.getPoint();
+        this.isTodaySolved = user.getIsTodaySolved();
+        this.isYesterdaySolved = user.getIsYesterdaySolved();
+        this.isTodayRandomSolved = user.getIsTodayRandomSolved();
+        this.todaySolvedProblemCount = user.getTodaySolvedProblemCount();
+        this.maxRandomStreak = user.getCurrentRandomStreak();
+    }
 
     public UserInfoResponse() {
         this.bojHandle = "";

@@ -1,11 +1,14 @@
 package com.randps.randomdefence.domain.boolshit.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -21,7 +24,8 @@ public class Boolshit extends BaseTimeEntity {
     private String bojHandle;
 
     @Builder
-    public Boolshit(String message, String bojHandle) {
+    public Boolshit(Long id, String message, String bojHandle) {
+        this.id = id;
         this.message = message;
         this.bojHandle = bojHandle;
     }

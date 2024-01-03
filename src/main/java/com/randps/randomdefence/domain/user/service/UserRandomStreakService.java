@@ -1,8 +1,9 @@
 package com.randps.randomdefence.domain.user.service;
 
+import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
+
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.item.service.RandomStreakFreezeItemUseServiceImpl;
-import com.randps.randomdefence.domain.log.domain.PointLogRepository;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
@@ -10,19 +11,23 @@ import com.randps.randomdefence.domain.recommendation.dto.RecommendationResponse
 import com.randps.randomdefence.domain.recommendation.service.RecommendationService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
-import com.randps.randomdefence.domain.user.domain.*;
+import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.domain.UserGrass;
+import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserRandomStreakResponse;
+import com.randps.randomdefence.domain.user.service.port.UserGrassRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRandomStreakRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class UserRandomStreakService {
 
@@ -55,16 +60,12 @@ public class UserRandomStreakService {
      */
     @Transactional
     public void save(String bojHandle) {
-        UserRandomStreak userRandomStreak = UserRandomStreak.builder()
-                .bojHandle(bojHandle)
+        UserRandomStreak userRandomStreak = UserRandomStreak.builder().bojHandle(bojHandle)
                 .startLevel("") // 초기화 시 빈 문자열(비활성)
                 .endLevel("") // 초기화 시 빈 문자열(비활성)
                 .isKo(true) // 초기화 시 기본 문제 한글로 설정
                 .todayRandomProblemId(0) // 문제가 없을 시 0번
-                .isTodayRandomSolved(false)
-                .currentRandomStreak(0)
-                .maxRandomStreak(0)
-                .build();
+                .isTodayRandomSolved(false).currentRandomStreak(0).maxRandomStreak(0).build();
         userRandomStreakRepository.save(userRandomStreak);
     }
 
@@ -73,7 +74,8 @@ public class UserRandomStreakService {
      */
     @Transactional
     public Boolean updateLevel(String bojHandle, String startLevel, String endLevel, Boolean isKo) {
-        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
 
         // 풀 수 있는 문제가 존재하는지 확인한다.
         String query = recommendationService.makeQuery(bojHandle, startLevel, endLevel, isKo);
@@ -97,11 +99,23 @@ public class UserRandomStreakService {
     }
 
     /*
+     * 특정 유저의 랜덤 스트릭을 삭제한다.
+     */
+    @Transactional
+    public void deleteUserRandomStreak(String bojHandle) {
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        userGrassService.deleteAllByUserRandomStreak(userRandomStreak);
+        userRandomStreakRepository.delete(userRandomStreak);
+    }
+
+    /*
      * 특정 유저의 랜덤 스트릭 정보를 불러온다. (문제를 문제의 아이디만 가진 형태)
      */
     @Transactional
     public UserRandomStreak findUserRandomStreak(String bojHandle) {
-        return userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        return userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
     }
 
     /*
@@ -109,7 +123,8 @@ public class UserRandomStreakService {
      */
     @Transactional
     public UserRandomStreakResponse findUserRandomStreakToResponseForm(String bojHandle) {
-        UserRandomStreak userRandomStreak =  userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
         ProblemDto problemDto = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
 
         // 랜덤 문제의 문제의 획득 포인트 = 레벨 * 2
@@ -143,7 +158,8 @@ public class UserRandomStreakService {
      */
     @Transactional
     public RecommendationResponse payReroll(String bojHandle) {
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = userRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
         // 리롤비용 5원이 없다면 리롤에 실패
         if (user.getPoint() < 5) {
@@ -164,11 +180,13 @@ public class UserRandomStreakService {
      */
     @Transactional
     public RecommendationResponse makeUpUserRandomProblem(String bojHandle) {
-        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
 
         // 만약 시작과 끝이 빈 문자열이라면 애초에 이 함수를 호출해서는 안됨.
         // 랜덤 문제 고르기
-        String query = recommendationService.makeQuery(bojHandle, userRandomStreak.getStartLevel(), userRandomStreak.getEndLevel(), userRandomStreak.getIsKo());
+        String query = recommendationService.makeQuery(bojHandle, userRandomStreak.getStartLevel(),
+                userRandomStreak.getEndLevel(), userRandomStreak.getIsKo());
         RecommendationResponse recommendationResponse = recommendationService.makeRecommend(query);
 
         // 추천된 문제가 없는경우
@@ -194,7 +212,8 @@ public class UserRandomStreakService {
         userGrassRepository.save(todayUserGrass);
 
         // 유저의 정보 갱신
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = userRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         user.checkTodayRandomSolvedNo();
         userRepository.save(user);
 
@@ -209,11 +228,15 @@ public class UserRandomStreakService {
         List<User> users = userRepository.findAll();
 
         for (User user : users) {
-            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(user.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(user.getBojHandle())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
 
-            if (userRandomStreak.getStartLevel().isBlank() || userRandomStreak.getEndLevel().isBlank()) continue;
+            if (userRandomStreak.getStartLevel().isBlank() || userRandomStreak.getEndLevel().isBlank()) {
+                continue;
+            }
             // 랜덤 문제 고르기
-            String query = recommendationService.makeQuery(user.getBojHandle(), userRandomStreak.getStartLevel(), userRandomStreak.getEndLevel(), userRandomStreak.getIsKo());
+            String query = recommendationService.makeQuery(user.getBojHandle(), userRandomStreak.getStartLevel(),
+                    userRandomStreak.getEndLevel(), userRandomStreak.getIsKo());
             RecommendationResponse recommendationResponse = recommendationService.makeRecommend(query);
 
             // 추천된 문제가 없는경우
@@ -249,21 +272,28 @@ public class UserRandomStreakService {
      */
     @Transactional
     public Boolean solvedCheck(String bojHandle) {
-        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
         ProblemDto randomProblem = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
-        List<SolvedProblemDto> solvedProblemDtos =  userSolvedProblemService.findAllTodayUserSolvedProblem(bojHandle);
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(bojHandle);
+        User user = userRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
         // 유저가 오늘 문제를 풀었다면 넘어간다.
-        if (userRandomStreak.getIsTodayRandomSolved()) return true;
+        if (userRandomStreak.getIsTodayRandomSolved()) {
+            return true;
+        }
 
         for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
             if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
 
                 // 유저의 정보 갱신
                 user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
-                pointLogSaveService.savePointLog(bojHandle, randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " points are earned by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+                pointLogSaveService.savePointLog(bojHandle, randomProblem.getLevel() * 2,
+                        randomProblem.getLevel() * 2 + " points are earned by solving random problem "
+                                + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo()
+                                + "\"" + " level - " + convertDifficulty(randomProblem.getLevel()), true);
 
                 // 이벤트를 적용한다
                 eventPointService.applyEventPoint(bojHandle, randomProblem.getLevel());
@@ -299,12 +329,16 @@ public class UserRandomStreakService {
         List<User> users = userRepository.findAll();
 
         for (User userCur : users) {
-            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userCur.getBojHandle())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
             ProblemDto randomProblem = problemService.findProblem(userRandomStreak.getTodayRandomProblemId());
-            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(userCur.getBojHandle());
+            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllTodayUserSolvedProblem(
+                    userCur.getBojHandle());
 
             // 유저가 오늘 문제를 풀었다면 넘어간다.
-            if (userRandomStreak.getIsTodayRandomSolved()) continue;
+            if (userRandomStreak.getIsTodayRandomSolved()) {
+                continue;
+            }
 
             for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
                 if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
@@ -312,7 +346,11 @@ public class UserRandomStreakService {
 
                     // 유저의 정보 갱신
                     userCur.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
-                    pointLogSaveService.savePointLog(userCur.getBojHandle(), randomProblem.getLevel() * 2,  randomProblem.getLevel() * 2 + " points are earned by solving random problem " + randomProblem.getProblemId().toString() + " : " + "\"" + randomProblem.getTitleKo() + "\""+ " level - " + convertDifficulty(randomProblem.getLevel()), true);
+                    pointLogSaveService.savePointLog(userCur.getBojHandle(), randomProblem.getLevel() * 2,
+                            randomProblem.getLevel() * 2 + " points are earned by solving random problem "
+                                    + randomProblem.getProblemId().toString() + " : " + "\""
+                                    + randomProblem.getTitleKo() + "\"" + " level - " + convertDifficulty(
+                                    randomProblem.getLevel()), true);
 
                     // 이벤트를 적용한다
                     eventPointService.applyEventPoint(userCur.getBojHandle(), randomProblem.getLevel());
@@ -320,7 +358,8 @@ public class UserRandomStreakService {
                     // 팀의 점수를 올린다. (랜덤 문제)
                     teamService.increaseTeamScore(userCur.getTeam(), randomProblem.getLevel() * 2);
                     // 유저 통계를 반영한다. (랜덤 문제)
-                    userStatisticsService.updateByDto(userCur.getBojHandle(), randomProblem, randomProblem.getLevel() * 2);
+                    userStatisticsService.updateByDto(userCur.getBojHandle(), randomProblem,
+                            randomProblem.getLevel() * 2);
 
                     userCur.increaseCurrentRandomStreak(); // 랜덤 스트릭 1 증가
                     userCur.checkTodayRandomSolvedOk();
@@ -344,10 +383,12 @@ public class UserRandomStreakService {
      */
     @Transactional
     public Boolean streakCheck(String bojHandle) {
-        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
         UserGrass yesterday = userGrassService.findYesterdayUserGrass(userRandomStreak);
         if (!yesterday.getGrassInfo()) {
-            User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+            User user = userRepository.findByBojHandle(bojHandle)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
             // 스트릭 프리즈가 있다면 사용한다.
             if (randomStreakFreezeItemUseService.isExist(user)) {
@@ -379,10 +420,12 @@ public class UserRandomStreakService {
         List<User> users = userRepository.findAll();
 
         for (User userCur : users) {
-            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userCur.getBojHandle())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
             UserGrass yesterday = userGrassService.findYesterdayUserGrass(userRandomStreak);
             if (!yesterday.getGrassInfo()) {
-                User user = userRepository.findByBojHandle(userCur.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                User user = userRepository.findByBojHandle(userCur.getBojHandle())
+                        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
                 // 스트릭 프리즈가 있다면 사용한다.
                 if (randomStreakFreezeItemUseService.isExist(user)) {

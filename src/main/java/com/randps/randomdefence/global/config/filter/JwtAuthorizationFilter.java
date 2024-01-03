@@ -3,18 +3,17 @@ package com.randps.randomdefence.global.config.filter;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.authDto.PrincipalDetails;
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
-import com.randps.randomdefence.global.jwt.JwtProvider;
+import com.randps.randomdefence.global.jwt.component.JwtProvider;
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * 인증이나 권한이 필요한 주소 요청이 있을때 해당 필터를 통과

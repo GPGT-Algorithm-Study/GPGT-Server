@@ -1,11 +1,15 @@
 package com.randps.randomdefence.domain.comment.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -26,7 +30,8 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     @Builder
-    public Comment(Long boardId, String bojHandle, Long parentCommentId, String content) {
+    public Comment(Long id, Long boardId, String bojHandle, Long parentCommentId, String content) {
+        this.id = id;
         this.boardId = boardId;
         this.bojHandle = bojHandle;
         this.parentCommentId = parentCommentId;

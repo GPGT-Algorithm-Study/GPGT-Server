@@ -2,11 +2,14 @@ package com.randps.randomdefence.domain.log.domain;
 
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -26,7 +29,8 @@ public class PointLog extends BaseTimeEntity {
     private Boolean state;
 
     @Builder
-    public PointLog(String bojHandle, Integer changedValue, String description, Boolean state) {
+    public PointLog(Long id, String bojHandle, Integer changedValue, String description, Boolean state) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.changedValue = changedValue;
         this.description = description;

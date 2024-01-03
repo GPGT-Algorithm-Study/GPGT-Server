@@ -1,10 +1,9 @@
 package com.randps.randomdefence.global.config;
 
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.global.config.filter.JwtRefreshAuthFilter;
-import com.randps.randomdefence.global.jwt.JwtProvider;
-import com.randps.randomdefence.global.jwt.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.JwtProvider;
+import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-
-    private final PrincipalDetailsService principalDetailsService;
-
-    private final CorsConfig corsConfig;
 
     private final UserRepository userRepository;
 

@@ -2,13 +2,15 @@ package com.randps.randomdefence.domain.user.service;
 
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.user.domain.UserSolvedProblem;
-import com.randps.randomdefence.domain.user.domain.UserSolvedProblemRepository;
+import com.randps.randomdefence.domain.user.service.port.UserSolvedProblemRepository;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class UserSolvedJudgeService {
 

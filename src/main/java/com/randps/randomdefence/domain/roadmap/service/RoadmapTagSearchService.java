@@ -1,6 +1,6 @@
 package com.randps.randomdefence.domain.roadmap.service;
 
-import com.randps.randomdefence.domain.problem.domain.ProblemRepository;
+import com.randps.randomdefence.domain.problem.service.port.ProblemRepository;
 import com.randps.randomdefence.domain.roadmap.domain.RoadmapProblemRepository;
 import com.randps.randomdefence.domain.roadmap.domain.RoadmapRepository;
 import com.randps.randomdefence.domain.roadmap.domain.RoadmapTag;

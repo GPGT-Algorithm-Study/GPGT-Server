@@ -1,17 +1,16 @@
 package com.randps.randomdefence.domain.item.service;
 
 import com.randps.randomdefence.domain.item.domain.Item;
-import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItem;
-import com.randps.randomdefence.domain.item.domain.UserItemRepository;
 import com.randps.randomdefence.domain.item.dto.ItemDto;
 import com.randps.randomdefence.domain.item.dto.UserItemResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.item.service.port.ItemRepository;
+import com.randps.randomdefence.domain.item.service.port.UserItemRepository;
 import java.util.ArrayList;
 import java.util.List;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service

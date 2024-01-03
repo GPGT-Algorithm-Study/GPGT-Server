@@ -2,11 +2,14 @@ package com.randps.randomdefence.domain.item.domain;
 
 import com.randps.randomdefence.domain.item.dto.ItemDto;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -26,7 +29,8 @@ public class Item extends BaseTimeEntity {
     private Integer maxItemCount;
 
     @Builder
-    public Item(String name, String description, Integer itemValue, Integer maxItemCount) {
+    public Item(Long id, String name, String description, Integer itemValue, Integer maxItemCount) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.itemValue = itemValue;

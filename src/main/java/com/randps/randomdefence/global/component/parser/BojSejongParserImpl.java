@@ -5,12 +5,14 @@ import com.randps.randomdefence.global.component.crawler.BojSejongWebCrawler;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 @Component
+@Qualifier("bojSejongParserToUse")
 public class BojSejongParserImpl implements SejongParser {
 
     private final BojSejongWebCrawler bojSejongWebCrawler;

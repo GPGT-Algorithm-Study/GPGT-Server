@@ -2,21 +2,23 @@ package com.randps.randomdefence.domain.problem.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.domain.problem.domain.Problem;
-import com.randps.randomdefence.domain.problem.domain.ProblemRepository;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.dto.ProblemSolveJudgedDto;
+import com.randps.randomdefence.domain.problem.service.port.ProblemRepository;
 import com.randps.randomdefence.domain.user.service.UserSolvedJudgeService;
 import com.randps.randomdefence.global.component.query.Query;
 import com.randps.randomdefence.global.component.query.SolvedacQueryImpl;
 import java.util.ArrayList;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class ProblemService {
 

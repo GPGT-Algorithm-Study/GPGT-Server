@@ -1,11 +1,10 @@
 package com.randps.randomdefence.domain.event.service;
 
-import com.randps.randomdefence.domain.event.domain.EventPointRepository;
 import com.randps.randomdefence.domain.event.dto.EventPointDto;
+import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service

@@ -2,14 +2,11 @@ package com.randps.randomdefence.domain.admin.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.randps.randomdefence.domain.item.domain.Item;
-import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.dto.ItemDto;
+import com.randps.randomdefence.domain.item.service.port.ItemRepository;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service

@@ -1,14 +1,11 @@
 package com.randps.randomdefence.domain.statistics.service;
 
-import com.randps.randomdefence.domain.statistics.domain.UserProblemStatisticsRepository;
-import com.randps.randomdefence.domain.statistics.dto.SolvedBarPair;
 import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -21,8 +18,7 @@ public class WarningBarGraphStatisticsServiceV2 {
      */
     @Transactional
     public List<UserWarningBarDto> getAllWarningBarStatistics() {
-        List<UserWarningBarDto> userWarningBars = userRepository.findAllWarningBarDto();
 
-        return userWarningBars;
+        return userRepository.findAllWarningBarDto();
     }
 }

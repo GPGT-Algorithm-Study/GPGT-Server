@@ -2,11 +2,14 @@ package com.randps.randomdefence.domain.user.domain;
 
 import com.randps.randomdefence.domain.user.dto.UserRandomStreakDto;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -34,7 +37,8 @@ public class UserRandomStreak extends BaseTimeEntity {
     private Integer maxRandomStreak;
 
     @Builder
-    public UserRandomStreak(String bojHandle, String startLevel, String endLevel, Boolean isKo, Integer todayRandomProblemId, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
+    public UserRandomStreak(Long id, String bojHandle, String startLevel, String endLevel, Boolean isKo, Integer todayRandomProblemId, Boolean isTodayRandomSolved, Integer currentRandomStreak, Integer maxRandomStreak) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.startLevel = startLevel;
         this.endLevel = endLevel;

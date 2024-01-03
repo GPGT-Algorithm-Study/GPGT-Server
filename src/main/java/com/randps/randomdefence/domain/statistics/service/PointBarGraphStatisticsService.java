@@ -1,20 +1,17 @@
 package com.randps.randomdefence.domain.statistics.service;
 
 import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
-import com.randps.randomdefence.domain.statistics.domain.UserStatisticsRepository;
 import com.randps.randomdefence.domain.statistics.dto.PointBarDto;
 import com.randps.randomdefence.domain.statistics.dto.PointBarGraphStatisticsResponse;
-import com.randps.randomdefence.domain.statistics.dto.SolvedBarDto;
-import com.randps.randomdefence.domain.statistics.dto.SolvedBarGraphStatisticsResponse;
+import com.randps.randomdefence.domain.statistics.service.port.UserStatisticsRepository;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service

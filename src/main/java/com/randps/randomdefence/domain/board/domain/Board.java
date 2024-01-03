@@ -1,11 +1,15 @@
 package com.randps.randomdefence.domain.board.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -28,7 +32,8 @@ public class Board extends BaseTimeEntity {
     private Integer problemId;
 
     @Builder
-    public Board(String type, String bojHandle, String title, String content, Integer problemId) {
+    public Board(Long id, String type, String bojHandle, String title, String content, Integer problemId) {
+        this.id = id;
         this.type = type;
         this.bojHandle = bojHandle;
         this.title = title;

@@ -4,7 +4,7 @@ import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.dto.ProblemSolveJudgedDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolved;
-import com.randps.randomdefence.domain.user.domain.UserAlreadySolvedRepository;
+import com.randps.randomdefence.domain.user.service.port.UserAlreadySolvedRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.transaction.Transactional;

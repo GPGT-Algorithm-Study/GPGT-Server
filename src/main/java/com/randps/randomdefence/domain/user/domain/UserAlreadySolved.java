@@ -1,12 +1,16 @@
 package com.randps.randomdefence.domain.user.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import java.util.List;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -23,7 +27,8 @@ public class UserAlreadySolved extends BaseTimeEntity {
     private List<Integer> alreadySolvedList;
 
     @Builder
-    public UserAlreadySolved(String bojHandle, List<Integer> alreadySolvedList) {
+    public UserAlreadySolved(Long id, String bojHandle, List<Integer> alreadySolvedList) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.alreadySolvedList = alreadySolvedList;
     }
