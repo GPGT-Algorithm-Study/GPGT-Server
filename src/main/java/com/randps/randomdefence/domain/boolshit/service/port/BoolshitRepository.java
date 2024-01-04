@@ -13,4 +13,5 @@ public interface BoolshitRepository {
 
     Boolshit save(Boolshit boolshit);
 
+    void deleteAllByBojHandle(String bojHandle);
 }

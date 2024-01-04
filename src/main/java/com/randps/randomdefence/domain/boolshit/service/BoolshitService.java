@@ -8,12 +8,14 @@ import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @RequiredArgsConstructor
+@Builder
 @Service
 public class BoolshitService {
 
@@ -81,5 +83,13 @@ public class BoolshitService {
                 .bojHandle(bojHandle)
                 .build();
         boolshitRepository.save(boolshit);
+    }
+
+    /*
+     * 나의 한마디를 삭제한다.
+     */
+    @Transactional
+    public void deleteAllByBojHandle(String bojHandle) {
+        boolshitRepository.deleteAllByBojHandle(bojHandle);
     }
 }

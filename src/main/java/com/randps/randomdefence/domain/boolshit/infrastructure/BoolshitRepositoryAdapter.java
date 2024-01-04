@@ -31,4 +31,9 @@ public class BoolshitRepositoryAdapter implements BoolshitRepository {
         return boolshitJpaRepository.save(boolshit);
     }
 
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        boolshitJpaRepository.deleteAllByBojHandle(bojHandle);
+    }
+
 }

@@ -4,6 +4,7 @@ package com.randps.randomdefence.domain.mock;
 import com.randps.randomdefence.domain.board.mock.FakeBoardRepository;
 import com.randps.randomdefence.domain.board.service.port.BoardRepository;
 import com.randps.randomdefence.domain.boolshit.mock.FakeBoolshitRepository;
+import com.randps.randomdefence.domain.boolshit.service.BoolshitService;
 import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
 import com.randps.randomdefence.domain.comment.mock.FakeCommentRepository;
 import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
@@ -113,6 +114,8 @@ public class TestContainer {
     public final PrincipalDetailsService principalDetailsService;
 
     public final UserAuthService userAuthService;
+
+    public final BoolshitService boolshitService;
 
     @Builder
     public TestContainer(Parser parser, SolvedacParser solvedacParser, BCryptPasswordEncoder passwordEncoder) {
@@ -247,12 +250,17 @@ public class TestContainer {
                 .refreshTokenRepository(refreshTokenRepository)
                 .jwtUtil(jwtUtil)
                 .build();
+        boolshitService = BoolshitService.builder()
+                .boolshitRepository(boolshitRepository)
+                .userRepository(userRepository)
+                .build();
         userDeleteService = UserDeleteService.builder()
                 .userRepository(userRepository)
                 .userRandomStreakService(userRandomStreakService)
                 .userSolvedProblemService(userSolvedProblemService)
                 .userStatisticsService(userStatisticsService)
                 .userAuthService(userAuthService)
+                .boolshitService(boolshitService)
                 .build();
     }
 

@@ -60,4 +60,9 @@ public class FakeBoolshitRepository implements BoolshitRepository {
             return newBoolshit;
         }
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        data.removeIf(item -> item.getBojHandle().equals(bojHandle));
+    }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.boolshit.domain.Boolshit;
 import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
@@ -47,6 +48,10 @@ public class UserDeleteServiceTest {
                 .bojHandle("fin")
                 .password("q1w2e3r4!")
                 .build());
+        testContainer.boolshitRepository.save(Boolshit.builder()
+                .message("test")
+                .bojHandle("fin")
+                .build());
 
         // when
         testContainer.userDeleteService.delete("fin");
@@ -69,8 +74,8 @@ public class UserDeleteServiceTest {
         assertThat(testContainer.userStatisticsRepository.findByBojHandle("fin")).isEmpty();
         // 유저 JWT 토큰 삭제
         assertThat(testContainer.refreshTokenRepository.findByBojHandle("fin")).isEmpty();
-//        // 유저 나의 한마디 삭제
-//        assertThat(testContainer.boolshitRepository.findAll().size()).isEqualTo(0);
+        // 유저 나의 한마디 삭제
+        assertThat(testContainer.boolshitRepository.findAll().size()).isEqualTo(0);
 //        // 유저 포인트 로그 삭제
 //        assertThat(testContainer.pointLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
 //        // 유저 경고 로그 삭제
