@@ -37,6 +37,7 @@ public class UserGrassRepositoryAdapter implements UserGrassRepository {
 
     @Override
     public void deleteAll(List<UserGrass> userGrasses) {
-        userGrassJpaRepository.deleteAll(userGrasses);
+        for (UserGrass userGrass : userGrasses)
+            userGrassJpaRepository.delete(userGrass);
     }
 }
