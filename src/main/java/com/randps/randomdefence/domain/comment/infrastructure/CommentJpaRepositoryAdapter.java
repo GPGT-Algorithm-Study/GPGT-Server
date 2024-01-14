@@ -50,4 +50,14 @@ public class CommentJpaRepositoryAdapter implements CommentRepository {
     public List<Comment> findAllByParentCommentId(Long ParentCommentId) {
         return commentRepositoryImpl.findAllByParentCommentId(ParentCommentId);
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        commentJpaRepository.deleteAllByBojHandle(bojHandle);
+    }
+
+    @Override
+    public void deleteAllByBoardId(Long boardId) {
+        commentJpaRepository.deleteAllByBoardId(boardId);
+    }
 }

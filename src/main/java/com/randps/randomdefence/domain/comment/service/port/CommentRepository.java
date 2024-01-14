@@ -23,4 +23,7 @@ public interface CommentRepository {
     // 부모 댓글 Id로 모든 댓글 조회
     List<Comment> findAllByParentCommentId(Long ParentCommentId);
 
+    void deleteAllByBojHandle(String bojHandle);
+
+    void deleteAllByBoardId(Long boardId);
 }

@@ -8,10 +8,12 @@ import com.randps.randomdefence.domain.comment.dto.CommentUpdateRequest;
 import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
 import java.util.List;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class CommentService {
 
@@ -78,5 +80,15 @@ public class CommentService {
      */
     public List<CommentDto> findAllByBoardId(Long boardId) {
         return commentRepository.findAllByBoardId(boardId);
+    }
+
+    @Transactional
+    public void deleteAllByBoardId(Long boardId) {
+        commentRepository.deleteAllByBoardId(boardId);
+    }
+
+    @Transactional
+    public void deleteAllByBojHandle(String bojHandle) {
+        commentRepository.deleteAllByBojHandle(bojHandle);
     }
 }

@@ -8,6 +8,7 @@ import com.randps.randomdefence.domain.boolshit.mock.FakeBoolshitRepository;
 import com.randps.randomdefence.domain.boolshit.service.BoolshitService;
 import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
 import com.randps.randomdefence.domain.comment.mock.FakeCommentRepository;
+import com.randps.randomdefence.domain.comment.service.CommentService;
 import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
 import com.randps.randomdefence.domain.event.mock.FakeEventPointRepository;
 import com.randps.randomdefence.domain.event.service.EventPointService;
@@ -140,6 +141,8 @@ public class TestContainer {
     public final BoardService boardService;
 
     public final S3Service s3Service;
+
+    public final CommentService commentService;
 
     @Builder
     public TestContainer(Parser parser, SolvedacParser solvedacParser, BCryptPasswordEncoder passwordEncoder) {
@@ -291,9 +294,13 @@ public class TestContainer {
                 .imageRepository(imageRepository)
                 .build();
         s3Service = new S3Service(amazonS3Client, imageService, "test");
+        commentService = CommentService.builder()
+                .commentRepository(commentRepository)
+                .build();
         boardService = BoardService.builder()
                 .boardRepository(boardRepository)
                 .imageRepository(imageRepository)
+                .commentService(commentService)
                 .imageService(imageService)
                 .s3Service(s3Service)
                 .boardImageRepository(boardImageRepository)
@@ -309,6 +316,7 @@ public class TestContainer {
                 .warningLogSaveService(warningLogSaveService)
                 .itemSaveService(itemSaveService)
                 .boardService(boardService)
+                .commentService(commentService)
                 .build();
     }
 

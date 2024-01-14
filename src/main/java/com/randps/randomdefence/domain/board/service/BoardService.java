@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.board.dto.BoardDetail;
 import com.randps.randomdefence.domain.board.dto.BoardSimple;
 import com.randps.randomdefence.domain.board.dto.SearchCondition;
 import com.randps.randomdefence.domain.board.service.port.BoardRepository;
+import com.randps.randomdefence.domain.comment.service.CommentService;
 import com.randps.randomdefence.domain.image.domain.BoardImage;
 import com.randps.randomdefence.domain.image.domain.Image;
 import com.randps.randomdefence.domain.image.service.ImageService;
@@ -27,6 +28,8 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+
+    private final CommentService commentService;
 
     private final ImageRepository imageRepository;
 
@@ -153,6 +156,9 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new NotFoundException("존재하지 않는 게시글입니다."));
         List<BoardImage> boardImages = boardImageRepository.findAllByBoardId(boardId);
         List<Long> imageIds = new ArrayList<>();
+
+        // comment 전부 삭제
+        commentService.deleteAllByBoardId(boardId);
 
         for (BoardImage bi  : boardImages) {
             imageIds.add(bi.getImageId());

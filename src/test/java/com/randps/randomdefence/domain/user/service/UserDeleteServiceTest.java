@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.boolshit.domain.Boolshit;
+import com.randps.randomdefence.domain.comment.dto.CommentPublishRequest;
 import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
@@ -58,6 +59,11 @@ public class UserDeleteServiceTest {
         testContainer.itemSaveService.makeItem();
         testContainer.itemSaveService.buyItem("fin", 1L);
         testContainer.boardService.save("test", "fin", "test", "test", 1001, UUID.randomUUID().toString());
+        testContainer.commentService.save(CommentPublishRequest.builder()
+                .boardId(1L)
+                .bojHandle("fin")
+                .content("test comment content")
+                .build());
 
         // when
         testContainer.userDeleteService.delete("fin");
@@ -92,9 +98,8 @@ public class UserDeleteServiceTest {
         assertThat(testContainer.boardRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
         assertThat(testContainer.boardImageRepository.findAllByBoardId(1L).isEmpty()).isTrue();
         assertThat(testContainer.imageRepository.findAll().isEmpty()).isTrue();
-//        // 유저 댓글 삭제
-//        assertThat(testContainer.commentRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
-        // TODO : Resolve this test
+        // 유저 댓글 삭제
+        assertThat(testContainer.commentRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
     }
 
     @Test

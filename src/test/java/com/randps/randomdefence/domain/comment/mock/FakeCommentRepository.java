@@ -66,4 +66,14 @@ public class FakeCommentRepository implements CommentRepository {
         return data.stream().filter(item -> item.getParentCommentId().equals(ParentCommentId))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        data.removeIf(item -> item.getBojHandle().equals(bojHandle));
+    }
+
+    @Override
+    public void deleteAllByBoardId(Long boardId) {
+        data.removeIf(item -> item.getBoardId().equals(boardId));
+    }
 }
