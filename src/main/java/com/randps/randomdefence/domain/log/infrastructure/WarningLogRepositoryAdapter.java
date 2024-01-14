@@ -45,4 +45,9 @@ public class WarningLogRepositoryAdapter implements WarningLogRepository {
         return warningLogJpaRepository.findAll();
     }
 
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        warningLogJpaRepository.deleteAllByBojHandle(bojHandle);
+    }
+
 }

@@ -12,4 +12,6 @@ public interface WarningLogJpaRepository extends JpaRepository<WarningLog, Long>
     List<WarningLog> findAllByBojHandle(String bojHandle);
 
     List<WarningLog> findAllByBojHandleOrderByCreatedDateDesc(String bojHandle, Pageable pageable);
+
+    void deleteAllByBojHandle(String bojHandle);
 }

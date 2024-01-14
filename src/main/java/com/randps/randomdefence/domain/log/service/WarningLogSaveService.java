@@ -81,4 +81,12 @@ public class WarningLogSaveService {
 
         return warningLog;
     }
+
+    /*
+     * 특정 유저의 모든 경고 로그를 삭제한다.
+     */
+    @Transactional
+    public void deleteAllWaringLog(String bojHandle) {
+        warningLogRepository.deleteAllByBojHandle(bojHandle);
+    }
 }

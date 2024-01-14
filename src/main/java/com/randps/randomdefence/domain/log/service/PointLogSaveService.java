@@ -84,4 +84,5 @@ public class PointLogSaveService {
     public void deleteAllPointLog(String bojHandle) {
         pointLogRepository.deleteAllByBojHandle(bojHandle);
     }
+
 }

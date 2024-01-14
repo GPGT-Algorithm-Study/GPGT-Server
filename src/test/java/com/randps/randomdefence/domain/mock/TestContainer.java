@@ -261,6 +261,8 @@ public class TestContainer {
                 .userStatisticsService(userStatisticsService)
                 .userAuthService(userAuthService)
                 .boolshitService(boolshitService)
+                .pointLogSaveService(pointLogSaveService)
+                .warningLogSaveService(warningLogSaveService)
                 .build();
     }
 

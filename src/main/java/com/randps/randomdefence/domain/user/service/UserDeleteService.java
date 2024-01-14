@@ -1,6 +1,8 @@
 package com.randps.randomdefence.domain.user.service;
 
 import com.randps.randomdefence.domain.boolshit.service.BoolshitService;
+import com.randps.randomdefence.domain.log.service.PointLogSaveService;
+import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
@@ -26,6 +28,10 @@ public class UserDeleteService {
 
     private final BoolshitService boolshitService;
 
+    private final PointLogSaveService pointLogSaveService;
+
+    private final WarningLogSaveService warningLogSaveService;
+
     /*
      * 유저를 DB에서 삭제한다.
      */
@@ -43,8 +49,11 @@ public class UserDeleteService {
         // 유저 나의 한마디 삭제
         boolshitService.deleteAllByBojHandle(bojHandle);
         // 유저 포인트 로그 삭제
+        pointLogSaveService.deleteAllPointLog(bojHandle);
         // 유저 경고 로그 삭제
+        warningLogSaveService.deleteAllWaringLog(bojHandle);
         // 유저 아이템 삭제
+
         // 유저 게시글 삭제
         // 유저 댓글 삭제
 

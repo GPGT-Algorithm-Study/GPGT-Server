@@ -52,6 +52,8 @@ public class UserDeleteServiceTest {
                 .message("test")
                 .bojHandle("fin")
                 .build());
+        testContainer.pointLogSaveService.savePointLog("fin", 100, "test", true);
+        testContainer.warningLogSaveService.saveWarningLog("fin", 1, "test", true);
 
         // when
         testContainer.userDeleteService.delete("fin");
@@ -76,10 +78,10 @@ public class UserDeleteServiceTest {
         assertThat(testContainer.refreshTokenRepository.findByBojHandle("fin")).isEmpty();
         // 유저 나의 한마디 삭제
         assertThat(testContainer.boolshitRepository.findAll().size()).isEqualTo(0);
-//        // 유저 포인트 로그 삭제
-//        assertThat(testContainer.pointLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
-//        // 유저 경고 로그 삭제
-//        assertThat(testContainer.warningLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
+        // 유저 포인트 로그 삭제
+        assertThat(testContainer.pointLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
+        // 유저 경고 로그 삭제
+        assertThat(testContainer.warningLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
 //        // 유저 아이템 삭제
 //        assertThat(testContainer.userItemRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
 //        // 유저 게시글 삭제

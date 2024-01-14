@@ -83,4 +83,10 @@ public class FakeWarningLogRepository implements WarningLogRepository {
     public List<WarningLog> findAll() {
         return data;
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        data.removeIf(elem -> elem.getBojHandle().equals(bojHandle));
+    }
+
 }

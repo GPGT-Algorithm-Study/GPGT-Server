@@ -18,4 +18,6 @@ public interface WarningLogRepository {
     Optional<WarningLog> findById(Long id);
 
     List<WarningLog> findAll();
+
+    void deleteAllByBojHandle(String bojHandle);
 }

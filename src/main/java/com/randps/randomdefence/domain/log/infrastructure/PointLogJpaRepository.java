@@ -13,4 +13,6 @@ public interface PointLogJpaRepository extends JpaRepository<PointLog, Long> {
     List<PointLog> findAllByBojHandle(String bojHandle);
 
     List<PointLog> findAllByBojHandleOrderByCreatedDateDesc(String bojHandle, Pageable pageable);
+
+    void deleteAllByBojHandle(String bojHandle);
 }
