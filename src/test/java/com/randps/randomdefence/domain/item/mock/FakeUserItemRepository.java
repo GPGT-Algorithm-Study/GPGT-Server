@@ -55,4 +55,10 @@ public class FakeUserItemRepository implements UserItemRepository {
     public void delete(UserItem userItem) {
         data.removeIf(item -> item.getId().equals(userItem.getId()));
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        data.removeIf(item -> item.getBojHandle().equals(bojHandle));
+    }
+
 }

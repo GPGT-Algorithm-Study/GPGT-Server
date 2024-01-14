@@ -33,4 +33,9 @@ public class UserItemRepositoryAdapter implements UserItemRepository {
     public void delete(UserItem userItem) {
         userItemJpaRepository.delete(userItem);
     }
+
+    @Override
+    public void deleteAllByBojHandle(String bojHandle) {
+        userItemJpaRepository.deleteAllByBojHandle(bojHandle);
+    }
 }

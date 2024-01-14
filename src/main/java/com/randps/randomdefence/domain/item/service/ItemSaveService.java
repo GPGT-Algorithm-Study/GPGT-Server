@@ -10,10 +10,12 @@ import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class ItemSaveService {
 
@@ -102,7 +104,7 @@ public class ItemSaveService {
         }
 
         // 테스트 상품
-        Item newItem = Item.builder().name("테스트 상품").description("테스트 상품입니다. 사용하면 서버에 로그를 하나 찍습니다.").itemValue(1)
+        Item newItem = Item.builder().name("테스트 상품").description("테스트 상품입니다. 사용하면 서버에 로그를 하나 찍습니다.").itemValue(0)
                 .maxItemCount(2).build();
         itemRepository.save(newItem);
 
@@ -123,4 +125,13 @@ public class ItemSaveService {
 
         return true;
     }
+
+    /*
+     * 유저의 모든 아이템을 삭제한다.
+     */
+    @Transactional
+    public void deleteAllUserItem(String bojHandle) {
+        userItemRepository.deleteAllByBojHandle(bojHandle);
+    }
+
 }

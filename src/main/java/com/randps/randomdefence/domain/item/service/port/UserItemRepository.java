@@ -15,4 +15,6 @@ public interface UserItemRepository {
 
     void delete(UserItem userItem);
 
+    void deleteAllByBojHandle(String bojHandle);
+
 }

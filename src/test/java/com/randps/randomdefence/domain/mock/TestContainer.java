@@ -13,6 +13,7 @@ import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
 import com.randps.randomdefence.domain.item.mock.FakeItemRepository;
 import com.randps.randomdefence.domain.item.mock.FakeUserItemRepository;
+import com.randps.randomdefence.domain.item.service.ItemSaveService;
 import com.randps.randomdefence.domain.item.service.RandomStreakFreezeItemUseServiceImpl;
 import com.randps.randomdefence.domain.item.service.port.ItemRepository;
 import com.randps.randomdefence.domain.item.service.port.UserItemRepository;
@@ -116,6 +117,8 @@ public class TestContainer {
     public final UserAuthService userAuthService;
 
     public final BoolshitService boolshitService;
+
+    public final ItemSaveService itemSaveService;
 
     @Builder
     public TestContainer(Parser parser, SolvedacParser solvedacParser, BCryptPasswordEncoder passwordEncoder) {
@@ -254,6 +257,12 @@ public class TestContainer {
                 .boolshitRepository(boolshitRepository)
                 .userRepository(userRepository)
                 .build();
+        itemSaveService = ItemSaveService.builder()
+                .userItemRepository(userItemRepository)
+                .userRepository(userRepository)
+                .itemRepository(itemRepository)
+                .pointLogSaveService(pointLogSaveService)
+                .build();
         userDeleteService = UserDeleteService.builder()
                 .userRepository(userRepository)
                 .userRandomStreakService(userRandomStreakService)
@@ -263,6 +272,7 @@ public class TestContainer {
                 .boolshitService(boolshitService)
                 .pointLogSaveService(pointLogSaveService)
                 .warningLogSaveService(warningLogSaveService)
+                .itemSaveService(itemSaveService)
                 .build();
     }
 

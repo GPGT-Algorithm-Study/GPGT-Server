@@ -10,4 +10,6 @@ public interface UserItemJpaRepository extends JpaRepository<UserItem, Long> {
     List<UserItem> findAllByBojHandle(String bojHandle);
 
     Optional<UserItem> findByBojHandleAndItem(String bojHandle, Item item);
+
+    void deleteAllByBojHandle(String bojHandle);
 }
