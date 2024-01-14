@@ -1,4 +1,4 @@
-package com.randps.randomdefence.domain.image.domain;
+package com.randps.randomdefence.domain.image.infrastructure;
 
 import java.time.LocalDateTime;
 import java.util.List;

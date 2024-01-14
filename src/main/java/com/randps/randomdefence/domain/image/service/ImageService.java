@@ -1,17 +1,16 @@
 package com.randps.randomdefence.domain.image.service;
 
 import com.randps.randomdefence.domain.image.domain.Image;
-import com.randps.randomdefence.domain.image.domain.ImageRepository;
-import com.randps.randomdefence.global.aws.s3.service.S3Service;
+import com.randps.randomdefence.domain.image.service.port.ImageRepository;
+import java.util.List;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class ImageService {
 

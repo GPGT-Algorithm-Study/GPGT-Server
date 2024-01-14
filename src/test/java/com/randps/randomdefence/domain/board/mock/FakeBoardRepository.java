@@ -6,6 +6,10 @@ import com.randps.randomdefence.domain.board.dto.BoardSimple;
 import com.randps.randomdefence.domain.board.dto.SearchCondition;
 import com.randps.randomdefence.domain.board.service.port.BoardRepository;
 import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
+import com.randps.randomdefence.domain.image.domain.BoardImage;
+import com.randps.randomdefence.domain.image.domain.Image;
+import com.randps.randomdefence.domain.image.service.port.BoardImageRepository;
+import com.randps.randomdefence.domain.image.service.port.ImageRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +25,20 @@ public class FakeBoardRepository implements BoardRepository {
 
     private final CommentRepository commentRepository;
 
+    private final ImageRepository imageRepository;
+
+    private final BoardImageRepository boardImageRepository;
+
     private final List<Board> data = new ArrayList<>();
 
     private Long autoIncreasingCount = 0L;
 
-    public FakeBoardRepository(UserRepository userRepository, CommentRepository commentRepository) {
+    public FakeBoardRepository(UserRepository userRepository, CommentRepository commentRepository,
+                               ImageRepository imageRepository, BoardImageRepository boardImageRepository) {
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.imageRepository = imageRepository;
+        this.boardImageRepository = boardImageRepository;
     }
 
     @Override
@@ -48,12 +59,24 @@ public class FakeBoardRepository implements BoardRepository {
                     .bojHandle(board.getBojHandle()).title(board.getTitle()).content(board.getContent())
                     .problemId(board.getProblemId()).build();
             data.add(newBoard);
+            Image newImage = imageRepository.save(
+                    Image.builder().url("https://test.com/" + autoIncreasingCount.toString() + ".jpg")
+                            .originName(autoIncreasingCount.toString()).contentType("jpg").build());
+            List<BoardImage> boardImages = new ArrayList<>();
+            boardImages.add(BoardImage.builder().boardId(autoIncreasingCount).imageId(newImage.getId()).build());
+            boardImageRepository.saveAll(boardImages);
             return newBoard;
         } else {
             data.removeIf(item -> item.getId().equals(board.getId()));
             Board newBoard = Board.builder().id(board.getId()).type(board.getType()).bojHandle(board.getBojHandle())
                     .title(board.getTitle()).content(board.getContent()).problemId(board.getProblemId()).build();
             data.add(newBoard);
+            Image newImage = imageRepository.save(
+                    Image.builder().url("https://test.com/" + board.getId().toString() + ".jpg")
+                            .originName(board.getId().toString()).contentType("jpg").build());
+            List<BoardImage> boardImages = new ArrayList<>();
+            boardImages.add(BoardImage.builder().boardId(board.getId()).imageId(newImage.getId()).build());
+            boardImageRepository.saveAll(boardImages);
             return newBoard;
         }
     }

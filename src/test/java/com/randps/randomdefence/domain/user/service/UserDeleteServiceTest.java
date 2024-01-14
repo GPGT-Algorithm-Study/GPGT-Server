@@ -14,6 +14,7 @@ import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -56,6 +57,7 @@ public class UserDeleteServiceTest {
         testContainer.warningLogSaveService.saveWarningLog("fin", 1, "test", true);
         testContainer.itemSaveService.makeItem();
         testContainer.itemSaveService.buyItem("fin", 1L);
+        testContainer.boardService.save("test", "fin", "test", "test", 1001, UUID.randomUUID().toString());
 
         // when
         testContainer.userDeleteService.delete("fin");
@@ -86,8 +88,10 @@ public class UserDeleteServiceTest {
         assertThat(testContainer.warningLogRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
         // 유저 아이템 삭제
         assertThat(testContainer.userItemRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
-//        // 유저 게시글 삭제
-//        assertThat(testContainer.boardRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
+        // 유저 게시글 삭제
+        assertThat(testContainer.boardRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
+        assertThat(testContainer.boardImageRepository.findAllByBoardId(1L).isEmpty()).isTrue();
+        assertThat(testContainer.imageRepository.findAll().isEmpty()).isTrue();
 //        // 유저 댓글 삭제
 //        assertThat(testContainer.commentRepository.findAllByBojHandle("fin").isEmpty()).isTrue();
         // TODO : Resolve this test

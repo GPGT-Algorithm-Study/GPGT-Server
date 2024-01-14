@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.mock;
 
 
 import com.randps.randomdefence.domain.board.mock.FakeBoardRepository;
+import com.randps.randomdefence.domain.board.service.BoardService;
 import com.randps.randomdefence.domain.board.service.port.BoardRepository;
 import com.randps.randomdefence.domain.boolshit.mock.FakeBoolshitRepository;
 import com.randps.randomdefence.domain.boolshit.service.BoolshitService;
@@ -11,6 +12,11 @@ import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
 import com.randps.randomdefence.domain.event.mock.FakeEventPointRepository;
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
+import com.randps.randomdefence.domain.image.mock.FakeBoardImageRepository;
+import com.randps.randomdefence.domain.image.mock.FakeImageRepository;
+import com.randps.randomdefence.domain.image.service.ImageService;
+import com.randps.randomdefence.domain.image.service.port.BoardImageRepository;
+import com.randps.randomdefence.domain.image.service.port.ImageRepository;
 import com.randps.randomdefence.domain.item.mock.FakeItemRepository;
 import com.randps.randomdefence.domain.item.mock.FakeUserItemRepository;
 import com.randps.randomdefence.domain.item.service.ItemSaveService;
@@ -56,11 +62,14 @@ import com.randps.randomdefence.domain.user.service.port.UserGrassRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.domain.user.service.port.UserSolvedProblemRepository;
+import com.randps.randomdefence.global.aws.s3.service.S3Service;
+import com.randps.randomdefence.global.aws.s3.service.port.AmazonS3ClientPort;
 import com.randps.randomdefence.global.component.parser.Parser;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
 import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
 import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
 import com.randps.randomdefence.global.jwt.mock.FakeRefreshTokenRepository;
+import com.randps.randomdefence.global.mock.FakeAmazonS3Client;
 import lombok.Builder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -88,6 +97,12 @@ public class TestContainer {
     public final CommentRepository commentRepository;
 
     public final BoardRepository boardRepository;
+
+    public final ImageRepository imageRepository;
+
+    public final BoardImageRepository boardImageRepository;
+
+    public final AmazonS3ClientPort amazonS3Client;
 
     public final Parser parserHolder;
     public final SolvedacParser solvedacParserHolder;
@@ -120,6 +135,12 @@ public class TestContainer {
 
     public final ItemSaveService itemSaveService;
 
+    public final ImageService imageService;
+
+    public final BoardService boardService;
+
+    public final S3Service s3Service;
+
     @Builder
     public TestContainer(Parser parser, SolvedacParser solvedacParser, BCryptPasswordEncoder passwordEncoder) {
         userRepository = new FakeUserRepository();
@@ -139,7 +160,10 @@ public class TestContainer {
         refreshTokenRepository = new FakeRefreshTokenRepository();
         boolshitRepository = new FakeBoolshitRepository(userRepository);
         commentRepository = new FakeCommentRepository();
-        boardRepository = new FakeBoardRepository(userRepository, commentRepository);
+        imageRepository = new FakeImageRepository();
+        boardImageRepository = new FakeBoardImageRepository();
+        boardRepository = new FakeBoardRepository(userRepository, commentRepository, imageRepository, boardImageRepository);
+        amazonS3Client = new FakeAmazonS3Client(); // TODO: mock객체로 변경
         parserHolder = parser;
         solvedacParserHolder = solvedacParser;
         userAlreadySolvedService = UserAlreadySolvedService.builder()
@@ -263,6 +287,17 @@ public class TestContainer {
                 .itemRepository(itemRepository)
                 .pointLogSaveService(pointLogSaveService)
                 .build();
+        imageService = ImageService.builder()
+                .imageRepository(imageRepository)
+                .build();
+        s3Service = new S3Service(amazonS3Client, imageService, "test");
+        boardService = BoardService.builder()
+                .boardRepository(boardRepository)
+                .imageRepository(imageRepository)
+                .imageService(imageService)
+                .s3Service(s3Service)
+                .boardImageRepository(boardImageRepository)
+                .build();
         userDeleteService = UserDeleteService.builder()
                 .userRepository(userRepository)
                 .userRandomStreakService(userRandomStreakService)
@@ -273,6 +308,7 @@ public class TestContainer {
                 .pointLogSaveService(pointLogSaveService)
                 .warningLogSaveService(warningLogSaveService)
                 .itemSaveService(itemSaveService)
+                .boardService(boardService)
                 .build();
     }
 

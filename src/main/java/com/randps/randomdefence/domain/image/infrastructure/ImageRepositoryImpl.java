@@ -1,14 +1,14 @@
-package com.randps.randomdefence.domain.image.domain;
-
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
-import java.util.List;
+package com.randps.randomdefence.domain.image.infrastructure;
 
 import static com.randps.randomdefence.domain.image.domain.QImage.image;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public class ImageRepositoryImpl implements ImageRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;

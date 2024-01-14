@@ -7,20 +7,22 @@ import com.randps.randomdefence.domain.board.dto.BoardSimple;
 import com.randps.randomdefence.domain.board.dto.SearchCondition;
 import com.randps.randomdefence.domain.board.service.port.BoardRepository;
 import com.randps.randomdefence.domain.image.domain.BoardImage;
-import com.randps.randomdefence.domain.image.domain.BoardImageRepository;
 import com.randps.randomdefence.domain.image.domain.Image;
-import com.randps.randomdefence.domain.image.domain.ImageRepository;
 import com.randps.randomdefence.domain.image.service.ImageService;
+import com.randps.randomdefence.domain.image.service.port.BoardImageRepository;
+import com.randps.randomdefence.domain.image.service.port.ImageRepository;
 import com.randps.randomdefence.global.aws.s3.service.S3Service;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
+@Builder
 @Service
 public class BoardService {
 
@@ -171,6 +173,16 @@ public class BoardService {
 
         // 게시글 삭제
         boardRepository.delete(board);
+    }
+
+    /*
+     * 특정 유저의 모든 게시글 삭제 (종속성 고려)
+     */
+    @Transactional
+    public void deleteAllByBojHandle(String bojHandle) {
+        boardRepository.findAllByBojHandle(bojHandle).forEach(board -> {
+            delete(board.getId());
+        });
     }
 
     /**
