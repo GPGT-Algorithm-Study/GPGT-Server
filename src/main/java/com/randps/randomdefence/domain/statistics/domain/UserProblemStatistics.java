@@ -3,12 +3,14 @@ package com.randps.randomdefence.domain.statistics.domain;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -58,7 +60,7 @@ public class UserProblemStatistics extends BaseTimeEntity {
     private Integer totalSolvedCountRuby;
 
     @Builder
-    public UserProblemStatistics(String bojHandle, Integer dailySolvedCountBronze, Integer dailySolvedCountSilver, Integer dailySolvedCountGold, Integer dailySolvedCountPlatinum, Integer dailySolvedCountDiamond, Integer dailySolvedCountRuby, Integer weeklySolvedCountBronze, Integer weeklySolvedCountSilver, Integer weeklySolvedCountGold, Integer weeklySolvedCountPlatinum, Integer weeklySolvedCountDiamond, Integer weeklySolvedCountRuby, Integer totalSolvedCountBronze, Integer totalSolvedCountSilver, Integer totalSolvedCountGold, Integer totalSolvedCountPlatinum, Integer totalSolvedCountDiamond, Integer totalSolvedCountRuby) {
+    public UserProblemStatistics(Long id, String bojHandle, Integer dailySolvedCountBronze, Integer dailySolvedCountSilver, Integer dailySolvedCountGold, Integer dailySolvedCountPlatinum, Integer dailySolvedCountDiamond, Integer dailySolvedCountRuby, Integer weeklySolvedCountBronze, Integer weeklySolvedCountSilver, Integer weeklySolvedCountGold, Integer weeklySolvedCountPlatinum, Integer weeklySolvedCountDiamond, Integer weeklySolvedCountRuby, Integer totalSolvedCountBronze, Integer totalSolvedCountSilver, Integer totalSolvedCountGold, Integer totalSolvedCountPlatinum, Integer totalSolvedCountDiamond, Integer totalSolvedCountRuby) {
         this.bojHandle = bojHandle;
         this.dailySolvedCountBronze = dailySolvedCountBronze;
         this.dailySolvedCountSilver = dailySolvedCountSilver;

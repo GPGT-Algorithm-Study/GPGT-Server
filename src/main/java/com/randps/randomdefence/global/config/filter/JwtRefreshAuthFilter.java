@@ -1,20 +1,19 @@
 package com.randps.randomdefence.global.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.randps.randomdefence.global.jwt.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
 import com.randps.randomdefence.global.jwt.dto.GlobalJwtResDto;
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor

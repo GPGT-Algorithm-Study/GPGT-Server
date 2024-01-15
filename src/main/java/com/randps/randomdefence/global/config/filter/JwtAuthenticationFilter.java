@@ -3,19 +3,18 @@ package com.randps.randomdefence.global.config.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.authDto.PrincipalDetails;
-import com.randps.randomdefence.global.jwt.JwtProvider;
+import com.randps.randomdefence.global.jwt.component.JwtProvider;
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * 인증을 위한 필터

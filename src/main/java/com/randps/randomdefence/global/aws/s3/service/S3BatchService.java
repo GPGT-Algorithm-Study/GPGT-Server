@@ -1,13 +1,11 @@
 package com.randps.randomdefence.global.aws.s3.service;
 
-import com.randps.randomdefence.domain.image.domain.ImageRepository;
-import com.randps.randomdefence.domain.image.service.ImageService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.randps.randomdefence.domain.image.service.port.ImageRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

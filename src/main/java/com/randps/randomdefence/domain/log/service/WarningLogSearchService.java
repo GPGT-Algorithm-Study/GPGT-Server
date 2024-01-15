@@ -1,16 +1,14 @@
 package com.randps.randomdefence.domain.log.service;
 
-import com.randps.randomdefence.domain.log.domain.PointLog;
 import com.randps.randomdefence.domain.log.domain.WarningLog;
-import com.randps.randomdefence.domain.log.domain.WarningLogRepository;
+import com.randps.randomdefence.domain.log.service.port.WarningLogRepository;
+import java.util.ArrayList;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
