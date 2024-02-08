@@ -10,9 +10,11 @@ import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
+import com.randps.randomdefence.global.component.mock.FakeSolvedacDelayedParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import javax.persistence.EntityExistsException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -116,6 +118,64 @@ public class UserServiceTest {
         // then
         assertThatThrownBy(() -> {
             testContainer.userService.save(userSave);
+        }).isInstanceOf(EntityExistsException.class);
+    }
+
+    static class UserSaveTestThread implements Runnable {
+
+        private final TestContainer testContainer;
+
+        private final UserSave userSave;
+
+        UserSaveTestThread(TestContainer testContainer, UserSave userSave) {
+            this.testContainer = testContainer;
+            this.userSave = userSave;
+        }
+
+        @Override
+        public void run() throws EntityExistsException {
+            try {
+                testContainer.userService.save(userSave);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("save로 유저를 생성하는데 아직 유저 정보에 대한 Tracsaction이 반영되지 않았을 때, 중복된 bojHandle의 유저를 생성하면 에러를 던진다")
+    public void save로_유저를_생성할_때_빠르게_연속으로_중복된_bojHandle의_유저를_생성하면_에러를_던진다() throws JsonProcessingException {
+        // given
+        UserScrapingInfoDto userScrapingInfoDto = UserScrapingInfoDto.builder()
+                .tier(15)
+                .profileImg("https://static.solved.ac/uploads/profile/64x64/fin-picture-1665752455693.png")
+                .currentStreak(252)
+                .totalSolved(1067)
+                .isTodaySolved(true)
+                .todaySolvedProblemCount(1)
+                .build();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        TestContainer testContainer = TestContainer.builder()
+                .parser(new FakeParserImpl())
+                .solvedacParser(new FakeSolvedacDelayedParserImpl(userScrapingInfoDto))
+                .passwordEncoder(passwordEncoder)
+                .build();
+        UserSave userSave = UserSave.builder()
+                .bojHandle("fin")
+                .password("q1w2e3r4!")
+                .notionId("성민")
+                .manager(1L)
+                .emoji("🛠️")
+                .build();
+        Thread userSaveProcess1 = new Thread(new UserSaveTestThread(testContainer, userSave));
+        Thread userSaveProcess2 = new Thread(new UserSaveTestThread(testContainer, userSave));
+
+        // when & then
+        assertThatThrownBy(() -> {
+            userSaveProcess1.start();
+            userSaveProcess2.start();
+            userSaveProcess1.join();
+            userSaveProcess2.join();
         }).isInstanceOf(EntityExistsException.class);
     }
 
