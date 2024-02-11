@@ -13,6 +13,10 @@ import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacDelayedParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import javax.persistence.EntityExistsException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -121,27 +125,6 @@ public class UserServiceTest {
         }).isInstanceOf(EntityExistsException.class);
     }
 
-    static class UserSaveTestThread implements Runnable {
-
-        private final TestContainer testContainer;
-
-        private final UserSave userSave;
-
-        UserSaveTestThread(TestContainer testContainer, UserSave userSave) {
-            this.testContainer = testContainer;
-            this.userSave = userSave;
-        }
-
-        @Override
-        public void run() throws EntityExistsException {
-            try {
-                testContainer.userService.save(userSave);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
     @Test
     @DisplayName("save로 유저를 생성하는데 아직 유저 정보에 대한 Tracsaction이 반영되지 않았을 때, 중복된 bojHandle의 유저를 생성하면 에러를 던진다")
     public void save로_유저를_생성할_때_빠르게_연속으로_중복된_bojHandle의_유저를_생성하면_에러를_던진다() throws JsonProcessingException {
@@ -167,15 +150,31 @@ public class UserServiceTest {
                 .manager(1L)
                 .emoji("🛠️")
                 .build();
-        Thread userSaveProcess1 = new Thread(new UserSaveTestThread(testContainer, userSave));
-        Thread userSaveProcess2 = new Thread(new UserSaveTestThread(testContainer, userSave));
+        ExecutorService executor = Executors.newFixedThreadPool(2);
 
         // when & then
         assertThatThrownBy(() -> {
-            userSaveProcess1.start();
-            userSaveProcess2.start();
-            userSaveProcess1.join();
-            userSaveProcess2.join();
+            Future<?> future1 = executor.submit(()->{
+                try {
+                    testContainer.userService.save(userSave);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            Future<?> future2 = executor.submit(()->{
+                try {
+                    testContainer.userService.save(userSave);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            try {
+                future1.get();
+                future2.get();
+            } catch (ExecutionException ee) {
+                throw ee.getCause();
+            }
+            executor.shutdown();
         }).isInstanceOf(EntityExistsException.class);
     }
 
