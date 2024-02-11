@@ -10,6 +10,7 @@ import com.randps.randomdefence.domain.user.service.port.UserRandomStreakReposit
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityExistsException;
 import javax.transaction.Transactional;
 import lombok.Builder;
@@ -43,9 +44,9 @@ public class UserService {
      */
     @Transactional
     public User save(UserSave userSave) throws JsonProcessingException {
-        User existUser = userRepository.findByBojHandle(userSave.getBojHandle()).orElse(null);
+        Optional<User> existUser = userRepository.findByBojHandle(userSave.getBojHandle());
         synchronized (this) {
-            if (existUser != null || userSaveProcessSet.get(userSave.getBojHandle()) != null) {
+            if (existUser.isPresent() || userSaveProcessSet.get(userSave.getBojHandle()) != null) {
                 throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
             } else {
                 // Process HashMap에 추가
