@@ -150,18 +150,18 @@ public class UserServiceTest {
                 .manager(1L)
                 .emoji("🛠️")
                 .build();
-        ExecutorService executor = Executors.newFixedThreadPool(2);
+        ExecutorService pool = Executors.newFixedThreadPool(2);
 
         // when & then
         assertThatThrownBy(() -> {
-            Future<?> future1 = executor.submit(()->{
+            Future<?> future1 = pool.submit(()->{
                 try {
                     testContainer.userService.save(userSave);
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
             });
-            Future<?> future2 = executor.submit(()->{
+            Future<?> future2 = pool.submit(()->{
                 try {
                     testContainer.userService.save(userSave);
                 } catch (JsonProcessingException e) {
@@ -172,9 +172,10 @@ public class UserServiceTest {
                 future1.get();
                 future2.get();
             } catch (ExecutionException ee) {
+                pool.shutdownNow();
                 throw ee.getCause();
             }
-            executor.shutdown();
+            pool.shutdown();
         }).isInstanceOf(EntityExistsException.class);
     }
 
