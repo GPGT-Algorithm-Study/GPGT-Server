@@ -43,8 +43,9 @@ public class UserService {
      */
     @Transactional
     public User save(UserSave userSave) throws JsonProcessingException {
+        User existUser = userRepository.findByBojHandle(userSave.getBojHandle()).orElse(null);
         synchronized (this) {
-            if (userSaveProcessSet.get(userSave.getBojHandle()) != null) {
+            if (existUser != null || userSaveProcessSet.get(userSave.getBojHandle()) != null) {
                 throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
             } else {
                 // Process HashMap에 추가
