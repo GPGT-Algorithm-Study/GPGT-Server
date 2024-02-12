@@ -8,6 +8,7 @@ import com.randps.randomdefence.domain.user.dto.UserMentionDto;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.domain.user.service.port.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityExistsException;
@@ -36,14 +37,21 @@ public class UserService {
 
     private final UserSolvedProblemService userSolvedProblemService;
 
+    private static HashMap<String, Boolean> userSaveProcessSet = new HashMap<>();
+
     /*
      * 유저를 DB에 저장한다.
      */
     @Transactional
     public User save(UserSave userSave) throws JsonProcessingException {
-        Optional<User> isExistUser = userRepository.findByBojHandle(userSave.getBojHandle());
-        if (isExistUser.isPresent()) {
-            throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
+        Optional<User> existUser = userRepository.findByBojHandle(userSave.getBojHandle());
+        synchronized (this) {
+            if (existUser.isPresent() || userSaveProcessSet.get(userSave.getBojHandle()) != null) {
+                throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
+            } else {
+                // Process HashMap에 추가
+                userSaveProcessSet.put(userSave.getBojHandle(), true);
+            }
         }
         if (!(userSave.getManager() == 0 || userSave.getManager() == 1)) {
             throw new IllegalArgumentException("잘못된 파라미터가 전달되었습니다.");
@@ -85,6 +93,8 @@ public class UserService {
         // 전날의 랜덤 스트릭 잔디 생성 (새로운 유저 생성 시 에러 방지용)
         userGrassService.makeYesterdayGrass(userRandomStreak);
 
+        // Process HashMap에서 삭제
+        userSaveProcessSet.remove(userSave.getBojHandle());
         return user;
     }
 
