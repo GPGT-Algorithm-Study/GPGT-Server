@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.mock.FakeUserRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +16,8 @@ public class PrincipalDetailServiceTest {
     private PrincipalDetailsService principalDetailsService;
 
     @Test
-    public void loadUserByUsername을_이용하여_bojHandle로_유저를_조회할_수_있다() {
+    @DisplayName("loadUserByUsername을 이용하여 bojHandle로 유저를 조회할 수 있다")
+    public void loadUserByUsernameTest() {
         // given
         UserRepository userRepository = new FakeUserRepository();
         this.principalDetailsService = new PrincipalDetailsService(userRepository);
@@ -52,7 +54,8 @@ public class PrincipalDetailServiceTest {
     }
 
     @Test
-    public void loadUserByUsername을_이용하여_bojHandle로_존재하지_않는_유저를_조회하면_에러를_던진다() {
+    @DisplayName("loadUserByUsername을 이용하여 bojHandle로 존재하지 않는 유저를 조회하면 에러를 던진다")
+    public void loadUserByUsernameExceptionTest() {
         // given
         UserRepository userRepository = new FakeUserRepository();
         this.principalDetailsService = new PrincipalDetailsService(userRepository);

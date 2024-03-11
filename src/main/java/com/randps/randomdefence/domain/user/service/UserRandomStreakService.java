@@ -1,6 +1,6 @@
 package com.randps.randomdefence.domain.user.service;
 
-import static com.randps.randomdefence.global.component.parser.BojParserImpl.convertDifficulty;
+import static com.randps.randomdefence.global.component.parser.ConvertDifficulty.convertDifficulty;
 
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.item.service.RandomStreakFreezeItemUseServiceImpl;

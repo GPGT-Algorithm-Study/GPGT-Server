@@ -86,7 +86,7 @@ public class UserService {
         // 유저 오늘 푼 문제 크롤링
         userSolvedProblemService.crawlTodaySolvedProblem(userSave.getBojHandle());
         // 유저 오늘 문제 풀었는지 여부 크롤링
-        userInfoService.updateAllUserInfo();
+        userInfoService.updateUserInfo(userSave.getBojHandle());
         // 오늘의 랜덤 스트릭 잔디 생성
         UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userSave.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
         userGrassService.makeTodayGrass(userRandomStreak);

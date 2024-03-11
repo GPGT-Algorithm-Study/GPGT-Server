@@ -4,9 +4,11 @@ import com.randps.randomdefence.domain.image.service.port.ImageRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@Builder
 @Service
 @RequiredArgsConstructor
 public class S3BatchService {

@@ -25,7 +25,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class UserServiceTest {
 
     @Test
-    public void save를_이용하여_유저를_생성할_수_있다() throws JsonProcessingException {
+    @DisplayName("save를 이용하여 유저를 생성할 수 있다")
+    public void saveUserTest() throws JsonProcessingException {
         // given
         UserScrapingInfoDto userScrapingInfoDto = UserScrapingInfoDto.builder()
                 .tier(15)
@@ -92,7 +93,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void save로_유저를_생성할_때_중복된_bojHandle의_유저를_생성하면_에러를_던진다() throws JsonProcessingException {
+    @DisplayName("save로 유저를 생성하는데 중복된 bojHandle의 유저를 생성하면 에러를 던진다")
+    public void saveDuplicatedUserExceptionTest() throws JsonProcessingException {
         // given
         UserScrapingInfoDto userScrapingInfoDto = UserScrapingInfoDto.builder()
                 .tier(15)
@@ -127,7 +129,7 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("save로 유저를 생성하는데 아직 유저 정보에 대한 Tracsaction이 반영되지 않았을 때, 중복된 bojHandle의 유저를 생성하면 에러를 던진다")
-    public void save로_유저를_생성할_때_빠르게_연속으로_중복된_bojHandle의_유저를_생성하면_에러를_던진다() throws JsonProcessingException {
+    public void saveConcurrencyExceptionTest() throws JsonProcessingException {
         // given
         UserScrapingInfoDto userScrapingInfoDto = UserScrapingInfoDto.builder()
                 .tier(15)
@@ -180,7 +182,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void save로_유저를_생성할_때_매니저가_0_또는_1_이_아니면_예외를_던진다() throws JsonProcessingException {
+    @DisplayName("save로 유저를 생성할 때 매니저가 0 또는 1이 아니면 예외를 던진다")
+    public void saveUserManagerExceptionTest() throws JsonProcessingException {
         // given
         UserScrapingInfoDto userScrapingInfoDto = UserScrapingInfoDto.builder()
                 .tier(15)

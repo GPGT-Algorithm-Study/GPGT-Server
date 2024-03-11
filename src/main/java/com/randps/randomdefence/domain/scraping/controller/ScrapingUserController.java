@@ -7,6 +7,8 @@ import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
 import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
 import java.util.HashMap;
 import java.util.Map;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Builder
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/scraping/user")
@@ -33,6 +36,7 @@ public class ScrapingUserController {
      * 특정 유저의 데이터를 스크래핑 한다.
      * 단, 20분에 한 번만 가능
      */
+    @Transactional
     @PostMapping("/")
     public ResponseEntity<Map<String, String>> scrapingUserData(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
         if (!scrapingUserLogService.isPossible(bojHandle)) {

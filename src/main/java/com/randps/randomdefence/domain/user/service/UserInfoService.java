@@ -72,7 +72,9 @@ public class UserInfoService {
     public void updateAllUserInfo() {
         List<User> users = userRepository.findAll();
 
-        for (User user : users) {
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+
             user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
             user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
             userRepository.save(user);
@@ -100,7 +102,9 @@ public class UserInfoService {
     public void crawlUserInfoAll() throws JsonProcessingException {
         List<User> users = userRepository.findAll();
 
-        for (User user : users) {
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+
             user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
             user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
             user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));

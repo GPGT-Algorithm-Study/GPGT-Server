@@ -25,7 +25,8 @@ public class ScrapingUserLog extends BaseTimeEntity {
     private LocalDateTime lastScrapingTime;
 
     @Builder
-    public ScrapingUserLog(String bojHandle) {
+    public ScrapingUserLog(Long id, String bojHandle) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.lastScrapingTime = LocalDateTime.now().minusMinutes(21);
     }
