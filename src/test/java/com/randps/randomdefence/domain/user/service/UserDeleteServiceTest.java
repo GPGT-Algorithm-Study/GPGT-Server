@@ -17,6 +17,7 @@ import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -51,7 +52,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_bojHandle로_삭제할_수_있다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 bojHandle로 삭제할 수 있다")
+    public void deleteTest() throws JsonProcessingException {
         // given
 
         // when
@@ -67,7 +69,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저의_랜덤_스트릭과_잔디도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 랜덤 스트릭도 삭제된다")
+    public void deleteWithRandomStreakTest() throws JsonProcessingException {
         // given
 
         // when
@@ -83,7 +86,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저의_오늘푼_문제도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 푼 문제도 삭제된다")
+    public void deleteUserSolvedProblemTest() throws JsonProcessingException {
         // given
 
         // when
@@ -93,12 +97,13 @@ public class UserDeleteServiceTest {
 
         // then
         assertThat(userResults.size()).isEqualTo(0);
-        // 유저 오늘 푼 문제 삭제
+        // 유저 푼 문제 삭제
         assertThat(userSolvedProblemResults.size()).isEqualTo(0);
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저의_통계도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 통계도 삭제된다")
+    public void deleteUserStatisticsTest() throws JsonProcessingException {
         // given
 
         // when
@@ -112,7 +117,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저의_JWT_토큰도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 JWT 토큰도 삭제된다")
+    public void deleteJWTTokenTest() throws JsonProcessingException {
         // given
         testContainer.userAuthService.login(LoginRequest.builder()
                 .bojHandle("fin")
@@ -130,7 +136,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저의_나의_한마디도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 나의 한마디도 삭제된다")
+    public void deleteBoolshitTest() throws JsonProcessingException {
         // given
         testContainer.boolshitRepository.save(Boolshit.builder()
                 .message("test")
@@ -148,7 +155,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저의_포인트_로그도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 포인트 로그도 삭제된다")
+    public void deletePointLogTest() throws JsonProcessingException {
         // given
         testContainer.pointLogSaveService.savePointLog("fin", 100, "test", true);
 
@@ -163,7 +171,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저의_경고_로그도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 경고 로그도 삭제된다")
+    public void deleteWarningLogTest() throws JsonProcessingException {
         // given
         testContainer.warningLogSaveService.saveWarningLog("fin", 1, "test", true);
 
@@ -179,7 +188,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저가_보유한_아이템도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 아이템도 삭제된다")
+    public void deleteUserItemTest() throws JsonProcessingException {
         // given
         testContainer.itemSaveService.makeItem();
         testContainer.itemSaveService.buyItem("fin", 1L);
@@ -195,7 +205,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저가_작성한_게시글도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 게시글도 삭제된다")
+    public void deleteUserBoardTest() throws JsonProcessingException {
         // given
         testContainer.boardService.save("test", "fin", "test", "test", 1001, UUID.randomUUID().toString());
 
@@ -212,7 +223,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_유저를_삭제하면_유저가_작성한_모든_댓글도_삭제된다() throws JsonProcessingException {
+    @DisplayName("delete를 이용해 유저를 삭제하면 유저의 댓글도 삭제된다")
+    public void deleteUserCommentTest() throws JsonProcessingException {
         // given
         testContainer.commentService.save(CommentPublishRequest.builder()
                 .boardId(1L)
@@ -231,7 +243,8 @@ public class UserDeleteServiceTest {
     }
 
     @Test
-    public void delete를_이용해_존재하지_않는_유저를_삭제하면_예외를_던진다() {
+    @DisplayName("delete를 이용해 존재하지 않는 유저를 삭제하면 예외를 던진다")
+    public void deleteNotFoundUserExceptionTest() {
         // given
 
         // when & then
