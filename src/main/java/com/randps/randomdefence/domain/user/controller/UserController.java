@@ -47,7 +47,6 @@ public class UserController {
 
     private final TeamSettingService teamSettingService;
 
-    //TODO: useradd, userdel은 jwt 토큰을 헤더에 넣어야지 접근가능하게 설정
     /*
      * 유저를 DB에 추가한다.
      */
@@ -284,31 +283,6 @@ public class UserController {
         map.put("message", bojHandles.size() + "명의 유저 리스트를 성공적으로 생성했습니다.");
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
-
-    /**
-     * admin을 생성한다.
-     */
-    @PostMapping("/admin/init")
-    public ResponseEntity<Map<String, String>> initAdmin() throws JsonProcessingException {
-        UserSave userSave = UserSave.builder()
-                .bojHandle("fin")
-                .password("fin")
-                .notionId("fin")
-                .manager(1L)
-                .emoji("🛠️")
-                .build();
-        userService.save(userSave);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        HttpStatus httpStatus = HttpStatus.OK;
-
-        Map<String, String> map = new HashMap<>();
-        map.put("type", httpStatus.getReasonPhrase());
-        map.put("code", "200");
-        map.put("message", "관리자 계정을 성공적으로 생성했습니다.");
-        return new ResponseEntity<>(map, responseHeaders, httpStatus);
-    }
-
 
     /**
      * 모든 유저의 마지막 로그인 일시를 조회합니다.

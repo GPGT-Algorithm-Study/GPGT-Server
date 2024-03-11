@@ -3,7 +3,6 @@ package com.randps.randomdefence.global.component.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.global.component.crawler.BojWebCrawler;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +24,7 @@ public class BojParserImpl implements Parser {
      */
     @Override
     public List<Object> getSolvedProblemList(String bojHandle) throws JsonProcessingException {
-        List<Object> solvedProblems = new ArrayList<>();
+        List<Object> solvedProblems;
         UriComponents uri = UriComponentsBuilder.newInstance()
                 .scheme("https").host("www.acmicpc.net").path("/status")
                 .queryParam("problem_id", "")

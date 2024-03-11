@@ -1,7 +1,6 @@
 package com.randps.randomdefence.global.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.randps.randomdefence.domain.statistics.service.TeamStatisticsService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
@@ -10,13 +9,14 @@ import com.randps.randomdefence.domain.user.service.UserInfoService;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
 import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
 import com.randps.randomdefence.global.aws.s3.service.S3BatchService;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.transaction.Transactional;
-
+@Builder
 @RequiredArgsConstructor
 @SpringBootApplication
 @EnableScheduling
@@ -70,7 +70,6 @@ public class Scheduler {
     @Transactional
     @Scheduled(cron = "0 26 6 * * 1")
     public void weekInitJob() {
-//        userStatisticsService.initAllDailyStat(); // 모든 유저의 일간 통계를 초기화한다.
         userStatisticsService.initAllWeeklyStat(); // 모든 유저의 주간 통계를 초기화한다.
         teamService.weeklyTeamPointDistribution(); // 승리 팀에게 승리 포인트 지급
         teamSettingService.initWeekly(); // 팀 포인트 주간 초기화

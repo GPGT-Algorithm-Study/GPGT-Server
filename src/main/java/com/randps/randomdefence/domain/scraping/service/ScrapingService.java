@@ -1,11 +1,10 @@
 package com.randps.randomdefence.domain.scraping.service;
 
 import com.randps.randomdefence.domain.scraping.domain.Scraping;
-import com.randps.randomdefence.domain.scraping.domain.ScrapingRepository;
+import com.randps.randomdefence.domain.scraping.infrastructure.ScrapingRepository;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service

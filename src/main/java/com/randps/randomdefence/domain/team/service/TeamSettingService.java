@@ -9,9 +9,11 @@ import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@Builder
 @RequiredArgsConstructor
 @Service
 public class TeamSettingService {

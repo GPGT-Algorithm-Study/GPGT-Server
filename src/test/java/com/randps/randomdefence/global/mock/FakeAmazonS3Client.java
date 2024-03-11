@@ -13,7 +13,7 @@ public class FakeAmazonS3Client implements AmazonS3ClientPort {
 
     @Override
     public PutObjectResult putObject(String bucketName, String key, InputStream input, ObjectMetadata metadata)
-            throws SdkClientException, AmazonServiceException {
+        throws SdkClientException, AmazonServiceException {
         return null;
     }
 

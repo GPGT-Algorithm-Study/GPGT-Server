@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FakeSolvedacParserImpl implements SolvedacParser {
 
-    private UserScrapingInfoDto userScrapingInfoDto;
+    private final UserScrapingInfoDto userScrapingInfoDto;
 
     public FakeSolvedacParserImpl(UserScrapingInfoDto userScrapingInfoDto) {
         this.userScrapingInfoDto = userScrapingInfoDto;

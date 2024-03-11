@@ -8,7 +8,7 @@ import java.util.List;
 
 public class FakeSolvedacDelayedParserImpl  implements SolvedacParser {
 
-    private UserScrapingInfoDto userScrapingInfoDto;
+    private final UserScrapingInfoDto userScrapingInfoDto;
 
     public FakeSolvedacDelayedParserImpl(UserScrapingInfoDto userScrapingInfoDto) {
         this.userScrapingInfoDto = userScrapingInfoDto;

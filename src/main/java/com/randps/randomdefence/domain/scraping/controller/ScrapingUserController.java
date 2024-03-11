@@ -8,6 +8,7 @@ import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
 import java.util.HashMap;
 import java.util.Map;
 import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Builder
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/scraping/user")
