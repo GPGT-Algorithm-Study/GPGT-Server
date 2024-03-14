@@ -2,17 +2,18 @@ package com.randps.randomdefence.domain.comment.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.randps.randomdefence.domain.comment.domain.Comment;
-import com.randps.randomdefence.domain.comment.domain.CommentRepository;
 import com.randps.randomdefence.domain.comment.dto.CommentDto;
 import com.randps.randomdefence.domain.comment.dto.CommentPublishRequest;
 import com.randps.randomdefence.domain.comment.dto.CommentUpdateRequest;
+import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
+import java.util.List;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.List;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class CommentService {
 
@@ -23,11 +24,9 @@ public class CommentService {
      */
     @Transactional
     public Comment save(CommentPublishRequest commentPublishRequest) {
-        Comment comment = Comment.builder()
-                .boardId(commentPublishRequest.getBoardId())
+        Comment comment = Comment.builder().boardId(commentPublishRequest.getBoardId())
                 .bojHandle(commentPublishRequest.getBojHandle())
-                .parentCommentId(commentPublishRequest.getParentCommentId())
-                .content(commentPublishRequest.getContent())
+                .parentCommentId(commentPublishRequest.getParentCommentId()).content(commentPublishRequest.getContent())
                 .build();
 
         commentRepository.save(comment);
@@ -40,13 +39,12 @@ public class CommentService {
      */
     @Transactional
     public Comment update(CommentUpdateRequest commentUpdateRequest) {
-        Comment comment = commentRepository.findById(commentUpdateRequest.getCommentId()).orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
+        Comment comment = commentRepository.findById(commentUpdateRequest.getCommentId())
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
 
         // 수정
-        comment.update(commentUpdateRequest.getBoardId(),
-                commentUpdateRequest.getBojHandle(),
-                commentUpdateRequest.getParentCommentId(),
-                commentUpdateRequest.getContent());
+        comment.update(commentUpdateRequest.getBoardId(), commentUpdateRequest.getBojHandle(),
+                commentUpdateRequest.getParentCommentId(), commentUpdateRequest.getContent());
         commentRepository.save(comment);
 
         return comment;
@@ -57,7 +55,8 @@ public class CommentService {
      */
     @Transactional
     public void delete(Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
 
         // 우선 삭제
         commentRepository.delete(comment);
@@ -66,8 +65,9 @@ public class CommentService {
         List<Comment> subComments = commentRepository.findAllByParentCommentId(comment.getId());
 
         // 모든 서브 comment를 삭제했다면 종료
-        if (subComments.size() == 0)
+        if (subComments.size() == 0) {
             return;
+        }
 
         // 재귀적 삭제
         for (Comment subComment : subComments) {
@@ -80,5 +80,15 @@ public class CommentService {
      */
     public List<CommentDto> findAllByBoardId(Long boardId) {
         return commentRepository.findAllByBoardId(boardId);
+    }
+
+    @Transactional
+    public void deleteAllByBoardId(Long boardId) {
+        commentRepository.deleteAllByBoardId(boardId);
+    }
+
+    @Transactional
+    public void deleteAllByBojHandle(String bojHandle) {
+        commentRepository.deleteAllByBojHandle(bojHandle);
     }
 }

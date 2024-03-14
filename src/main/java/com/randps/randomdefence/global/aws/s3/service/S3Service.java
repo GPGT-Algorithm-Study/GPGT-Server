@@ -1,31 +1,29 @@
 package com.randps.randomdefence.global.aws.s3.service;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.randps.randomdefence.domain.image.domain.Image;
 import com.randps.randomdefence.domain.image.service.ImageService;
+import com.randps.randomdefence.global.aws.s3.service.port.AmazonS3ClientPort;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class S3Service {
 
-    private final AmazonS3Client amazonS3;
+    private final AmazonS3ClientPort amazonS3;
 
     private final ImageService imageService;
 
     @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+    private final String bucket;
 
     public String saveFile(MultipartFile multipartFile) throws IOException {
         String originalFilename = UUID.randomUUID().toString();
@@ -43,9 +41,7 @@ public class S3Service {
     }
 
     public UrlResource downloadImage(String originalFilename) {
-        UrlResource urlResource = new UrlResource(amazonS3.getUrl(bucket, originalFilename));
-
-        return urlResource;
+        return new UrlResource(amazonS3.getUrl(bucket, originalFilename));
     }
 
     public void deleteImage(String originalFilename)  {

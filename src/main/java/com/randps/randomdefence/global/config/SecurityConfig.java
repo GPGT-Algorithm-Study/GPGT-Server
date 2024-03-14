@@ -1,10 +1,9 @@
 package com.randps.randomdefence.global.config;
 
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.global.config.filter.JwtRefreshAuthFilter;
-import com.randps.randomdefence.global.jwt.JwtProvider;
-import com.randps.randomdefence.global.jwt.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.JWTProvider;
+import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,68 +22,53 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
+  private final AuthenticationConfiguration authenticationConfiguration;
 
-    private final PrincipalDetailsService principalDetailsService;
+  private final UserRepository userRepository;
 
-    private final CorsConfig corsConfig;
+  private final JWTRefreshUtil jwtUtil;
 
-    private final UserRepository userRepository;
+  @Bean
+  public AuthenticationManager authenticationManager() throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
-    private final JwtRefreshUtil jwtUtil;
+  @Bean
+  public JWTProvider jwtTokenProvider() {
+    return new JWTProvider(userRepository);
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+  // 회원의 패스워드 암호화
+  @Bean
+  public BCryptPasswordEncoder bCryptPasswordEncoder() {
 
-    @Bean
-    public JwtProvider jwtTokenProvider() {
-        return new JwtProvider(userRepository);
-    }
+    return new BCryptPasswordEncoder();
+  }
 
-    // 회원의 패스워드 암호화
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+  // 시큐리티 필터 설정
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return new BCryptPasswordEncoder();
-    }
+    http
+        .authorizeRequests()
+        .antMatchers(HttpMethod.OPTIONS, "/api/v1/**").permitAll()
+        .antMatchers("/api/v1/user/auth/login", "/api/v1/user/auth/logout", "/api/v1/user/add/all",
+            "/api/v1/user/admin/init", "/api/v1/recommend").permitAll()
+        .antMatchers("/api/v1/user/sejong/register/**").permitAll()
+        .antMatchers("/api/v1/user/add", "/api/v1/user/del", "/api/v1/scraping/*",
+            "api/v1/admin/*", "/api/v1/complaint/processor/*").hasRole("ADMIN")
+        .anyRequest().authenticated()
+        .and()
+        .cors().disable()
+        .csrf().disable()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .formLogin().disable()
+        .httpBasic().disable() // http의 기본 인증. ID, PW 인증방식
+        .addFilterBefore(new JwtRefreshAuthFilter(jwtUtil),
+            UsernamePasswordAuthenticationFilter.class);
 
-    // 시큐리티 필터 설정
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    return http.build();
 
-        http
-                .authorizeRequests()
-//                .anyRequest().permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/api/v1/**").permitAll()
-                .antMatchers("/api/v1/user/auth/login", "/api/v1/user/auth/logout", "/api/v1/user/add/all", "/api/v1/user/admin/init").permitAll()
-                .antMatchers("/api/v1/user/sejong/register/**").permitAll()
-                .antMatchers("/api/v1/user/add", "/api/v1/user/del", "/api/v1/scraping/*", "api/v1/admin/*").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .cors().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .formLogin().disable()
-                .httpBasic().disable() // http의 기본 인증. ID, PW 인증방식
-//                .authorizeRequests()
-//                .antMatchers("/api/v1/auth/*").permitAll()
-//                .antMatchers("/api/v1/*").hasRole("USER")
-//                .and()
-//                .addFilter(corsConfig.corsFilter())
-                .addFilterBefore(new JwtRefreshAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-//                .addFilter(new JwtAuthenticationFilter(authenticationManager(), jwtTokenProvider()))  // JWT 필터 AuthenticationManager
-//                .addFilter(new JwtAuthorizationFilter(authenticationManager(),  jwtTokenProvider(), principalDetailsService));  // JWT 필터 AuthenticationManager
-//                .authorizeHttpRequests()
-//                .anyRequest().denyAll();
-//                .antMatchers("/api/v1/auth/*").permitAll()
-//                .antMatchers("/api/v1/*").hasRole("USER");
-//                .authorizeHttpRequests()
-//                .anyRequest().permitAll();
-
-        return http.build();
-
-    }
+  }
 }

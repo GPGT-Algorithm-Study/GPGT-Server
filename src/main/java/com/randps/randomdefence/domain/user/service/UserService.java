@@ -1,23 +1,26 @@
 package com.randps.randomdefence.domain.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
-import com.randps.randomdefence.domain.user.domain.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.dto.UserLastLoginLogDto;
 import com.randps.randomdefence.domain.user.dto.UserMentionDto;
+import com.randps.randomdefence.domain.user.dto.UserSave;
+import com.randps.randomdefence.domain.user.service.port.UserRandomStreakRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.component.util.CrawlingLock;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import javax.persistence.EntityExistsException;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class UserService {
 
@@ -35,28 +38,37 @@ public class UserService {
 
     private final UserSolvedProblemService userSolvedProblemService;
 
+    private final CrawlingLock crawlingLock;
+
+    private static HashMap<String, Boolean> userSaveProcessSet = new HashMap<>();
+
     /*
      * 유저를 DB에 저장한다.
      */
     @Transactional
-    public User save(String bojHandle, String password, String notionId, Long manager, String emoji) throws JsonProcessingException {
-        Optional<User> isExistUser = userRepository.findByBojHandle(bojHandle);
-        if (isExistUser.isPresent()) {
-            throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
+    public User save(UserSave userSave) throws JsonProcessingException {
+        Optional<User> existUser = userRepository.findByBojHandle(userSave.getBojHandle());
+        synchronized (this) {
+            if (existUser.isPresent() || userSaveProcessSet.get(userSave.getBojHandle()) != null) {
+                throw new EntityExistsException("이미 존재하는 유저는 생성할 수 없습니다.");
+            } else {
+                // Process HashMap에 추가
+                userSaveProcessSet.put(userSave.getBojHandle(), true);
+            }
         }
-        if (!(manager == 0 || manager == 1)) {
+        if (!(userSave.getManager() == 0 || userSave.getManager() == 1)) {
             throw new IllegalArgumentException("잘못된 파라미터가 전달되었습니다.");
         }
 
         User user = User.builder()
-                .bojHandle(bojHandle)
-                .notionId(notionId)
-                .password(passwordEncoder.encode(password)) // encoder로 암호화 후 넣기
-                .roles(manager==1?"ROLE_USER,ROLE_ADMIN":"ROLE_USER") // 유저의 권한 설정
-                .manager(manager==1?true:false)
+                .bojHandle(userSave.getBojHandle())
+                .notionId(userSave.getNotionId())
+                .password(passwordEncoder.encode(userSave.getPassword())) // encoder로 암호화 후 넣기
+                .roles(userSave.getManager()==1?"ROLE_USER,ROLE_ADMIN":"ROLE_USER") // 유저의 권한 설정
+                .manager(userSave.getManager() == 1)
                 .warning(0)
                 .profileImg("")
-                .emoji(emoji)
+                .emoji(userSave.getEmoji())
                 .tier(0)
                 .totalSolved(0)
                 .currentStreak(0)
@@ -64,36 +76,36 @@ public class UserService {
                 .team(0)
                 .point(0)
                 .isTodaySolved(false)
+                .isYesterdaySolved(false)
                 .isTodayRandomSolved(false)
                 .build();
 
-        userRepository.save(user);
+        crawlingLock.lock(); // 크롤링 중복 방지를 위한 락
+        try {
+            user = userRepository.save(user);
 
-        // 유저 프로필 정보 크롤링
-        userInfoService.crawlUserInfo(bojHandle);
-        // 유저 랜덤 스트릭 생성
-        userRandomStreakService.save(bojHandle);
-        // 유저 오늘 푼 문제 크롤링
-        userSolvedProblemService.crawlTodaySolvedProblem(bojHandle);
-        // 유저 오늘 문제 풀었는지 여부 크롤링
-        userInfoService.updateAllUserInfo();
-        // 오늘의 랜덤 스트릭 잔디 생성
-        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
-        userGrassService.makeTodayGrass(userRandomStreak);
-        // 전날의 랜덤 스트릭 잔디 생성 (새로운 유저 생성 시 에러 방지용)
-        userGrassService.makeYesterdayGrass(userRandomStreak);
+            // 유저 프로필 정보 크롤링
+            userInfoService.crawlUserInfo(userSave.getBojHandle());
+            // 유저 랜덤 스트릭 생성
+            userRandomStreakService.save(userSave.getBojHandle());
+            // 유저 오늘 푼 문제 크롤링
+            userSolvedProblemService.crawlTodaySolvedProblem(userSave.getBojHandle());
+            // 유저 오늘 문제 풀었는지 여부 크롤링
+            userInfoService.updateUserInfo(userSave.getBojHandle());
+            // 오늘의 랜덤 스트릭 잔디 생성
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(
+                    userSave.getBojHandle())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            userGrassService.makeTodayGrass(userRandomStreak);
+            // 전날의 랜덤 스트릭 잔디 생성 (새로운 유저 생성 시 에러 방지용)
+            userGrassService.makeYesterdayGrass(userRandomStreak);
+        } finally {
+            crawlingLock.unlock(); // 크롤링 중복 방지를 위한 락 해제
+        }
 
+        // Process HashMap에서 삭제
+        userSaveProcessSet.remove(userSave.getBojHandle());
         return user;
-    }
-
-    /*
-     * 유저를 DB에서 삭제한다.
-     */
-    @Transactional
-    public void delete(String bojHandle) {
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-
-        userRepository.delete(user);
     }
 
     /**

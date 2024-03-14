@@ -15,6 +15,10 @@ https://randps.kr
 
 These features help you manage your study and increase the motivation of your study members to learn algorithms.
 
+## Architecture
+![서버구조withCICD 001](https://github.com/GPGT-Algorithm-Study/GPGT-Server/assets/44383895/ec88733e-9304-4388-89aa-ea5b548bf575)
+
+
 
 ## Dependencies
 - OpenJDK11

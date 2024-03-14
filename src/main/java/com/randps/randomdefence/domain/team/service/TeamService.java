@@ -2,16 +2,18 @@ package com.randps.randomdefence.domain.team.service;
 
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.team.domain.Team;
-import com.randps.randomdefence.domain.team.domain.TeamRepository;
+import com.randps.randomdefence.domain.team.service.port.TeamRepository;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class TeamService {
 
@@ -24,6 +26,7 @@ public class TeamService {
     /*
      * 팀의 점수를 올린다.
      */
+    @Transactional
     public void increaseTeamScore(Integer teamNumber, Integer point) {
         // 팀이 할당되지 않았다면 넘어간다.
         if (teamNumber == null) return;
@@ -31,7 +34,7 @@ public class TeamService {
         Optional<Team> team = teamRepository.findByTeamNumber(teamNumber);
 
         // 팀이 없다면 팀 스코어를 올리지 않는다.
-        if (!team.isPresent()) return;
+        if (team.isEmpty()) return;
 
         team.get().increasePoint(point);
         teamRepository.save(team.get());
@@ -40,6 +43,7 @@ public class TeamService {
     /*
      * 팀 결과 주간 결산 포인트 지급
      */
+    @Transactional
     public void weeklyTeamPointDistribution() {
         Team firstTeam = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
         Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
@@ -53,13 +57,13 @@ public class TeamService {
             teamName = firstTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = (5 + (Integer) (firstTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
+            winingPoint = (5 + (firstTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
         } else {
             winingTeamUsers = userRepository.findAllByTeam(1);
             teamName = secondTeam.getTeamName();
 
             // 승리한 팀의 포인트를 유저들이 나눠가진다.
-            winingPoint = (5 + (Integer) (secondTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
+            winingPoint = (5 + (secondTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
         }
 
         // 승리한 팀의 유저들에게 포인트를 지급한다.

@@ -4,7 +4,7 @@ import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.dto.ProblemSolveJudgedDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.user.domain.UserAlreadySolved;
-import com.randps.randomdefence.domain.user.domain.UserAlreadySolvedRepository;
+import com.randps.randomdefence.domain.user.service.port.UserAlreadySolvedRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import javax.transaction.Transactional;
@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,7 @@ public class RecommendationAlreadySolvedService {
                 entity, // {요청할 때 보낼 데이터}
                 String.class // {요청시 반환되는 데이터 타입}
         );
-        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+        return response;
     }
 
     @Transactional
@@ -83,7 +82,6 @@ public class RecommendationAlreadySolvedService {
                 entity, // {요청할 때 보낼 데이터}
                 String.class // {요청시 반환되는 데이터 타입}
         );
-
-        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+        return response;
     }
 }

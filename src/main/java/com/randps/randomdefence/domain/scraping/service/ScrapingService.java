@@ -1,11 +1,10 @@
 package com.randps.randomdefence.domain.scraping.service;
 
 import com.randps.randomdefence.domain.scraping.domain.Scraping;
-import com.randps.randomdefence.domain.scraping.domain.ScrapingRepository;
+import com.randps.randomdefence.domain.scraping.infrastructure.ScrapingRepository;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -43,7 +42,6 @@ public class ScrapingService {
     /*
      * 저장한 솔브닥의 스크래핑 데이터를 불러온다.
      */
-    @Transactional
     public String findSolvedacUserInfo(String bojHandle) {
         Scraping solvedacUserInfo = scrapingRepository.findByBojHandleAndSource(bojHandle, "solvedac")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 정보입니다."));
@@ -54,7 +52,6 @@ public class ScrapingService {
     /*
      * 저장한 백준의 스크래핑 데이터를 불러온다
      */
-    @Transactional
     public String findBojUserInfo(String bojHandle) {
         Scraping bojUserInfo = scrapingRepository.findByBojHandleAndSource(bojHandle, "baekjoon")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 정보입니다."));

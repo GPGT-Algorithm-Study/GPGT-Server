@@ -2,11 +2,14 @@ package com.randps.randomdefence.domain.user.domain;
 
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -28,7 +31,8 @@ public class UserSolvedProblem extends BaseTimeEntity {
     private String language;
 
     @Builder
-    public UserSolvedProblem(String bojHandle, Integer problemId, String title, String dateTime, String language) {
+    public UserSolvedProblem(Long id, String bojHandle, Integer problemId, String title, String dateTime, String language) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.problemId = problemId;
         this.title = title;

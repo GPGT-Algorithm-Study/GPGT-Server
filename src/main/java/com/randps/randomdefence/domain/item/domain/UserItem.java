@@ -1,11 +1,15 @@
 package com.randps.randomdefence.domain.item.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -24,7 +28,8 @@ public class UserItem extends BaseTimeEntity {
     private Item item;
 
     @Builder
-    public UserItem(String bojHandle, Integer count, Item item) {
+    public UserItem(Long id, String bojHandle, Integer count, Item item) {
+        this.id = id;
         this.bojHandle = bojHandle;
         this.count = count;
         this.item = item;

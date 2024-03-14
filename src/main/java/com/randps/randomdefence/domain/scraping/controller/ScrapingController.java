@@ -4,7 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
-import com.randps.randomdefence.domain.user.service.*;
+import com.randps.randomdefence.domain.user.service.UserAlreadySolvedService;
+import com.randps.randomdefence.domain.user.service.UserGrassService;
+import com.randps.randomdefence.domain.user.service.UserInfoService;
+import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
+import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
+import com.randps.randomdefence.global.component.util.CrawlingLock;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -13,9 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -37,6 +41,8 @@ public class ScrapingController {
     private final TeamSettingService teamSettingService;
 
     private final TeamService teamService;
+
+    private final CrawlingLock crawlingLock;
 
     /*
      * 유저가 오늘 푼 문제 스크래핑 (기존 데이터와 중복 제거 포함, 단 옛날에 똑같은 문제를 푼적 있다면 중복 제거되지 않음)
@@ -128,10 +134,15 @@ public class ScrapingController {
      */
     @GetMapping("/cron/batch")
     public ResponseEntity<Map<String, String>> cronBatch() throws JsonProcessingException {
-        userSolvedProblemService.crawlTodaySolvedProblemAll(); // 모든 유저의 맞았습니다를 크롤링해서 해결한 문제 DB를 업데이트한다.
-        userInfoService.crawlUserInfoAll(); // 모든 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
-        userRandomStreakService.solvedCheckAll(); // 모든 유저의 오늘의 추첨 랜덤 문제 풀었는지 여부를 체크하고 DB를 업데이트한다.
-        userInfoService.updateAllUserInfo(); // 모든 유저의 문제 풀었는지 여부를 체크해서 저장한다.
+        crawlingLock.lock(); // 크롤링 중복 방지를 위한 락
+        try {
+            userSolvedProblemService.crawlTodaySolvedProblemAll(); // 모든 유저의 맞았습니다를 크롤링해서 해결한 문제 DB를 업데이트한다.
+            userInfoService.crawlUserInfoAll(); // 모든 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
+            userRandomStreakService.solvedCheckAll(); // 모든 유저의 오늘의 추첨 랜덤 문제 풀었는지 여부를 체크하고 DB를 업데이트한다.
+            userInfoService.updateAllUserInfo(); // 모든 유저의 문제 풀었는지 여부를 체크해서 저장한다.
+        } finally {
+            crawlingLock.unlock(); // 크롤링 중복 방지를 위한 락 해제
+        }
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

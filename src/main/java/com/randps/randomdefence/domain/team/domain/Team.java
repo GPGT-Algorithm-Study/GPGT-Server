@@ -1,11 +1,14 @@
 package com.randps.randomdefence.domain.team.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -23,7 +26,8 @@ public class Team extends BaseTimeEntity {
     private Integer teamPoint;
 
     @Builder
-    public Team(Integer teamNumber, String teamName, Integer teamPoint) {
+    public Team(Long id, Integer teamNumber, String teamName, Integer teamPoint) {
+        this.id = id;
         this.teamNumber = teamNumber;
         this.teamName = teamName;
         this.teamPoint = teamPoint;
