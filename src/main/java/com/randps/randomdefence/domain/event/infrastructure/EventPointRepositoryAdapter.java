@@ -43,6 +43,6 @@ public class EventPointRepositoryAdapter implements EventPointRepository {
 
     @Override
     public List<EventPointDto> findAllValidEventByDto() {
-        return eventPointRepositoryCustom.findAllByDto();
+        return eventPointRepositoryCustom.findAllValidEventByDto();
     }
 }
