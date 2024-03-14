@@ -61,6 +61,7 @@ public class TeamStatisticsService {
             userStatDtos1.add(dto);
         }
 
+        team1.updateTeamPoint(score1);
         TeamStatisticsDto firstTeam = TeamStatisticsDto.builder()
                 .team(team1)
                 .rank(0)
@@ -105,6 +106,7 @@ public class TeamStatisticsService {
             userStatDtos2.add(dto);
         }
 
+        team2.updateTeamPoint(score2);
         TeamStatisticsDto secondTeam = TeamStatisticsDto.builder()
                 .team(team2)
                 .rank(0)
