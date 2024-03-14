@@ -24,6 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserServiceTest {
 
+    private TestContainer testContainer;
+
     @Test
     @DisplayName("save를 이용하여 유저를 생성할 수 있다")
     public void saveUserTest() throws JsonProcessingException {
@@ -37,13 +39,13 @@ public class UserServiceTest {
                 .todaySolvedProblemCount(0)
                 .build();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        TestContainer testContainer = TestContainer.builder()
+        testContainer = TestContainer.builder()
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
                 .build();
         UserSave userSave = UserSave.builder()
-                .bojHandle("fin")
+            .bojHandle("fin1")
                 .password("q1w2e3r4!")
                 .notionId("성민")
                 .manager(1L)
@@ -52,19 +54,20 @@ public class UserServiceTest {
 
         // when
         User userResult = testContainer.userService.save(userSave);
-        UserRandomStreak userRandomStreakResult = testContainer.userRandomStreakService.findUserRandomStreak("fin");
-        UserInfoResponse userInfoResponseResult = testContainer.userInfoService.getInfo("fin");
+        UserRandomStreak userRandomStreakResult = testContainer.userRandomStreakService.findUserRandomStreak(
+            "fin1");
+        UserInfoResponse userInfoResponseResult = testContainer.userInfoService.getInfo("fin1");
 
         // then
         assertThat(userResult.getId()).isEqualTo(1L);
-        assertThat(userResult.getBojHandle()).isEqualTo("fin");
+        assertThat(userResult.getBojHandle()).isEqualTo("fin1");
         assertThat(passwordEncoder.matches("q1w2e3r4!", userResult.getPassword())).isTrue();
         assertThat(userResult.getNotionId()).isEqualTo("성민");
         assertThat(userResult.getManager()).isTrue();
         assertThat(userResult.getEmoji()).isEqualTo("🛠️");
 
         assertThat(userRandomStreakResult.getId()).isEqualTo(1);
-        assertThat(userRandomStreakResult.getBojHandle()).isEqualTo("fin");
+        assertThat(userRandomStreakResult.getBojHandle()).isEqualTo("fin1");
         assertThat(userRandomStreakResult.getMaxRandomStreak()).isEqualTo(0);
         assertThat(userRandomStreakResult.getCurrentRandomStreak()).isEqualTo(0);
         assertThat(userRandomStreakResult.getTodayRandomProblemId()).isEqualTo(0);
@@ -73,7 +76,7 @@ public class UserServiceTest {
         assertThat(userRandomStreakResult.getStartLevel()).isEqualTo("");
         assertThat(userRandomStreakResult.getEndLevel()).isEqualTo("");
 
-        assertThat(userInfoResponseResult.getBojHandle()).isEqualTo("fin");
+        assertThat(userInfoResponseResult.getBojHandle()).isEqualTo("fin1");
         assertThat(userInfoResponseResult.getNotionId()).isEqualTo("성민");
         assertThat(userInfoResponseResult.getManager()).isTrue();
         assertThat(userInfoResponseResult.getWarning()).isEqualTo(0);
@@ -90,6 +93,8 @@ public class UserServiceTest {
         assertThat(userInfoResponseResult.getIsTodayRandomSolved()).isFalse();
         assertThat(userInfoResponseResult.getTodaySolvedProblemCount()).isEqualTo(0);
         assertThat(userInfoResponseResult.getMaxRandomStreak()).isEqualTo(0);
+
+        testContainer.userDeleteService.delete("fin1");
     }
 
     @Test
@@ -105,13 +110,13 @@ public class UserServiceTest {
                 .todaySolvedProblemCount(1)
                 .build();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        TestContainer testContainer = TestContainer.builder()
+        testContainer = TestContainer.builder()
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
                 .build();
         UserSave userSave = UserSave.builder()
-                .bojHandle("fin")
+            .bojHandle("testUser")
                 .password("q1w2e3r4!")
                 .notionId("성민")
                 .manager(1L)
@@ -122,9 +127,8 @@ public class UserServiceTest {
         testContainer.userService.save(userSave);
 
         // then
-        assertThatThrownBy(() -> {
-            testContainer.userService.save(userSave);
-        }).isInstanceOf(EntityExistsException.class);
+        assertThatThrownBy(() -> testContainer.userService.save(userSave)).isInstanceOf(
+            EntityExistsException.class);
     }
 
     @Test
@@ -140,13 +144,13 @@ public class UserServiceTest {
                 .todaySolvedProblemCount(1)
                 .build();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        TestContainer testContainer = TestContainer.builder()
+        testContainer = TestContainer.builder()
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacDelayedParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
                 .build();
         UserSave userSave = UserSave.builder()
-                .bojHandle("fin")
+            .bojHandle("fin2")
                 .password("q1w2e3r4!")
                 .notionId("성민")
                 .manager(1L)
@@ -194,13 +198,13 @@ public class UserServiceTest {
                 .todaySolvedProblemCount(1)
                 .build();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        TestContainer testContainer = TestContainer.builder()
+        testContainer = TestContainer.builder()
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
                 .build();
         UserSave userSave = UserSave.builder()
-                .bojHandle("fin")
+            .bojHandle("fin3")
                 .password("q1w2e3r4!")
                 .notionId("성민")
                 .manager(2L)

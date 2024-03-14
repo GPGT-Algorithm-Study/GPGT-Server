@@ -1,13 +1,16 @@
 package com.randps.randomdefence.domain.user.service;
 
-import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
 import static com.randps.randomdefence.global.component.parser.ConvertDifficulty.convertDifficulty;
+import static com.randps.randomdefence.global.component.util.TimeUtil.getToday;
+import static com.randps.randomdefence.global.component.util.TimeUtil.getYesterdayEnd;
+import static com.randps.randomdefence.global.component.util.TimeUtil.getYesterdayStart;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
+import com.randps.randomdefence.domain.scraping.service.ScrapingUserLogService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.user.domain.User;
@@ -23,7 +26,6 @@ import com.randps.randomdefence.global.component.parser.Parser;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -56,12 +58,11 @@ public class UserSolvedProblemService {
 
   private final EventPointService eventPointService;
 
-  private final ConcurrentHashMap<String, Boolean> crawlHashMap = new ConcurrentHashMap<>();
+  private final ScrapingUserLogService scrapingUserLogService;
 
   /*
    * 유저가 그동안 푼 모든 문제의 정보를 가져온다.
    */
-  @Transactional
   public List<SolvedProblemDto> findAllUserSolvedProblem(String bojHandle) {
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
         bojHandle);
@@ -83,19 +84,9 @@ public class UserSolvedProblemService {
   /*
    * 오늘 유저가 푼 모든 문제의 정보를 가져온다.
    */
-  @Transactional
   public List<SolvedProblemDto> findAllTodayUserSolvedProblem(String bojHandle) {
     // 오늘의 기준을 만든다.
-    LocalDateTime now = LocalDateTime.now();
-    LocalDateTime startOfDateTime;
-    if (is6AmAfter(now.getHour())) {
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    } else {
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    }
+    LocalDateTime startOfDateTime = getToday();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -132,16 +123,7 @@ public class UserSolvedProblemService {
   @Transactional
   public List<UserSolvedProblemPairDto> findAllTodayUserSolvedProblemAll() {
     // 오늘의 기준을 만든다.
-    LocalDateTime now = LocalDateTime.now();
-    LocalDateTime startOfDateTime;
-    if (is6AmAfter(now.getHour())) {
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    } else {
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    }
+    LocalDateTime startOfDateTime = getToday();
 
     // 모든 유저 조회
     List<User> users = userRepository.findAll();
@@ -187,13 +169,13 @@ public class UserSolvedProblemService {
    */
   @Transactional
   public void crawlTodaySolvedProblem(String bojHandle) throws JsonProcessingException {
-    if (crawlHashMap.get(bojHandle) != null) {
-      throw new RuntimeException("서버가 이미 유저의 정보를 크롤링 중입니다.");
-    } else {
-      crawlHashMap.put(bojHandle, true);
+    LocalDateTime today = getToday();
+    if (!scrapingUserLogService.isTodayScraping(bojHandle)) {
+      today = today.minusDays(1);
     }
+    bojParser.setStartOfActiveDay(today);
     List<Object> problems = bojParser.getSolvedProblemList(bojHandle);
-    crawlHashMap.remove(bojHandle);
+
     // 중복 제거를 위해 기존의 푼 문제 목록을 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
         bojHandle);
@@ -243,9 +225,8 @@ public class UserSolvedProblemService {
       }
     }
 
-//        // 중복을 제거하고 저장한다.
-//        userSolvedProblems.stream().distinct();
     userSolvedProblemRepository.saveAll(userSolvedProblems);
+    scrapingUserLogService.saveScrapingUserLog(bojHandle);
   }
 
   /*
@@ -256,65 +237,7 @@ public class UserSolvedProblemService {
     List<User> users = userRepository.findAll();
 
     for (User user : users) {
-      if (crawlHashMap.get(user.getBojHandle()) != null) {
-        throw new RuntimeException("서버가 이미 유저의 정보를 크롤링 중입니다.");
-      } else {
-        crawlHashMap.put(user.getBojHandle(), true);
-      }
-      List<Object> problems = bojParser.getSolvedProblemList(user.getBojHandle());
-      crawlHashMap.remove(user.getBojHandle());
-      // 중복 제거를 위해 기존의 푼 문제 목록을 가져온다.
-      List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
-          user.getBojHandle());
-
-      // 모든 스크래핑 한 데이터를 푼 문제 목록에 추가한다.
-      for (Object problem : problems) {
-        BojProblemPair pair = (BojProblemPair) problem;
-        UserSolvedProblem userSolvedProblem = UserSolvedProblem.builder()
-            .bojHandle(user.getBojHandle()).problemId(pair.getProblemId()).title(pair.getTitle())
-            .dateTime(pair.getDateTime()).language(pair.getLanguage()).build();
-        // 중복 제거 로직
-        boolean isAlreadyExist = false;
-        for (UserSolvedProblem alreadySolvedProblem : userSolvedProblems) {
-          if (alreadySolvedProblem.getProblemId().equals(userSolvedProblem.getProblemId())) {
-            isAlreadyExist = true;
-            break;
-          }
-        }
-        // 중복이 없다면 저장한다.
-        if (!isAlreadyExist && !userAlreadySolvedService.isSolved(user.getBojHandle(),
-            userSolvedProblem.getProblemId())) {
-          // 문제의 포인트만큼 유저의 포인트를 추가한다.
-          ProblemDto pb = problemService.findProblem(userSolvedProblem.getProblemId());
-          UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(
-                  user.getBojHandle())
-              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 스트릭입니다."));
-
-          // 랜덤 스트릭 문제라면 따로 포인트를 부여한다.
-          if (!userRandomStreak.getTodayRandomProblemId().equals(pb.getProblemId())) {
-            // 일반 문제의 포인트 부여
-            user.increasePoint(pb.getPoint());
-            pointLogSaveService.savePointLog(user.getBojHandle(), pb.getPoint(),
-                pb.getPoint() + " points are earned by solving problem " + pb.getProblemId()
-                    .toString() + " : " + "\"" + pb.getTitleKo() + "\"" + " level - "
-                    + convertDifficulty(pb.getLevel()), true);
-
-            // 이벤트를 적용한다
-            eventPointService.applyEventPoint(user.getBojHandle(), pb.getPoint());
-
-            // 팀의 점수를 올린다. (일반 문제)
-            teamService.increaseTeamScore(user.getTeam(), pb.getPoint());
-            // 유저 통계를 반영한다. (일반 문제)
-            userStatisticsService.updateByDto(user.getBojHandle(), pb, pb.getPoint());
-          }
-
-          userSolvedProblems.add(userSolvedProblem);
-        }
-      }
-
-//        // 중복을 제거하고 저장한다.
-//        userSolvedProblems.stream().distinct();
-      userSolvedProblemRepository.saveAll(userSolvedProblems);
+      crawlTodaySolvedProblem(user.getBojHandle());
     }
   }
 
@@ -324,16 +247,7 @@ public class UserSolvedProblemService {
   @Transactional
   public Boolean isTodaySolved(String bojHandle) {
     // 오늘의 기준을 만든다.
-    LocalDateTime now = LocalDateTime.now();
-    LocalDateTime startOfDateTime;
-    if (is6AmAfter(now.getHour())) {
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    } else {
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    }
+    LocalDateTime startOfDateTime = getToday();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -363,21 +277,8 @@ public class UserSolvedProblemService {
   @Transactional
   public Boolean isYesterdaySolved(String bojHandle) {
     // 어제의 기준을 만든다.
-    LocalDateTime now = LocalDateTime.now();
-    LocalDateTime startOfDateTime;
-    LocalDateTime endOfDateTime;
-    if (is6AmAfter(now.getHour())) {
-      endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    } else {
-      now = now.minusDays(1);
-      endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    }
+    LocalDateTime startOfDateTime = getYesterdayStart();
+    LocalDateTime endOfDateTime = getYesterdayEnd();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -405,16 +306,7 @@ public class UserSolvedProblemService {
   @Transactional
   public Integer getTodaySolvedProblemCount(String bojHandle) {
     // 오늘의 기준을 만든다.
-    LocalDateTime now = LocalDateTime.now();
-    LocalDateTime startOfDateTime;
-    if (is6AmAfter(now.getHour())) {
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    } else {
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    }
+    LocalDateTime startOfDateTime = getToday();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -445,21 +337,8 @@ public class UserSolvedProblemService {
   @Transactional
   public Integer getYesterdaySolvedProblemCount(String bojHandle) {
     // 어제의 기준을 만든다.
-    LocalDateTime now = LocalDateTime.now();
-    LocalDateTime startOfDateTime;
-    LocalDateTime endOfDateTime;
-    if (is6AmAfter(now.getHour())) {
-      endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    } else {
-      now = now.minusDays(1);
-      endOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0, 0);
-      now = now.minusDays(1);
-      startOfDateTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 6, 0,
-          0);
-    }
+    LocalDateTime startOfDateTime = getYesterdayStart();
+    LocalDateTime endOfDateTime = getYesterdayEnd();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(

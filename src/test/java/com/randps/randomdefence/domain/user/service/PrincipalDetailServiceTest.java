@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.mock.FakeUserRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class PrincipalDetailServiceTest {
 
     private PrincipalDetailsService principalDetailsService;
+
+    @AfterEach
+    void tearDown() {
+        principalDetailsService = null;
+    }
 
     @Test
     @DisplayName("loadUserByUsername을 이용하여 bojHandle로 유저를 조회할 수 있다")

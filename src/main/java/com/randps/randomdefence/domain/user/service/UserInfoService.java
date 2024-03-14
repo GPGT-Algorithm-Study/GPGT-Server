@@ -36,7 +36,6 @@ public class UserInfoService {
     /*
      * 유저의 프로필 정보를 불러온다.
      */
-    @Transactional
     public UserInfoResponse getInfo(String bojHandle) {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         UserRandomStreak userRandomStreak = userRandomStreakService.findUserRandomStreak(bojHandle);
@@ -47,7 +46,6 @@ public class UserInfoService {
     /**
      * 모든 유저의 프로필 정보를 불러온다. (Querydsl)
      */
-    @Transactional
     public List<UserInfoResponse> getAllInfo() {
 
         return userRepository.findAllUserResponse();
@@ -89,7 +87,7 @@ public class UserInfoService {
     public void crawlUserInfo(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(bojHandle));
+        user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
         user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
         user.setTodaySolvedProblemCount(userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
         userRepository.save(user);
@@ -144,7 +142,6 @@ public class UserInfoService {
     /*
      * 유저의 프로필 정보를 불러온다. (직접 불러오기)
      */
-    @Transactional
     public JsonNode getInfoRaw(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
@@ -154,7 +151,6 @@ public class UserInfoService {
     /*
      * 유저가 오늘 푼 문제 목록을 불러온다. (직접 불러오기)
      */
-    @Transactional
     public List<Object> getTodaySolvedRaw(String bojHandle) throws JsonProcessingException {
         User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 

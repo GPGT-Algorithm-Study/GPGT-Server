@@ -3,7 +3,7 @@ package com.randps.randomdefence.global.config.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.authDto.PrincipalDetails;
-import com.randps.randomdefence.global.jwt.component.JwtProvider;
+import com.randps.randomdefence.global.jwt.component.JWTProvider;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
-    private final JwtProvider jwtProvider;
+    private final JWTProvider jwtProvider;
 
     // 인증 객체(Authentication)을 만들기 시도
     // attemptAuthentication 추상메소드의 구현은 상속한 UsernamePasswordAuthenticationFilter에 구현 되어 있습니다.

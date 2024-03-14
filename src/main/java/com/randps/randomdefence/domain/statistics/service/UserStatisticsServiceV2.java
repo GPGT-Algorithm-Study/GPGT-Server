@@ -4,7 +4,6 @@ import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
 import com.randps.randomdefence.domain.statistics.dto.YesterdayUnsolvedUserDto;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.List;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,6 @@ public class UserStatisticsServiceV2 {
     /**
      * 모든 유저가 오늘 문제를 풀었는지 여부를 반환한다. (Qeurydsl)
      */
-    @Transactional
     public List<UserIsTodaySolvedDto> getAllUserIsTodaySolved() {
         return userRepository.findAllUserIsTodaySolvedDto();
     }

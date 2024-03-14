@@ -1,18 +1,12 @@
 package com.randps.randomdefence.global.component.crawler;
 
-import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.randps.randomdefence.global.component.crawler.BojWebCrawler.is6AmAfter;
 
 @Component
 public class BojProfileWebCrawler extends WebCrawler  {

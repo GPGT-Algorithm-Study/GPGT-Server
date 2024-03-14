@@ -8,7 +8,6 @@ import com.randps.randomdefence.domain.item.service.port.ItemRepository;
 import com.randps.randomdefence.domain.item.service.port.UserItemRepository;
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,6 @@ public class ItemSearchService {
     /*
      * 유저의 모든 아이템을 반환한다.
      */
-    @Transactional
     public List<UserItemResponse> findAllUserItem(String bojHandle) {
         List<UserItem> userItems = userItemRepository.findAllByBojHandle(bojHandle);
         List<UserItemResponse> userItemResponses = new ArrayList<>();
@@ -44,7 +42,6 @@ public class ItemSearchService {
     /*
      * 모든 아이템 리스트를 반환한다.
      */
-    @Transactional
     public List<ItemDto> findAllItem() {
         List<Item> items = itemRepository.findAll();
         List<ItemDto> itemDtos = new ArrayList<>();

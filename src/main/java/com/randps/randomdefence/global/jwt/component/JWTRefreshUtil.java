@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtRefreshUtil {
+public class JWTRefreshUtil {
 
     private final PrincipalDetailsService principalDetailsService;
 
@@ -40,12 +40,6 @@ public class JwtRefreshUtil {
     private Algorithm getSign() {
         return Algorithm.HMAC512(Base64.getEncoder().encodeToString(this.secretKey.getBytes()));
     }
-
-//    //객체 초기화, secretKey를 Base64로 인코딩한다.
-//    @PostConstruct
-//    protected void init() {
-//        this.encodedSecretKey = Base64.getEncoder().encodeToString(this.secretKey.getBytes());
-//    }
 
     // header 토큰을 가져오는 기능
     public String getHeaderToken(HttpServletRequest request, String type) {

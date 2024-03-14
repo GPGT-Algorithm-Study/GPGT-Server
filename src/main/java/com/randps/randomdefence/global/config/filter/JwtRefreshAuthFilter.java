@@ -1,7 +1,7 @@
 package com.randps.randomdefence.global.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import com.randps.randomdefence.global.jwt.dto.GlobalJwtResDto;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtRefreshAuthFilter extends OncePerRequestFilter {
 
-    private final JwtRefreshUtil jwtUtil;
+    private final JWTRefreshUtil jwtUtil;
 
     @Override
     // HTTP 요청이 오면 WAS(tomcat)가 HttpServletRequest, HttpServletResponse 객체를 만들어 줍니다.

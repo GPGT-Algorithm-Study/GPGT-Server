@@ -55,7 +55,6 @@ public class ProblemStatisticsService {
     /*
      * 가장 많은 유저가 푼 순서대로 문제 리스트를 반환한다.
      */
-    @Transactional
     public List<MostSolvedProblemDto> findMostSolvedProblems() {
         List<ProblemStatistics> problems = problemStatisticsRepository.findTop50ByOrderBySolvedCountDesc();
         List<MostSolvedProblemDto> mostSolvedProblems = new ArrayList<>();

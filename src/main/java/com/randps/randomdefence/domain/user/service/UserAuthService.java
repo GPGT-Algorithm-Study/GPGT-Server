@@ -10,7 +10,7 @@ import com.randps.randomdefence.domain.user.dto.authDto.LogoutResponse;
 import com.randps.randomdefence.domain.user.dto.authDto.ParseDto;
 import com.randps.randomdefence.domain.user.dto.authDto.RefreshDto;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
-import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
+import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
 import com.randps.randomdefence.global.jwt.domain.RefreshToken;
 import com.randps.randomdefence.global.jwt.dto.TokenDto;
@@ -32,7 +32,7 @@ public class UserAuthService {
 
     private final UserRepository userRepository;
 
-    private final JwtRefreshUtil jwtUtil;
+    private final JWTRefreshUtil jwtUtil;
 
     private final RefreshTokenRepository refreshTokenRepository;
 

@@ -48,7 +48,6 @@ public class UserProblemStatisticsService {
     /*
      * 유저 난이도별 문제수 통계 조회
      */
-    @Transactional
     public UserProblemStatistics findByBojHandle(String bojHandle) {
         return userProblemStatisticsRepository.findByBojHandle(bojHandle)
                 .orElseThrow(() -> new IllegalArgumentException("유저의 문제 난이도별 통계를 찾을 수 없습니다."));

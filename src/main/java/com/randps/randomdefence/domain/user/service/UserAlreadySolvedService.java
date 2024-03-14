@@ -8,6 +8,7 @@ import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.global.component.parser.Parser;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +29,7 @@ public class UserAlreadySolvedService {
     /*
      * 유저의 이전에 푼 문제 목록을 저장한다.
      */
+    @Transactional
     public void save(String bojHandle, List<Integer> alreadySolvedList) {
         Optional<UserAlreadySolved> userAlreadySolved = userAlreadySolvedRepository.findByBojHandle(bojHandle);
         UserAlreadySolved target;
@@ -74,6 +76,7 @@ public class UserAlreadySolvedService {
     /*
      * 특정 유저가 기존에 푼 모든 문제를 스크래핑하고 저장한다.
      */
+    @Transactional
     public void saveScrapingData(String bojHandle) throws JsonProcessingException {
         List<Integer> solvedList = (List<Integer>) ((List<?>) bojProfileParser.getSolvedProblemList(bojHandle));
 
@@ -83,6 +86,7 @@ public class UserAlreadySolvedService {
     /*
      * 모든 유저가 기존에 푼 모든 문제를 스크래핑하고 저장한다.
      */
+    @Transactional
     public void saveAllScrapingData() throws JsonProcessingException {
         List<User> users = userRepository.findAll();
 
@@ -97,6 +101,7 @@ public class UserAlreadySolvedService {
     /*
      * 특정 유저가 기존에 푼 모든 문제를 스크래핑한다. (raw data)
      */
+    @Transactional
     public List<Object> scrapingDataRaw(String bojHandle) throws JsonProcessingException {
         return bojProfileParser.getSolvedProblemList(bojHandle);
     }

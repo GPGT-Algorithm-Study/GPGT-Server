@@ -29,7 +29,6 @@ public class ProblemService {
     /*
      * solvedac의 문제를 유저의 해결 여부와 함께 조회한다.
      */
-    @Transactional
     public ProblemSolveJudgedDto findProblemByBojHandle(String bojHandle, Integer problemId) {
         ProblemDto problemDto = findProblem(problemId);
         Boolean isSolved = userSolvedJudgeService.isSolved(bojHandle, problemDto);

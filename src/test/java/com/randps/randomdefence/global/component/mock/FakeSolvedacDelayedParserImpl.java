@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FakeSolvedacDelayedParserImpl  implements SolvedacParser {
 
     private final UserScrapingInfoDto userScrapingInfoDto;
+
+    private LocalDateTime startOfActiveDay;
 
     public FakeSolvedacDelayedParserImpl(UserScrapingInfoDto userScrapingInfoDto) {
         this.userScrapingInfoDto = userScrapingInfoDto;
@@ -42,5 +45,10 @@ public class FakeSolvedacDelayedParserImpl  implements SolvedacParser {
             throw new RuntimeException("error occurred while waiting for 10 seconds.");
         }
         return userScrapingInfoDto;
+    }
+
+    @Override
+    public void setStartOfActiveDay(LocalDateTime startOfActiveDay) {
+        this.startOfActiveDay = startOfActiveDay;
     }
 }

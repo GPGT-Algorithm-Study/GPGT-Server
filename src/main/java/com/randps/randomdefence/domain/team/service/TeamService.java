@@ -7,6 +7,7 @@ import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class TeamService {
     /*
      * 팀의 점수를 올린다.
      */
+    @Transactional
     public void increaseTeamScore(Integer teamNumber, Integer point) {
         // 팀이 할당되지 않았다면 넘어간다.
         if (teamNumber == null) return;
@@ -41,6 +43,7 @@ public class TeamService {
     /*
      * 팀 결과 주간 결산 포인트 지급
      */
+    @Transactional
     public void weeklyTeamPointDistribution() {
         Team firstTeam = teamRepository.findByTeamNumber(0).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
         Team secondTeam = teamRepository.findByTeamNumber(1).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
