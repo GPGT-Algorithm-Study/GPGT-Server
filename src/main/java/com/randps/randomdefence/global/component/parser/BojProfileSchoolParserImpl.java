@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.global.component.crawler.BojProfileSchoolWebCrawler;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 @Component
+@Qualifier("bojProfileSchoolParserToUse")
 public class BojProfileSchoolParserImpl implements BojProfileParser {
 
     private final BojProfileSchoolWebCrawler webCrawler;

@@ -1,12 +1,14 @@
 package com.randps.randomdefence.domain.image.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -22,7 +24,8 @@ public class BoardImage extends BaseTimeEntity {
     private Long imageId;
 
     @Builder
-    public BoardImage(Long boardId, Long imageId) {
+    public BoardImage(Long id, Long boardId, Long imageId) {
+        this.id = id;
         this.boardId = boardId;
         this.imageId = imageId;
     }

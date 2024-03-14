@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.randps.randomdefence.domain.user.dto.UserSejongDto;
 import com.randps.randomdefence.global.component.crawler.SolvedacWebCrawler;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,14 +19,22 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Getter
 @RequiredArgsConstructor
 @Component
+@Qualifier("solvedacSejongParserToUse")
 public class SolvedacSejongParserImpl implements Parser {
     private List<UserSejongDto> users = new ArrayList<>();
+
+    private LocalDateTime startOfActiveDay;
 
     private final SolvedacWebCrawler webCrawler;
 
     @Override
     public List<Object> getSolvedProblemList(String userName) {
         return null;
+    }
+
+    @Override
+    public void setStartOfActiveDay(LocalDateTime startOfActiveDay) {
+        this.startOfActiveDay = startOfActiveDay;
     }
 
     public List<UserSejongDto> crawlingUserInfos() throws JsonProcessingException {

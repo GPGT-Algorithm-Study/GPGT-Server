@@ -1,17 +1,16 @@
 package com.randps.randomdefence.domain.image.service;
 
 import com.randps.randomdefence.domain.image.domain.Image;
-import com.randps.randomdefence.domain.image.domain.ImageRepository;
-import com.randps.randomdefence.global.aws.s3.service.S3Service;
+import com.randps.randomdefence.domain.image.service.port.ImageRepository;
+import java.util.List;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class ImageService {
 
@@ -20,7 +19,6 @@ public class ImageService {
     /*
      * 모든 이미지 조회
      */
-    @Transactional
     public List<Image> findAllImage() {
         return imageRepository.findAll();
     }
@@ -28,7 +26,6 @@ public class ImageService {
     /*
      * 이미지 이름으로 이미지 조회
      */
-    @Transactional
     public Image findByOriginalName(String originalName) {
         return imageRepository.findByOriginName(originalName);
     }
@@ -36,7 +33,6 @@ public class ImageService {
     /*
      * 이미지 이름 리스트로 모든 이미지 조회
      */
-    @Transactional
     public List<Image> findAllByOriginalNameList(String[] originalNames) {
         return imageRepository.findAllByOriginNameIn(List.of(originalNames));
     }
@@ -46,7 +42,6 @@ public class ImageService {
     /*
      * 이미지 아이디 리스트로 전부 조회
      */
-    @Transactional
     public List<Image> findAllByIdList(List<Long> imageIds) {
         return imageRepository.findAllById(imageIds);
     }

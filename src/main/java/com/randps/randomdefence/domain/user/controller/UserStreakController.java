@@ -1,21 +1,24 @@
 package com.randps.randomdefence.domain.user.controller;
 
 import com.randps.randomdefence.domain.recommendation.dto.RecommendationResponse;
-import com.randps.randomdefence.domain.user.dto.UserRandomStreakResponse;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.UserGrassDto;
+import com.randps.randomdefence.domain.user.dto.UserRandomStreakResponse;
 import com.randps.randomdefence.domain.user.service.UserGrassService;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController

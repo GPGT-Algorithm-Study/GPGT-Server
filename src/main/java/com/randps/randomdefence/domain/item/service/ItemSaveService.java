@@ -1,21 +1,21 @@
 package com.randps.randomdefence.domain.item.service;
 
 import com.randps.randomdefence.domain.item.domain.Item;
-import com.randps.randomdefence.domain.item.domain.ItemRepository;
 import com.randps.randomdefence.domain.item.domain.UserItem;
-import com.randps.randomdefence.domain.item.domain.UserItemRepository;
-import com.randps.randomdefence.domain.log.domain.PointLog;
+import com.randps.randomdefence.domain.item.service.port.ItemRepository;
+import com.randps.randomdefence.domain.item.service.port.UserItemRepository;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.user.domain.User;
-import com.randps.randomdefence.domain.user.domain.UserRepository;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-
 @RequiredArgsConstructor
+@Builder
 @Service
 public class ItemSaveService {
 
@@ -32,8 +32,10 @@ public class ItemSaveService {
      */
     @Transactional
     public Boolean buyItem(String bojHandle, Long itemId) {
-        User user = userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템입니다."));
+        User user = userRepository.findByBojHandle(bojHandle)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아이템입니다."));
         Optional<UserItem> userItem = userItemRepository.findByBojHandleAndItem(bojHandle, item);
 
         // 아이템이 하나라도 있는 경우
@@ -56,7 +58,8 @@ public class ItemSaveService {
             }
 
             // 구매 로그를 작성한다.
-            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(), "-" + item.getItemValue() + " points, purchase \'" + item.getName() + "\'", true);
+            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(),
+                    "-" + item.getItemValue() + " points, purchase \'" + item.getName() + "\'", true);
 
             // 상태 변화를 저장한다.
             userRepository.save(user);
@@ -74,14 +77,12 @@ public class ItemSaveService {
             }
 
             // 아이템을 생성한다.
-            UserItem newUserItem = UserItem.builder()
-                    .bojHandle(bojHandle)
-                    .count(1)
-                    .item(itemRepository.getReferenceById(itemId))
-                    .build();
+            UserItem newUserItem = UserItem.builder().bojHandle(bojHandle).count(1)
+                    .item(itemRepository.getReferenceById(itemId)).build();
 
             // 구매 로그를 작성한다.
-            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(), "-" + item.getItemValue() + " points, purchase \'" + item.getName() + "\'", true);
+            pointLogSaveService.savePointLog(bojHandle, -item.getItemValue(),
+                    "-" + item.getItemValue() + " points, purchase \'" + item.getName() + "\'", true);
 
             // 상태 변화를 저장한다.
             userRepository.save(user);
@@ -98,46 +99,39 @@ public class ItemSaveService {
     public Boolean makeItem() {
         List<Item> items = itemRepository.findAll();
 
-        if (items.size() > 0) {
+        if (!items.isEmpty()) {
             throw new IllegalArgumentException("이미 아이템이 생성되었습니다.");
         }
 
         // 테스트 상품
-        Item newItem = Item.builder()
-                .name("테스트 상품")
-                .description("테스트 상품입니다. 사용하면 서버에 로그를 하나 찍습니다.")
-                .itemValue(1)
-                .maxItemCount(2)
-                .build();
+        Item newItem = Item.builder().name("테스트 상품").description("테스트 상품입니다. 사용하면 서버에 로그를 하나 찍습니다.").itemValue(0)
+                .maxItemCount(2).build();
         itemRepository.save(newItem);
 
         // 경고 차감권
-        Item deleteWarningItem = Item.builder()
-                .name("경고 차감권")
-                .description("사용하면 경고를 하나 차감합니다.")
-                .itemValue(40)
-                .maxItemCount(3)
-                .build();
+        Item deleteWarningItem = Item.builder().name("경고 차감권").description("사용하면 경고를 하나 차감합니다.").itemValue(40)
+                .maxItemCount(3).build();
         itemRepository.save(deleteWarningItem);
 
         // 랜덤 스트릭 프리즈
-        Item randomStreakFreezeItem = Item.builder()
-                .name("랜덤 스트릭 프리즈")
-                .description("가지고 있으면 문제를 풀지 않았을 시, 자동으로 스트릭이 유지됩니다.")
-                .itemValue(200)
-                .maxItemCount(2)
-                .build();
+        Item randomStreakFreezeItem = Item.builder().name("랜덤 스트릭 프리즈")
+                .description("가지고 있으면 문제를 풀지 않았을 시, 자동으로 스트릭이 유지됩니다.").itemValue(200).maxItemCount(2).build();
         itemRepository.save(randomStreakFreezeItem);
 
         // 나의 한마디
-        Item boolshitItem = Item.builder()
-                .name("나의 한마디")
-                .description("나의 멋진 한마디를 모두에게 공지합니다.")
-                .itemValue(1)
-                .maxItemCount(1)
-                .build();
+        Item boolshitItem = Item.builder().name("나의 한마디").description("나의 멋진 한마디를 모두에게 공지합니다.").itemValue(1)
+                .maxItemCount(1).build();
         itemRepository.save(boolshitItem);
 
         return true;
     }
+
+    /*
+     * 유저의 모든 아이템을 삭제한다.
+     */
+    @Transactional
+    public void deleteAllUserItem(String bojHandle) {
+        userItemRepository.deleteAllByBojHandle(bojHandle);
+    }
+
 }

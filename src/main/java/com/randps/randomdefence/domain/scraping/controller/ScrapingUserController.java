@@ -5,8 +5,11 @@ import com.randps.randomdefence.domain.scraping.service.ScrapingUserLogService;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
 import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
 import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
+import com.randps.randomdefence.global.component.util.CrawlingLock;
 import java.util.HashMap;
 import java.util.Map;
+import javax.transaction.Transactional;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Builder
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/scraping/user")
@@ -29,12 +33,25 @@ public class ScrapingUserController {
 
     private final ScrapingUserLogService scrapingUserLogService;
 
+    private final CrawlingLock crawlingLock;
+
     /*
      * 특정 유저의 데이터를 스크래핑 한다.
      * 단, 20분에 한 번만 가능
      */
+    @Transactional
     @PostMapping("/")
     public ResponseEntity<Map<String, String>> scrapingUserData(@Param("bojHandle") String bojHandle) throws JsonProcessingException {
+        if (crawlingLock.isLocked()) {
+            HttpHeaders responseHeaders = new HttpHeaders();
+            HttpStatus httpStatus = HttpStatus.TOO_EARLY;
+
+            Map<String, String> map = new HashMap<>();
+            map.put("type", httpStatus.getReasonPhrase());
+            map.put("code", "425");
+            map.put("message", "서버가 현재 데이터 크롤링 중입니다.");
+            return new ResponseEntity<>(map, responseHeaders, httpStatus);
+        }
         if (!scrapingUserLogService.isPossible(bojHandle)) {
             HttpHeaders responseHeaders = new HttpHeaders();
             HttpStatus httpStatus = HttpStatus.TOO_EARLY;
@@ -46,10 +63,17 @@ public class ScrapingUserController {
             return new ResponseEntity<>(map, responseHeaders, httpStatus);
         }
 
-        userSolvedProblemService.crawlTodaySolvedProblem(bojHandle); // 특정 유저의 맞았습니다를 크롤링해서 해결한 문제 DB를 업데이트한다.
-        userInfoService.crawlUserInfo(bojHandle); // 특정 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
-        userRandomStreakService.solvedCheck(bojHandle); // 특정 유저의 오늘의 추첨 랜덤 문제 풀었는지 여부를 체크하고 DB를 업데이트한다.
-        userInfoService.updateUserInfo(bojHandle); // 특정 유저의 문제 풀었는지 여부를 체크해서 저장한다.
+        crawlingLock.lock(); // 크롤링 중복 방지를 위한 락
+        try {
+            userSolvedProblemService.crawlTodaySolvedProblem(
+                bojHandle); // 특정 유저의 맞았습니다를 크롤링해서 해결한 문제 DB를 업데이트한다.
+            userInfoService.crawlUserInfo(bojHandle); // 특정 유저의 프로필 정보를 크롤링해서 DB를 업데이트한다.
+            userRandomStreakService.solvedCheck(
+                bojHandle); // 특정 유저의 오늘의 추첨 랜덤 문제 풀었는지 여부를 체크하고 DB를 업데이트한다.
+            userInfoService.updateUserInfo(bojHandle); // 특정 유저의 문제 풀었는지 여부를 체크해서 저장한다.
+        } finally {
+            crawlingLock.unlock(); // 크롤링 중복 방지를 위한 락 해제
+        }
 
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.OK;

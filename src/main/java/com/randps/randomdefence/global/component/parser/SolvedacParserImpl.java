@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.randps.randomdefence.global.component.crawler.SolvedacWebCrawler;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.nodes.Element;
@@ -12,18 +15,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Getter
 @RequiredArgsConstructor
 @Component
-public class SolvedacParserImpl implements Parser {
+public class SolvedacParserImpl implements SolvedacParser {
     private JsonNode userInfoJson;
     private String profileImg = "";
     private Integer currentStreak;
     private Integer maxStreak;
+
+    private LocalDateTime startOfActiveDay;
 
     private final SolvedacWebCrawler webCrawler;
 
@@ -32,6 +33,12 @@ public class SolvedacParserImpl implements Parser {
         return null;
     }
 
+    @Override
+    public void setStartOfActiveDay(LocalDateTime startOfActiveDay) {
+        this.startOfActiveDay = startOfActiveDay;
+    }
+
+    @Override
     public JsonNode crawlingUserInfo(String bojHandle) throws JsonProcessingException {
         UriComponents uri = UriComponentsBuilder.newInstance()
                 .scheme("https").host("solved.ac").path("/profile/" + bojHandle).build();
@@ -46,6 +53,7 @@ public class SolvedacParserImpl implements Parser {
         return userInfoJson;
     }
 
+    @Override
     public Boolean isTodaySolved(JsonNode userInfo) {
         JsonNode grass = userInfo.path("props").path("pageProps").path("grass").path("grass");
         LocalDateTime cur = LocalDateTime.now();
@@ -61,6 +69,7 @@ public class SolvedacParserImpl implements Parser {
         return false;
     }
 
+    @Override
     public Integer countTodaySolved(JsonNode userInfo) {
         JsonNode grass = userInfo.path("props").path("pageProps").path("grass").path("grass");
         LocalDateTime cur = LocalDateTime.now();
@@ -77,6 +86,7 @@ public class SolvedacParserImpl implements Parser {
         return 0;
     }
 
+    @Override
     public UserScrapingInfoDto getSolvedUserInfo(String bojHandle) throws JsonProcessingException {
         JsonNode userInfo = crawlingUserInfo(bojHandle);
 
