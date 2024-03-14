@@ -44,4 +44,8 @@ public class Team extends BaseTimeEntity {
     public void resetTeamPoint() {
         this.teamPoint = 0;
     }
+
+    public void updateTeamPoint(Integer updateValue) {
+        this.teamPoint = updateValue;
+    }
 }
