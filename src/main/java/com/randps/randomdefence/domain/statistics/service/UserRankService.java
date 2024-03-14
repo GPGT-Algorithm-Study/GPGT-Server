@@ -5,7 +5,6 @@ import com.randps.randomdefence.domain.user.domain.UserSejongRepository;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.service.UserInfoService;
 import java.util.List;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +21,6 @@ public class UserRankService {
     /*
      * 문제 많이 푼 순서대로 유저 랭킹 조회
      */
-    @Transactional
     public List<UserInfoResponse> mostSolvedRankedUserInfos() {
         List<UserInfoResponse> userInfos = userInfoService.getAllInfo();
 
@@ -34,7 +32,6 @@ public class UserRankService {
     /**
      * 세종대 학생들 문제 많이 푼 순서대로 유저 랭킹 조회
      */
-    @Transactional
     public Page<UserRankDto> findUserSejongRank(Pageable pageable) {
         return userSejongRepository.findAllUserRankPaging(pageable);
     }

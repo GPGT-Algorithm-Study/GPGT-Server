@@ -1,13 +1,17 @@
 package com.randps.randomdefence.domain.problem.domain;
 
-import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
+import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import java.util.List;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -47,7 +51,8 @@ public class Problem extends BaseTimeEntity {
     private List<String> tags;
 
     @Builder
-    public Problem(Integer problemId, String titleKo, Boolean isSolvable, Boolean isPartial, Integer acceptedUserCount, Integer level, Integer votedUserCount, Boolean sprout, Boolean givesNoRating, Boolean isLevelLocked, String averageTries, Boolean official, List<String> tags) {
+    public Problem(Long id, Integer problemId, String titleKo, Boolean isSolvable, Boolean isPartial, Integer acceptedUserCount, Integer level, Integer votedUserCount, Boolean sprout, Boolean givesNoRating, Boolean isLevelLocked, String averageTries, Boolean official, List<String> tags) {
+        this.id = id;
         this.problemId = problemId;
         this.titleKo = titleKo;
         this.isSolvable = isSolvable;

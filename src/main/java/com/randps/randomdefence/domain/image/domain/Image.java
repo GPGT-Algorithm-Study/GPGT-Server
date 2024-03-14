@@ -1,11 +1,14 @@
 package com.randps.randomdefence.domain.image.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
@@ -25,7 +28,8 @@ public class Image extends BaseTimeEntity {
     private Boolean state; // {false : 이미지 저장 미확정, true : 이미지 저장 확정}
 
     @Builder
-    public Image(String url, String originName, String contentType) {
+    public Image(Long id, String url, String originName, String contentType) {
+        this.id = id;
         this.url = url;
         this.originName = originName;
         this.contentType = contentType;

@@ -11,7 +11,6 @@ public class UserScrapingInfoDto {
     private Integer currentStreak;
     private Integer totalSolved;
     private Boolean isTodaySolved;
-
     private Integer todaySolvedProblemCount;
 
     @Builder

@@ -32,8 +32,8 @@ jobs:
    - name: web docker build and push
      run: |
       docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      docker build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/univps-backend:v1.0.2 .
-      docker push ${{ secrets.DOCKER_USERNAME }}/univps-backend:v1.0.2
+      docker build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/randps-back .
+      docker push ${{ secrets.DOCKER_USERNAME }}/randps-back
 
      # Github Actions IP 가져온다.
    - name: Get Github Actions IP
@@ -57,11 +57,11 @@ jobs:
      uses: appleboy/ssh-action@master
      with:
       host: ${{ secrets.HOST_IP }}
-      username: ec2-user
+      username: ubuntu
       key: ${{ secrets.PRIVATE_KEY }}
       script: |
        sudo docker rm -f $(sudo docker ps -qa)
-       sudo docker pull ${{ secrets.DOCKER_USERNAME }}/univps-backend:v1.0.2
+       sudo docker pull ${{ secrets.DOCKER_USERNAME }}/randps-back
        sudo docker-compose up -d
        sudo docker image prune -f
 

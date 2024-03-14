@@ -2,16 +2,21 @@ package com.randps.randomdefence.global.component.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.global.component.crawler.BojProfileWebCrawler;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RequiredArgsConstructor
 @Component
+@Qualifier("bojProfileParserToUse")
 public class BojProfileParserImpl implements Parser {
+
+    private LocalDateTime startOfActiveDay;
 
     private final BojProfileWebCrawler bojProfileWebCrawler;
 
@@ -30,4 +35,10 @@ public class BojProfileParserImpl implements Parser {
 
         return solvedProblems;
     }
+
+    @Override
+    public void setStartOfActiveDay(LocalDateTime startOfActiveDay) {
+        this.startOfActiveDay = startOfActiveDay;
+    }
+
 }
