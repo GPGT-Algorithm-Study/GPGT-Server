@@ -10,6 +10,13 @@ import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
 import com.randps.randomdefence.domain.comment.mock.FakeCommentRepository;
 import com.randps.randomdefence.domain.comment.service.CommentService;
 import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
+import com.randps.randomdefence.domain.complaint.controller.ComplaintProcessorController;
+import com.randps.randomdefence.domain.complaint.controller.ComplaintRequesterController;
+import com.randps.randomdefence.domain.complaint.mock.FakeComplaintRepository;
+import com.randps.randomdefence.domain.complaint.service.ComplaintProcessorService;
+import com.randps.randomdefence.domain.complaint.service.ComplaintRequesterService;
+import com.randps.randomdefence.domain.complaint.service.ComplaintSearchService;
+import com.randps.randomdefence.domain.complaint.service.port.ComplaintRepository;
 import com.randps.randomdefence.domain.event.mock.FakeEventPointRepository;
 import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.event.service.port.EventPointRepository;
@@ -73,7 +80,9 @@ import com.randps.randomdefence.global.aws.s3.service.S3Service;
 import com.randps.randomdefence.global.aws.s3.service.port.AmazonS3ClientPort;
 import com.randps.randomdefence.global.component.parser.Parser;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
-import com.randps.randomdefence.global.jwt.component.JwtRefreshUtil;
+import com.randps.randomdefence.global.component.util.CrawlingLock;
+import com.randps.randomdefence.global.jwt.component.JWTProvider;
+import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
 import com.randps.randomdefence.global.jwt.mock.FakeRefreshTokenRepository;
 import com.randps.randomdefence.global.mock.FakeAmazonS3Client;
@@ -82,6 +91,8 @@ import lombok.Builder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class TestContainer {
+
+  public final String jwtSecret = "secret";
 
   public final UserRepository userRepository;
   public final UserRandomStreakRepository userRandomStreakRepository;
@@ -112,12 +123,14 @@ public class TestContainer {
 
   public final ScrapingUserLogRepository scrapingUserLogRepository;
 
+  public final ComplaintRepository complaintRepository;
+
   public final AmazonS3ClientPort amazonS3Client;
 
   public final Parser parserHolder;
   public final SolvedacParser solvedacParserHolder;
 
-  public final JwtRefreshUtil jwtUtil;
+  public final JWTRefreshUtil jwtUtil;
 
   public final UserAlreadySolvedService userAlreadySolvedService;
   public final UserSolvedJudgeService userSolvedJudgeService;
@@ -159,16 +172,31 @@ public class TestContainer {
 
   public final ScrapingUserLogService scrapingUserLogService;
 
+  public final ComplaintProcessorService complaintProcessorService;
+
+  public final ComplaintRequesterService complaintRequesterService;
+
+  public final ComplaintSearchService complaintSearchService;
+
+  public final ComplaintProcessorController complaintProcessorController;
+
+  public final ComplaintRequesterController complaintRequesterController;
+
   public final Scheduler scheduler;
+
+  public final CrawlingLock crawlingLock;
 
   /**
    * Controller
    **/
   public final ScrapingUserController scrapingUserController;
 
+  public final JWTProvider jwtProvider;
+
   @Builder
   public TestContainer(Parser parser, SolvedacParser solvedacParser,
       BCryptPasswordEncoder passwordEncoder) {
+    crawlingLock = new CrawlingLock();
     userRepository = new FakeUserRepository();
     userRandomStreakRepository = new FakeUserRandomStreakRepository();
     userGrassRepository = new FakeUserGrassRepository();
@@ -192,6 +220,7 @@ public class TestContainer {
         imageRepository,
         boardImageRepository);
     scrapingUserLogRepository = new FakeScrapingUserLogRepository();
+    complaintRepository = new FakeComplaintRepository();
     amazonS3Client = new FakeAmazonS3Client(); // TODO: mock객체로 변경
     parserHolder = parser;
     solvedacParserHolder = solvedacParser;
@@ -241,6 +270,9 @@ public class TestContainer {
         .eventPointRepository(eventPointRepository)
         .pointLogSaveService(pointLogSaveService)
         .build();
+    scrapingUserLogService = ScrapingUserLogService.builder()
+        .scrapingUserLogRepository(scrapingUserLogRepository)
+        .build();
     userSolvedProblemService = UserSolvedProblemService.builder()
         .userRandomStreakRepository(userRandomStreakRepository)
         .userRepository(userRepository)
@@ -252,6 +284,7 @@ public class TestContainer {
         .userStatisticsService(userStatisticsService)
         .userAlreadySolvedService(userAlreadySolvedService)
         .eventPointService(eventPointService)
+        .scrapingUserLogService(scrapingUserLogService)
         .build();
     randomStreakFreezeItemUseService = RandomStreakFreezeItemUseServiceImpl.builder()
         .userRepository(userRepository)
@@ -295,11 +328,12 @@ public class TestContainer {
         .userInfoService(userInfoService)
         .userRandomStreakService(userRandomStreakService)
         .userSolvedProblemService(userSolvedProblemService)
+        .crawlingLock(crawlingLock)
         .build();
     principalDetailsService = PrincipalDetailsService.builder()
         .userRepository(userRepository)
         .build();
-    jwtUtil = new JwtRefreshUtil(principalDetailsService, refreshTokenRepository, "secret");
+    jwtUtil = new JWTRefreshUtil(principalDetailsService, refreshTokenRepository, jwtSecret);
     userAuthService = UserAuthService.builder()
         .passwordEncoder(passwordEncoder)
         .userRepository(userRepository)
@@ -344,19 +378,39 @@ public class TestContainer {
         .boardService(boardService)
         .commentService(commentService)
         .build();
-    scrapingUserLogService = ScrapingUserLogService.builder()
-        .scrapingUserLogRepository(scrapingUserLogRepository)
-        .build();
     scrapingUserController = ScrapingUserController.builder()
         .userSolvedProblemService(userSolvedProblemService)
         .userInfoService(userInfoService)
         .userRandomStreakService(userRandomStreakService)
         .scrapingUserLogService(scrapingUserLogService)
+        .crawlingLock(crawlingLock)
+        .build();
+    complaintProcessorService = ComplaintProcessorService.builder()
+        .complaintRepository(complaintRepository)
+        .userRepository(userRepository)
+        .build();
+    complaintRequesterService = ComplaintRequesterService.builder()
+        .complaintRepository(complaintRepository)
+        .userRepository(userRepository)
+        .build();
+    complaintSearchService = ComplaintSearchService.builder()
+        .complaintRepository(complaintRepository)
+        .userRepository(userRepository)
         .build();
     teamSettingService = TeamSettingService.builder()
         .teamRepository(teamRepository)
         .userStatisticsService(userStatisticsService)
         .userRepository(userRepository)
+        .build();
+    complaintProcessorController = ComplaintProcessorController.builder()
+        .complaintSearchService(complaintSearchService)
+        .complaintProcessorService(complaintProcessorService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
+    complaintRequesterController = ComplaintRequesterController.builder()
+        .complaintSearchService(complaintSearchService)
+        .complaintRequesterService(complaintRequesterService)
+        .jwtRefreshUtil(jwtUtil)
         .build();
     s3BatchService = S3BatchService.builder()
         .s3Service(s3Service)
@@ -371,7 +425,10 @@ public class TestContainer {
         .teamSettingService(teamSettingService)
         .teamService(teamService)
         .s3BatchService(s3BatchService)
+        .crawlingLock(crawlingLock)
         .build();
+    jwtProvider = new JWTProvider(userRepository);
+    jwtProvider.setSecretKey(jwtSecret);
   }
 
 }

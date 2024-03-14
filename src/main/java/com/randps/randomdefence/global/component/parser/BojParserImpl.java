@@ -1,8 +1,8 @@
 package com.randps.randomdefence.global.component.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.global.component.crawler.BojWebCrawler;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +14,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 @Qualifier("bojParserToUse")
 public class BojParserImpl implements Parser {
-    private JsonNode userSolvedList;
+
+    private LocalDateTime startOfActiveDay;
 
     private final BojWebCrawler webCrawler;
 
@@ -33,9 +34,19 @@ public class BojParserImpl implements Parser {
                 .build();
 
         webCrawler.setUrl(uri.toUriString());
+        webCrawler.setStartOfActiveDay(startOfActiveDay);
         solvedProblems = webCrawler.process();
 
+        System.out.println(
+            "[LOG] bojHandle = " + bojHandle + ", today solved problem count = "
+                + solvedProblems.size());
+
         return solvedProblems;
+    }
+
+    @Override
+    public void setStartOfActiveDay(LocalDateTime startOfActiveDay) {
+        this.startOfActiveDay = startOfActiveDay;
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JwtProvider {
+public class JWTProvider {
 
     private final UserRepository userRepository;
     static Long EXPIRE_TIME = 60L * 60L * 1000L; // 만료 시간 1시간
@@ -33,6 +33,9 @@ public class JwtProvider {
         this.secretKey = Base64.getEncoder().encodeToString(this.secretKey.getBytes());
     }
 
+    public void setSecretKey(String secretKey) {
+        this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
 
     // Jwt 토큰 생성
     public String generateJwtToken(Long id, String bojHandle, String notionId){

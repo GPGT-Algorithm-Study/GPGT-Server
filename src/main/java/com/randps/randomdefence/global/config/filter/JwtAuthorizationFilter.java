@@ -3,7 +3,7 @@ package com.randps.randomdefence.global.config.filter;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.authDto.PrincipalDetails;
 import com.randps.randomdefence.domain.user.service.PrincipalDetailsService;
-import com.randps.randomdefence.global.jwt.component.JwtProvider;
+import com.randps.randomdefence.global.jwt.component.JWTProvider;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,11 +21,12 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private JwtProvider jwtProvider;
+    private JWTProvider jwtProvider;
 
     private PrincipalDetailsService principalDetailsService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, PrincipalDetailsService principalDetailsService ) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager,
+        JWTProvider jwtProvider, PrincipalDetailsService principalDetailsService) {
         super(authenticationManager);
         this.jwtProvider = jwtProvider;
         this.principalDetailsService = principalDetailsService;

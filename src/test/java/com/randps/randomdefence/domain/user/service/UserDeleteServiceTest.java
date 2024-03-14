@@ -16,6 +16,7 @@ import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import java.util.List;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,11 @@ public class UserDeleteServiceTest {
                 .emoji("🛠️")
                 .build();
         testContainer.userService.save(userSave);
+    }
+
+    @AfterEach
+    public void tearDown() {
+        testContainer = null;
     }
 
     @Test

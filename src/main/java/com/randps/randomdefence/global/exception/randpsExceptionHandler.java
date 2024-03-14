@@ -1,16 +1,17 @@
 package com.randps.randomdefence.global.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.security.cert.CertificateExpiredException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.persistence.EntityExistsException;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import javax.persistence.EntityExistsException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class randpsExceptionHandler {
@@ -28,6 +29,44 @@ public class randpsExceptionHandler {
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
 
+    @ExceptionHandler(value = CertificateExpiredException.class)
+    public ResponseEntity<Map<String, String>> ExceptionHandler(CertificateExpiredException e) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("error type", httpStatus.getReasonPhrase());
+        map.put("code", "401");
+        map.put("message", e.getMessage());
+
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<Map<String, String>> ExceptionHandler(AccessDeniedException e) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("error type", httpStatus.getReasonPhrase());
+        map.put("code", "403");
+        map.put("message", e.getMessage());
+
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
+
+    @ExceptionHandler(value = RuntimeException.class)
+    public ResponseEntity<Map<String, String>> ExceptionHandler(RuntimeException e) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("error type", httpStatus.getReasonPhrase());
+        map.put("code", "400");
+        map.put("message", e.getMessage());
+
+        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    }
     @ExceptionHandler(value = ArithmeticException.class)
     public ResponseEntity<Map<String, String>> ExceptionHandler(ArithmeticException e) {
         HttpHeaders responseHeaders = new HttpHeaders();

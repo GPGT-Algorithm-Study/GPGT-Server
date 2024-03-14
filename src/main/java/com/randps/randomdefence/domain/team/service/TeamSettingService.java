@@ -9,6 +9,7 @@ import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class TeamSettingService {
     /*
      * 모든 유저를 0번팀과 1번팀에 반반 할당한다.
      */
+    @Transactional
     public List<List<User>> setUsers() {
         List<User> users = userRepository.findAll();
         Random r = new Random();
@@ -116,6 +118,7 @@ public class TeamSettingService {
     /*
      * 추가된 유저를 0번팀과 1번팀 중 하나에 할당한다.
      */
+    @Transactional
     public void setUser(User user) {
         List<User> firstTeamUsers = userRepository.findAllByTeam(0);
         List<User> secondTeamUsers = userRepository.findAllByTeam(1);
@@ -165,6 +168,7 @@ public class TeamSettingService {
     /*
      * 팀 주간 초기화
      */
+    @Transactional
     public void initWeekly() {
         List<Team> teams = teamRepository.findAll();
 
@@ -177,6 +181,7 @@ public class TeamSettingService {
     /*
      * 초기 팀 데이터 생성 (테스트)
      */
+    @Transactional
     public void makeTeamInitialData() {
         List<Team> teams = teamRepository.findAll();
 

@@ -25,6 +25,8 @@ public class FakeScrapingUserLogRepository implements ScrapingUserLogRepository 
       ScrapingUserLog newUserLog = ScrapingUserLog.builder()
           .id(autoIncreasingCount)
           .bojHandle(userLog.getBojHandle())
+          .lastScrapingTime(userLog.getLastScrapingTime())
+          .lastUserScrapingRequestTime(userLog.getLastUserScrapingRequestTime())
           .build();
       data.add(newUserLog);
       return newUserLog;
@@ -33,6 +35,8 @@ public class FakeScrapingUserLogRepository implements ScrapingUserLogRepository 
       ScrapingUserLog newUserLog = ScrapingUserLog.builder()
           .id(userLog.getId())
           .bojHandle(userLog.getBojHandle())
+          .lastScrapingTime(userLog.getLastScrapingTime())
+          .lastUserScrapingRequestTime(userLog.getLastUserScrapingRequestTime())
           .build();
       data.add(newUserLog);
       return newUserLog;

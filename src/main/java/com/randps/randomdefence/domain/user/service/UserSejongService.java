@@ -24,7 +24,6 @@ public class UserSejongService {
     /**
      * 가장 많은 사람이 푼 문제 순으로 문제 반환
      */
-    @Transactional
     public void findAllUserBySolvedProblemCountDced() {
 
     }

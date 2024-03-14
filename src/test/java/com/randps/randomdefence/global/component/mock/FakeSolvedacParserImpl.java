@@ -4,11 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FakeSolvedacParserImpl implements SolvedacParser {
 
     private final UserScrapingInfoDto userScrapingInfoDto;
+    
+    private LocalDateTime startOfActiveDay;
 
     public FakeSolvedacParserImpl(UserScrapingInfoDto userScrapingInfoDto) {
         this.userScrapingInfoDto = userScrapingInfoDto;
@@ -37,5 +40,10 @@ public class FakeSolvedacParserImpl implements SolvedacParser {
     @Override
     public UserScrapingInfoDto getSolvedUserInfo(String bojHandle) throws JsonProcessingException {
         return userScrapingInfoDto;
+    }
+
+    @Override
+    public void setStartOfActiveDay(LocalDateTime startOfActiveDay) {
+        this.startOfActiveDay = startOfActiveDay;
     }
 }

@@ -26,7 +26,6 @@ public class BoolshitService {
     /*
      * 가장 최근 나의 한마디를 조회한다.
      */
-    @Transactional
     public BoolshitResponse findLast() {
         List<Boolshit> boolshitList = boolshitRepository.findAll();
 
@@ -53,7 +52,6 @@ public class BoolshitService {
     /*
      * 모든 나의 한마디를 조회한다.
      */
-    @Transactional
     public List<BoolshitResponse> findAll() {
         List<Boolshit> boolshitList = boolshitRepository.findAll();
         List<BoolshitResponse> boolshitResponses = new ArrayList<>();

@@ -99,7 +99,6 @@ public class UserGrassService {
     /*
      * 인자로 받은 스트릭의 문제를 해결한 날의 모든 잔디 Dto 리스트를 반환한다.
      */
-    @Transactional
     public List<UserGrassDto> findUserGrassList(UserRandomStreak userRandomStreak) {
         List<UserGrass> userGrasses = userGrassRepository.findAllByUserRandomStreakAndGrassInfo(userRandomStreak, true);
         List<UserGrassDto> userGrassDtos = new ArrayList<>();
@@ -114,7 +113,6 @@ public class UserGrassService {
     /*
      * 오늘의 잔디를 반환한다.
      */
-    @Transactional
     public UserGrass findTodayUserGrass(UserRandomStreak userRandomStreak) {
         LocalDateTime now = LocalDateTime.now();
         if (now.getHour() < 6) {
@@ -130,7 +128,6 @@ public class UserGrassService {
     /*
      * 전날의 잔디를 반환한다.
      */
-    @Transactional
     public UserGrass findYesterdayUserGrass(UserRandomStreak userRandomStreak) {
         LocalDateTime now = LocalDateTime.now();
         if (now.getHour() >= 6) {

@@ -24,11 +24,18 @@ public class SolvedacParserImpl implements SolvedacParser {
     private Integer currentStreak;
     private Integer maxStreak;
 
+    private LocalDateTime startOfActiveDay;
+
     private final SolvedacWebCrawler webCrawler;
 
     @Override
     public List<Object> getSolvedProblemList(String userName) {
         return null;
+    }
+
+    @Override
+    public void setStartOfActiveDay(LocalDateTime startOfActiveDay) {
+        this.startOfActiveDay = startOfActiveDay;
     }
 
     @Override

@@ -24,18 +24,29 @@ public class ScrapingUserLog extends BaseTimeEntity {
 
     private LocalDateTime lastScrapingTime;
 
+    private LocalDateTime lastUserScrapingRequestTime;
+
     @Builder
-    public ScrapingUserLog(Long id, String bojHandle) {
+    public ScrapingUserLog(Long id, String bojHandle, LocalDateTime lastScrapingTime,
+        LocalDateTime lastUserScrapingRequestTime) {
         this.id = id;
         this.bojHandle = bojHandle;
-        this.lastScrapingTime = LocalDateTime.now().minusMinutes(21);
+        this.lastScrapingTime = lastScrapingTime;
+        this.lastUserScrapingRequestTime = lastUserScrapingRequestTime;
     }
 
     public Boolean isScrapingPossible() {
-        return this.lastScrapingTime.isBefore(LocalDateTime.now().minusMinutes(20));
+        if (this.lastUserScrapingRequestTime == null) {
+            return true;
+        }
+        return this.lastUserScrapingRequestTime.isBefore(LocalDateTime.now().minusMinutes(20));
     }
 
-    public void saveLastScrapingTime() {
-        this.lastScrapingTime = LocalDateTime.now();
+    public void saveLastUserScrapingRequestTime(LocalDateTime lastUserScrapingRequestTime) {
+        this.lastUserScrapingRequestTime = lastUserScrapingRequestTime;
+    }
+
+    public void saveLastScrapingTime(LocalDateTime lastScrapingTime) {
+        this.lastScrapingTime = lastScrapingTime;
     }
 }

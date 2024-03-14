@@ -8,6 +8,7 @@ import com.randps.randomdefence.domain.user.dto.UserMentionDto;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.domain.user.service.port.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.component.util.CrawlingLock;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,8 @@ public class UserService {
     private final UserRandomStreakService userRandomStreakService;
 
     private final UserSolvedProblemService userSolvedProblemService;
+
+    private final CrawlingLock crawlingLock;
 
     private static HashMap<String, Boolean> userSaveProcessSet = new HashMap<>();
 
@@ -77,21 +80,28 @@ public class UserService {
                 .isTodayRandomSolved(false)
                 .build();
 
-        user = userRepository.save(user);
+        crawlingLock.lock(); // 크롤링 중복 방지를 위한 락
+        try {
+            user = userRepository.save(user);
 
-        // 유저 프로필 정보 크롤링
-        userInfoService.crawlUserInfo(userSave.getBojHandle());
-        // 유저 랜덤 스트릭 생성
-        userRandomStreakService.save(userSave.getBojHandle());
-        // 유저 오늘 푼 문제 크롤링
-        userSolvedProblemService.crawlTodaySolvedProblem(userSave.getBojHandle());
-        // 유저 오늘 문제 풀었는지 여부 크롤링
-        userInfoService.updateUserInfo(userSave.getBojHandle());
-        // 오늘의 랜덤 스트릭 잔디 생성
-        UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(userSave.getBojHandle()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
-        userGrassService.makeTodayGrass(userRandomStreak);
-        // 전날의 랜덤 스트릭 잔디 생성 (새로운 유저 생성 시 에러 방지용)
-        userGrassService.makeYesterdayGrass(userRandomStreak);
+            // 유저 프로필 정보 크롤링
+            userInfoService.crawlUserInfo(userSave.getBojHandle());
+            // 유저 랜덤 스트릭 생성
+            userRandomStreakService.save(userSave.getBojHandle());
+            // 유저 오늘 푼 문제 크롤링
+            userSolvedProblemService.crawlTodaySolvedProblem(userSave.getBojHandle());
+            // 유저 오늘 문제 풀었는지 여부 크롤링
+            userInfoService.updateUserInfo(userSave.getBojHandle());
+            // 오늘의 랜덤 스트릭 잔디 생성
+            UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(
+                    userSave.getBojHandle())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
+            userGrassService.makeTodayGrass(userRandomStreak);
+            // 전날의 랜덤 스트릭 잔디 생성 (새로운 유저 생성 시 에러 방지용)
+            userGrassService.makeYesterdayGrass(userRandomStreak);
+        } finally {
+            crawlingLock.unlock(); // 크롤링 중복 방지를 위한 락 해제
+        }
 
         // Process HashMap에서 삭제
         userSaveProcessSet.remove(userSave.getBojHandle());

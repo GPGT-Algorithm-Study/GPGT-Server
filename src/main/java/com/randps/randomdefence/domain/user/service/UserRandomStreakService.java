@@ -112,7 +112,6 @@ public class UserRandomStreakService {
     /*
      * 특정 유저의 랜덤 스트릭 정보를 불러온다. (문제를 문제의 아이디만 가진 형태)
      */
-    @Transactional
     public UserRandomStreak findUserRandomStreak(String bojHandle) {
         return userRandomStreakRepository.findByBojHandle(bojHandle)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
@@ -121,7 +120,6 @@ public class UserRandomStreakService {
     /*
      * 특정 유저의 랜덤 스트릭 정보를 불러온다. (문제를 문제의 모든 정보를 보여주는 형태)
      */
-    @Transactional
     public UserRandomStreakResponse findUserRandomStreakToResponseForm(String bojHandle) {
         UserRandomStreak userRandomStreak = userRandomStreakRepository.findByBojHandle(bojHandle)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저의 스트릭입니다."));
@@ -136,7 +134,6 @@ public class UserRandomStreakService {
     /*
      * 모든 유저의 랜덤 스트릭 정보를 불러온다.
      */
-    @Transactional
     public List<UserRandomStreakResponse> findAllUserRandomStreak() {
         List<UserRandomStreak> userRandomStreaks = userRandomStreakRepository.findAll();
         List<UserRandomStreakResponse> userRandomStreakResponses = new ArrayList<>();

@@ -3,7 +3,6 @@ package com.randps.randomdefence.domain.boolshit.service;
 import com.randps.randomdefence.domain.boolshit.dto.BoolshitLastResponse;
 import com.randps.randomdefence.domain.boolshit.service.port.BoolshitRepository;
 import java.util.Optional;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ public class BoolshitServiceV2 {
     /**
      * 가장 최근 나의 한마디를 조회한다. (Qeurydsl)
      */
-    @Transactional
     public BoolshitLastResponse findLast() {
         Optional<BoolshitLastResponse> boolshitLastResponse = boolshitRepository.findLastBoolshit();
 

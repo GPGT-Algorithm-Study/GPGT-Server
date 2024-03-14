@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,12 @@ public class SchedulerTest {
         .emoji("🛠️")
         .build();
     testContainer.userService.save(userSave);
+  }
+
+  @AfterEach
+  void tearDown() {
+    testContainer.userDeleteService.delete("fin");
+    testContainer = null;
   }
 
   @Test
