@@ -55,7 +55,75 @@
 위와 같은 기능들을 통해 사용자의 알고리즘 공부에 대한 학습 의욕을 촉진하고, 관리의 용이성을 제공합니다.
 
 
-## 서버 구조
+## 제공 기능 상세
+
+기본적으로 기존의 알고리즘 스터디를 효율적으로 관리하기 위해 사용자들이 오늘 어떤 문제를 풀었는지 확인할 수 있도록 합니다. 스터디 관리자는 이를 기반으로 경고를 관리하고 사용자를 추가 및 삭제할 수 있는 기능을 제공하고 있습니다.
+그리고 스터디원의 동기 부여를 위해 포인트 제도를 도입하고 몇 가지 추가 기능을 제공하고 있습니다.
+
+**1. 랜덤 문제 추천 및 스트릭**
+
+사용자가 마이페이지에서 랜덤 문제 난이도를 설정하면, 해당 난의도의 문제를 매일 하나씩 추천해줍니다. 그리고 이 문제를 풀면, 사용자 정보 하단에 있는 스트릭이 채워지게 됩니다.
+
+<img width="472" alt="스크린샷 2023-10-05 오전 12 42 06" src="https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/b01e2020-41ad-487d-90ec-cb8eca01c2c7">
+
+<br/>
+
+<br/>
+
+**2. 팀 대항**
+
+매주 사용자들이 무작위로 두 팀으로 나뉘어 대결하는데, 이 때 팀의 점수는 팀원들이 해결한 문제의 난이도를 기반으로 책정됩니다. 일주일이 지난 후에는 새로운 팀이 구성되며, 지난 주에 승리한 팀에 추가 포인트가 주어집니다.
+
+![팀](https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/b1f6ec7a-b49c-4369-bd10-dcb06adaff4a)
+
+<br/>
+
+**3. 통계**
+
+사용자의 문제 풀이 현황, 포인트 등의 지표를 통해 스터디의 전반적인 상황을 시각적으로 확인할 수 있는 통계 기능을 제공합니다.
+
+
+<img width="1438" alt="스크린샷 2023-10-05 오전 12 42 55" src="https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/a7640dc4-b0d1-4bb7-bd29-232b537bbbdd">
+<img width="1390" alt="스크린샷 2023-10-05 오전 12 43 10" src="https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/24abca3c-4e92-409b-a5b3-17ce081316f2">
+
+<br/>
+
+<br/>
+
+**4. 마크다운 게시판**
+
+마크다운 게시판 기능을 제공합니다. 문제풀이와 질문 게시판에서는 문제 번호를 입력하면 자동으로 해당 문제의 정보와 링크가 제공됩니다.
+
+<div>
+<img width="1429" alt="스크린샷 2023-10-05 오후 3 17 20" src="https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/c8d93729-c74f-4e8a-a344-d1db8a0a91fe">
+<img width="1439" alt="스크린샷 2023-10-05 오전 12 44 02" src="https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/cdff2e36-f2d7-400d-addc-4c61d3544340">
+</div>
+
+<br/>
+
+
+**5. 아이템**
+
+아이템과 상점 기능을 제공합니다. 문제를 풀어 획득한 포인트로 상점에서 아이템을 구매하고 사용할 수 있습니다.
+
+<div>
+<img width="1440" alt="스크린샷 2023-10-05 오후 3 17 20" src="https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/c5764081-b967-42e7-988d-e5b2a840408b">
+</div>
+
+<br/>
+
+**6. 프로필 상세 페이지**
+
+사용자의 프로필 페이지에서 랜덤 스트릭 정보, 작성한 게시글과 같은 정보와 포인트 및 경고 로그를 조회할 수 있습니다.
+
+<div>
+<img width="1440" alt="스크린샷 2023-10-05 오후 3 17 20" src="https://github.com/klloo/next-ts-x-clonecoding/assets/53117014/58013b11-3568-440c-a353-2863b5c8d509">
+</div>
+
+<br/>
+
+
+## 서비스 서버 구조
 ![서버구조withCICD 001](https://github.com/GPGT-Algorithm-Study/GPGT-Server/assets/44383895/ec88733e-9304-4388-89aa-ea5b548bf575)
 
 
