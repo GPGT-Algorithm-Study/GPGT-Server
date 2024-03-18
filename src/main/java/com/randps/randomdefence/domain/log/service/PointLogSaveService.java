@@ -66,14 +66,22 @@ public class PointLogSaveService {
         User user = userRepository.findByBojHandle(pointLog.getBojHandle())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
-        // 유저의 포인트 변화를 되돌린다.
-        user.decreasePoint(pointLog.getChangedValue());
-        userRepository.save(user);
+        if (pointLog.getState()) {
+            // 유저의 포인트 변화를 되돌린다.
+            user.decreasePoint(pointLog.getChangedValue());
+            userRepository.save(user);
 
-        // 포인트 로그의 상태를 취소로 바꾼다.
-        pointLog.setStateNo();
+            // 포인트 로그의 상태를 취소로 바꾼다.
+            pointLog.setStateNo();
+        } else {
+            // 유저의 포인트 변화를 되돌린다.
+            user.increasePoint(pointLog.getChangedValue());
+            userRepository.save(user);
+
+            // 포인트 로그의 상태를 취소로 바꾼다.
+            pointLog.setStateOk();
+        }
         pointLogRepository.save(pointLog);
-
         return pointLog;
     }
 

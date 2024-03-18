@@ -118,6 +118,43 @@ public class UserSolvedProblemService {
   }
 
   /*
+   * 어제 유저가 푼 모든 문제의 정보를 가져온다.
+   */
+  public List<SolvedProblemDto> findAllYesterdayUserSolvedProblem(String bojHandle) {
+    // 어제의 기준을 만든다.
+    LocalDateTime startOfDateTime = getYesterdayStart();
+    LocalDateTime endOfDateTime = getYesterdayEnd();
+
+    // 데이터를 DB에서 가져온다.
+    List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
+        bojHandle);
+    List<SolvedProblemDto> solvedProblems = new ArrayList<>();
+
+    // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
+    for (UserSolvedProblem problem : userSolvedProblems) {
+      LocalDateTime target = LocalDateTime.of(
+          Integer.parseInt(problem.getDateTime().substring(0, 4)),
+          Integer.parseInt(problem.getDateTime().substring(5, 7)),
+          Integer.parseInt(problem.getDateTime().substring(8, 10)),
+          Integer.parseInt(problem.getDateTime().substring(11, 13)),
+          Integer.parseInt(problem.getDateTime().substring(14, 16)),
+          Integer.parseInt(problem.getDateTime().substring(18)), 0);
+
+      if (target.isAfter(startOfDateTime) && target.isBefore(endOfDateTime)) {
+        SolvedProblemDto solvedProblemDto = problem.toDto();
+        ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
+        solvedProblemDto.setTier(problemDto.getLevel());
+        solvedProblemDto.setTags(problemDto.getTags());
+        solvedProblemDto.setLanguage(problem.getLanguage());
+        solvedProblemDto.setPoint(problemDto.getLevel());
+        solvedProblems.add(solvedProblemDto);
+      }
+    }
+
+    return solvedProblems;
+  }
+
+  /*
    * 오늘 모든 유저가 푼 모든 문제의 정보를 가져온다.
    */
   @Transactional

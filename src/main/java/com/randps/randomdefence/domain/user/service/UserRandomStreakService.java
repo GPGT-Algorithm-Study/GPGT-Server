@@ -424,6 +424,10 @@ public class UserRandomStreakService {
                 User user = userRepository.findByBojHandle(userCur.getBojHandle())
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
+//                if ()
+//                List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllYesterdayUserSolvedProblem(
+//                    user.getBojHandle());
+
                 // 스트릭 프리즈가 있다면 사용한다.
                 if (randomStreakFreezeItemUseService.isExist(user)) {
                     randomStreakFreezeItemUseService.useItem(user, 3L);

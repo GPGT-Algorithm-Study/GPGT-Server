@@ -37,10 +37,6 @@ public class BojParserImpl implements Parser {
         webCrawler.setStartOfActiveDay(startOfActiveDay);
         solvedProblems = webCrawler.process();
 
-        System.out.println(
-            "[LOG] bojHandle = " + bojHandle + ", today solved problem count = "
-                + solvedProblems.size());
-
         return solvedProblems;
     }
 
