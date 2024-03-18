@@ -1,6 +1,7 @@
 package com.randps.randomdefence.domain.user.service;
 
 import static com.randps.randomdefence.global.component.parser.ConvertDifficulty.convertDifficulty;
+import static com.randps.randomdefence.global.component.util.TimeUtil.getSomedayStart;
 import static com.randps.randomdefence.global.component.util.TimeUtil.getToday;
 import static com.randps.randomdefence.global.component.util.TimeUtil.getYesterdayEnd;
 import static com.randps.randomdefence.global.component.util.TimeUtil.getYesterdayStart;
@@ -118,12 +119,13 @@ public class UserSolvedProblemService {
   }
 
   /*
-   * 어제 유저가 푼 모든 문제의 정보를 가져온다.
+   * 특정 날에 유저가 푼 모든 문제의 정보를 가져온다.
    */
-  public List<SolvedProblemDto> findAllYesterdayUserSolvedProblem(String bojHandle) {
-    // 어제의 기준을 만든다.
-    LocalDateTime startOfDateTime = getYesterdayStart();
-    LocalDateTime endOfDateTime = getYesterdayEnd();
+  public List<SolvedProblemDto> findAllSomedayUserSolvedProblem(String bojHandle,
+      LocalDateTime someday) {
+    // 요알 기준을 만든다.
+    LocalDateTime startOfDateTime = getSomedayStart(someday);
+    LocalDateTime endOfDateTime = startOfDateTime.plusDays(1);
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
