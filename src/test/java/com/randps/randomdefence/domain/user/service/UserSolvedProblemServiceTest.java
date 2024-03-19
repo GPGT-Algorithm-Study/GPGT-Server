@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.scraping.domain.ScrapingUserLog;
+import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
 import com.randps.randomdefence.global.component.mock.FakeBojDelayedParserImpl;
@@ -125,6 +126,32 @@ public class UserSolvedProblemServiceTest {
 
     // then
     assertThat(result).isEqualTo(false);
+  }
+
+  @Test
+  @DisplayName("유저가 특정 날짜에 푼 문제들을 지정해서 가져올 수 있다.")
+  public void findAllSomedayUserSolvedProblemTest() throws JsonProcessingException {
+    // given
+    List<Object> solvedProblems = List.of(
+        BojProblemPair.builder().problemId(1000).title("A+B")
+            .dateTime(
+                (LocalDateTime.of(2024, 3, 19, 10, 10, 10)).toString()) // 2024-3-19 10:10:10에 푼 문제
+            .language("C++").build()); // 유저가 해결한 문제
+    fakeBojDelayedParserImpl.setSolvedProblems(solvedProblems); // 유저가 해결한 문제를 설정
+    fakeBojDelayedParserImpl.delayOn(); // 크롤링 지연을 설정
+
+    // when
+    testContainer.scrapingUserController.scrapingUserData("fin"); // 유저가 해결한 문제 크롤링
+    List<SolvedProblemDto> ret = testContainer.userSolvedProblemService.findAllSomedayUserSolvedProblem(
+        "fin", LocalDateTime.of(2024, 3, 19, 16, 25, 0));
+
+    // then
+    assertThat(ret.size()).isEqualTo(1);
+    assertThat(ret.get(0).getProblemId()).isEqualTo(1000);
+    assertThat(ret.get(0).getTitle()).isEqualTo("A+B");
+    assertThat(ret.get(0).getDateTime()).isEqualTo(
+        LocalDateTime.of(2024, 3, 19, 10, 10, 10).toString());
+    assertThat(ret.get(0).getLanguage()).isEqualTo("C++");
   }
 
 }

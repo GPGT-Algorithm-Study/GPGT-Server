@@ -142,6 +142,7 @@ public class UserSolvedProblemService {
           Integer.parseInt(problem.getDateTime().substring(14, 16)),
           Integer.parseInt(problem.getDateTime().substring(18)), 0);
 
+      System.out.println("target : " + target);
       if (target.isAfter(startOfDateTime) && target.isBefore(endOfDateTime)) {
         SolvedProblemDto solvedProblemDto = problem.toDto();
         ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
