@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.notify.dto.NotifyDeleteRequest;
 import com.randps.randomdefence.domain.notify.service.NotifyAdminService;
 import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
+import java.nio.file.AccessDeniedException;
 import java.security.cert.CertificateExpiredException;
 import java.util.Map;
 import lombok.Builder;
@@ -37,7 +38,7 @@ public class NotifyAdminController {
   @DeleteMapping("/admin/receiver/all")
   public ResponseEntity<Map<String, String>> deleteAllByReceiver(
       @RequestHeader("Refresh_Token") String refresh, @Param("receiver") String receiver)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
     notifyAdminService.deleteAllByReceiver(receiver, jwtRefreshUtil.getBojHandle(refresh));
 
     return toResponse(HttpStatus.OK, "200", "해당 유저의 모든 알림을 성공적으로 삭제했습니다.");
@@ -50,10 +51,10 @@ public class NotifyAdminController {
   public ResponseEntity<Map<String, String>> deleteById(
       @RequestHeader("Refresh_Token") String refresh,
       @RequestBody NotifyDeleteRequest request)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
     notifyAdminService.deleteById(request.getId(), jwtRefreshUtil.getBojHandle(refresh));
 
-    return toResponse(HttpStatus.OK, "200", "특정 알림을 성공적으로 삭제했습니다.");
+    return toResponse(HttpStatus.OK, "200", "알림을 성공적으로 삭제했습니다.");
   }
 
 }

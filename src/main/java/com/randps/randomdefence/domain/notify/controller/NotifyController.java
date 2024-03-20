@@ -5,9 +5,11 @@ import static com.randps.randomdefence.global.component.util.ResponseUtil.toResp
 import com.randps.randomdefence.domain.notify.dto.NotifyDeleteRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyPublishRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyPublishToUsersRequest;
+import com.randps.randomdefence.domain.notify.dto.NotifyReadRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyUpdateRequest;
 import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
+import java.nio.file.AccessDeniedException;
 import java.security.cert.CertificateExpiredException;
 import java.util.Map;
 import javax.transaction.Transactional;
@@ -41,7 +43,7 @@ public class NotifyController {
   @PostMapping("/")
   public ResponseEntity<Map<String, String>> publish(@RequestBody NotifyPublishRequest request,
       @RequestHeader("Refresh_Token") String refresh)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
 
     notifyService.publish(request, jwtRefreshUtil.getBojHandle(refresh));
 
@@ -55,7 +57,7 @@ public class NotifyController {
   @PutMapping("/")
   public ResponseEntity<Map<String, String>> update(@RequestBody NotifyUpdateRequest request,
       @RequestHeader("Refresh_Token") String refresh)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
 
     notifyService.update(request, jwtRefreshUtil.getBojHandle(refresh));
 
@@ -69,7 +71,7 @@ public class NotifyController {
   @DeleteMapping("/")
   public ResponseEntity<Map<String, String>> delete(@RequestBody NotifyDeleteRequest request,
       @RequestHeader("Refresh_Token") String refresh)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
 
     notifyService.delete(request, jwtRefreshUtil.getBojHandle(refresh));
 
@@ -84,11 +86,24 @@ public class NotifyController {
   public ResponseEntity<Map<String, String>> publishToUsers(
       @RequestBody NotifyPublishToUsersRequest request,
       @RequestHeader("Refresh_Token") String refresh)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
 
     notifyService.publishToUsers(request, jwtRefreshUtil.getBojHandle(refresh));
 
     return toResponse(HttpStatus.OK, "200", "알림을 성공적으로 발행했습니다.");
   }
 
+  /*
+   * 특정 알림을 읽었다고 처리한다.
+   */
+  @Transactional
+  @PutMapping("/read")
+  public ResponseEntity<Map<String, String>> read(@RequestBody NotifyReadRequest request,
+      @RequestHeader("Refresh_Token") String refresh)
+      throws CertificateExpiredException, AccessDeniedException {
+
+    notifyService.read(request, jwtRefreshUtil.getBojHandle(refresh));
+
+    return toResponse(HttpStatus.OK, "200", "알림을 성공적으로 읽었습니다.");
+  }
 }

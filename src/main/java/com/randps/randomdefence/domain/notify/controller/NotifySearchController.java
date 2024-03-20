@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.notify.controller;
 import com.randps.randomdefence.domain.notify.dto.NotifyResponse;
 import com.randps.randomdefence.domain.notify.service.NotifySearchService;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
+import java.nio.file.AccessDeniedException;
 import java.security.cert.CertificateExpiredException;
 import java.util.List;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class NotifySearchController {
    */
   @GetMapping("/receiver")
   public List<NotifyResponse> searchByReceiver(@RequestHeader("Refresh_Token") String refresh, @Param("receiver") String receiver)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
     return notifySearchService.findAllByReceiver(receiver, jwtRefreshUtil.getBojHandle(refresh));
   }
 

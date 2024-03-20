@@ -1,6 +1,5 @@
 package com.randps.randomdefence.domain.user.service;
 
-import static com.randps.randomdefence.global.component.util.TimeUtil.getToday;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +9,7 @@ import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
 import com.randps.randomdefence.global.component.mock.FakeBojDelayedParserImpl;
+import com.randps.randomdefence.global.component.mock.FakeClock;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import java.time.LocalDateTime;
@@ -26,6 +26,8 @@ public class UserSolvedProblemServiceTest {
 
   private TestContainer testContainer;
 
+  private FakeClock clock;
+
   @BeforeEach
   void setUp() throws JsonProcessingException {
     UserScrapingInfoDto userScrapingInfoDto = UserScrapingInfoDto.builder().tier(15)
@@ -35,9 +37,12 @@ public class UserSolvedProblemServiceTest {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     fakeBojDelayedParserImpl = new FakeBojDelayedParserImpl(List.of());
     fakeBojDelayedParserImpl.delayOff();
+    clock = new FakeClock();
     testContainer = TestContainer.builder().parser(fakeBojDelayedParserImpl)
         .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
-        .passwordEncoder(passwordEncoder).build();
+        .passwordEncoder(passwordEncoder)
+        .clock(clock)
+        .build();
     UserSave userSave = UserSave.builder().bojHandle("fin").password("q1w2e3r4!").notionId("성민")
         .manager(1L).emoji("🛠️").build();
     testContainer.userService.save(userSave);
@@ -57,7 +62,8 @@ public class UserSolvedProblemServiceTest {
     // given
     List<Object> solvedProblems = List.of(
         BojProblemPair.builder().problemId(1000).title("A+B")
-            .dateTime((getToday().plusHours(12).plusSeconds(1)).toString()) // 오늘 시작한 뒤 1초 뒤에 푼 문제
+            .dateTime((testContainer.timeUtil.getToday().plusHours(12)
+                .plusSeconds(1)).toString()) // 오늘 시작한 뒤 1초 뒤에 푼 문제
             .language("C++").build()); // 유저가 해결한 문제
     fakeBojDelayedParserImpl.setSolvedProblems(solvedProblems); // 유저가 해결한 문제를 설정
     fakeBojDelayedParserImpl.delayOn(); // 크롤링 지연을 설정
@@ -76,7 +82,8 @@ public class UserSolvedProblemServiceTest {
     // given
     List<Object> solvedProblems = List.of(
         BojProblemPair.builder().problemId(1000).title("A+B")
-            .dateTime((getToday().plusSeconds(1)).toString()) // 오늘 시작한 뒤 1초 뒤에 푼 문제
+            .dateTime((testContainer.timeUtil.getToday()
+                .plusSeconds(1)).toString()) // 오늘 시작한 뒤 1초 뒤에 푼 문제
             .language("C++").build()); // 유저가 해결한 문제
     fakeBojDelayedParserImpl.setSolvedProblems(solvedProblems); // 유저가 해결한 문제를 설정
     fakeBojDelayedParserImpl.delayOn(); // 크롤링 지연을 설정
@@ -96,7 +103,8 @@ public class UserSolvedProblemServiceTest {
     // given
     List<Object> solvedProblems = List.of(
         BojProblemPair.builder().problemId(1000).title("A+B")
-            .dateTime((getToday().plusDays(1).minusSeconds(1)).toString()) // 오늘이 끝나기 1초 전에 푼 문제
+            .dateTime((testContainer.timeUtil.getToday().plusDays(1)
+                .minusSeconds(1)).toString()) // 오늘이 끝나기 1초 전에 푼 문제
             .language("C++").build()); // 유저가 해결한 문제
     fakeBojDelayedParserImpl.setSolvedProblems(solvedProblems); // 유저가 해결한 문제를 설정
     fakeBojDelayedParserImpl.delayOn(); // 크롤링 지연을 설정
@@ -115,7 +123,8 @@ public class UserSolvedProblemServiceTest {
     // given
     List<Object> solvedProblems = List.of(
         BojProblemPair.builder().problemId(1000).title("A+B")
-            .dateTime((getToday().minusSeconds(1)).toString()) // 오늘이 끝나기 1초 전에 푼 문제
+            .dateTime((testContainer.timeUtil.getToday()
+                .minusSeconds(1)).toString()) // 오늘이 끝나기 1초 전에 푼 문제
             .language("C++").build()); // 유저가 해결한 문제
     fakeBojDelayedParserImpl.setSolvedProblems(solvedProblems); // 유저가 해결한 문제를 설정
     fakeBojDelayedParserImpl.delayOn(); // 크롤링 지연을 설정
@@ -132,6 +141,7 @@ public class UserSolvedProblemServiceTest {
   @DisplayName("유저가 특정 날짜에 푼 문제들을 지정해서 가져올 수 있다.")
   public void findAllSomedayUserSolvedProblemTest() throws JsonProcessingException {
     // given
+    clock.setNow(LocalDateTime.of(2024, 3, 19, 16, 25, 0));
     List<Object> solvedProblems = List.of(
         BojProblemPair.builder().problemId(1000).title("A+B")
             .dateTime(

@@ -39,6 +39,7 @@ import com.randps.randomdefence.domain.log.service.port.PointLogRepository;
 import com.randps.randomdefence.domain.log.service.port.WarningLogRepository;
 import com.randps.randomdefence.domain.notify.controller.NotifyAdminController;
 import com.randps.randomdefence.domain.notify.controller.NotifyAdminSearchController;
+import com.randps.randomdefence.domain.notify.controller.NotifyController;
 import com.randps.randomdefence.domain.notify.controller.NotifySearchController;
 import com.randps.randomdefence.domain.notify.mock.FakeNotifyRepository;
 import com.randps.randomdefence.domain.notify.service.NotifyAdminSearchService;
@@ -90,6 +91,8 @@ import com.randps.randomdefence.global.aws.s3.service.port.AmazonS3ClientPort;
 import com.randps.randomdefence.global.component.parser.Parser;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
 import com.randps.randomdefence.global.component.util.CrawlingLock;
+import com.randps.randomdefence.global.component.util.TimeUtil;
+import com.randps.randomdefence.global.component.util.port.Clock;
 import com.randps.randomdefence.global.jwt.component.JWTProvider;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
@@ -217,10 +220,14 @@ public class TestContainer {
 
   public final NotifySearchController notifySearchController;
 
+  public final NotifyController notifyController;
+
+  public final TimeUtil timeUtil;
 
   @Builder
   public TestContainer(Parser parser, SolvedacParser solvedacParser,
-      BCryptPasswordEncoder passwordEncoder) {
+      BCryptPasswordEncoder passwordEncoder, Clock clock) {
+    timeUtil = new TimeUtil(clock);
     crawlingLock = new CrawlingLock();
     userRepository = new FakeUserRepository();
     userRandomStreakRepository = new FakeUserRandomStreakRepository();
@@ -297,6 +304,7 @@ public class TestContainer {
         .build();
     scrapingUserLogService = ScrapingUserLogService.builder()
         .scrapingUserLogRepository(scrapingUserLogRepository)
+        .timeUtil(timeUtil)
         .build();
     userSolvedProblemService = UserSolvedProblemService.builder()
         .userRandomStreakRepository(userRandomStreakRepository)
@@ -310,6 +318,7 @@ public class TestContainer {
         .userAlreadySolvedService(userAlreadySolvedService)
         .eventPointService(eventPointService)
         .scrapingUserLogService(scrapingUserLogService)
+        .timeUtil(timeUtil)
         .build();
     randomStreakFreezeItemUseService = RandomStreakFreezeItemUseServiceImpl.builder()
         .userRepository(userRepository)
@@ -460,6 +469,7 @@ public class TestContainer {
 
     notifyService = NotifyService.builder()
         .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
         .build();
     notifyAdminService = NotifyAdminService.builder()
         .notifyRepository(notifyRepository)
@@ -485,6 +495,10 @@ public class TestContainer {
         .build();
     notifySearchController = NotifySearchController.builder()
         .notifySearchService(notifySearchService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
+    notifyController = NotifyController.builder()
+        .notifyService(notifyService)
         .jwtRefreshUtil(jwtUtil)
         .build();
   }

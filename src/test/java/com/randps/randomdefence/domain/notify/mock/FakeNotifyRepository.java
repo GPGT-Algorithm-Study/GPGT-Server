@@ -32,6 +32,9 @@ public class FakeNotifyRepository implements NotifyRepository {
           .message(notify.getMessage())
           .type(notify.getType())
           .build();
+      if (notify.getIsRead()) {
+        updatedNotify.read();
+      }
       notifyList.add(updatedNotify);
       return updatedNotify;
     }

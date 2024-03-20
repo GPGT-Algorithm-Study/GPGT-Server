@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.notify.controller;
 import com.randps.randomdefence.domain.notify.dto.NotifyResponse;
 import com.randps.randomdefence.domain.notify.service.NotifyAdminSearchService;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
+import java.nio.file.AccessDeniedException;
 import java.security.cert.CertificateExpiredException;
 import java.util.List;
 import lombok.Builder;
@@ -28,7 +29,7 @@ public class NotifyAdminSearchController {
    */
   @GetMapping("/admin/all")
   public List<NotifyResponse> searchAll(@RequestHeader("Refresh_Token") String refresh)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
     return notifyAdminSearchService.findAll(jwtRefreshUtil.getBojHandle(refresh));
   }
 
@@ -37,7 +38,7 @@ public class NotifyAdminSearchController {
    */
   @GetMapping("/admin/receiver/all")
   public List<NotifyResponse> searchByReceiver(@RequestHeader("Refresh_Token") String refresh, @Param("receiver") String receiver)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
     return notifyAdminSearchService.findAllByReceiver(receiver, jwtRefreshUtil.getBojHandle(refresh));
   }
 
@@ -46,7 +47,7 @@ public class NotifyAdminSearchController {
    */
   @GetMapping("/admin/notRead/all")
   public List<NotifyResponse> searchNotReadNotifiesAll(@RequestHeader("Refresh_Token") String refresh)
-      throws CertificateExpiredException {
+      throws CertificateExpiredException, AccessDeniedException {
     return notifyAdminSearchService.findNotReadNotifiesAll(jwtRefreshUtil.getBojHandle(refresh));
   }
 
