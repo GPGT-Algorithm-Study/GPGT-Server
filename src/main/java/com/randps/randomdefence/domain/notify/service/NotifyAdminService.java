@@ -1,7 +1,6 @@
 package com.randps.randomdefence.domain.notify.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.randps.randomdefence.domain.notify.domain.Notify;
 import com.randps.randomdefence.domain.notify.service.port.NotifyRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
@@ -40,7 +39,7 @@ public class NotifyAdminService {
   public void deleteById(Long id, String bojHandle) {
     User adminUser = userRepository.findByBojHandle(bojHandle)
         .orElseThrow(() -> new NotFoundException("사용자가 존재하지 않습니다."));
-    Notify notify = notifyRepository.findById(id)
+    notifyRepository.findById(id)
         .orElseThrow(() -> new NotFoundException("알림이 존재하지 않습니다."));
     if (!adminUser.getManager()) {
       throw new IllegalArgumentException("권한이 없습니다.");
