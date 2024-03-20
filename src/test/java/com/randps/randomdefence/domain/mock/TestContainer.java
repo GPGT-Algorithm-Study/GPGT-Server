@@ -37,6 +37,15 @@ import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.log.service.port.PointLogRepository;
 import com.randps.randomdefence.domain.log.service.port.WarningLogRepository;
+import com.randps.randomdefence.domain.notify.controller.NotifyAdminController;
+import com.randps.randomdefence.domain.notify.controller.NotifyAdminSearchController;
+import com.randps.randomdefence.domain.notify.controller.NotifySearchController;
+import com.randps.randomdefence.domain.notify.mock.FakeNotifyRepository;
+import com.randps.randomdefence.domain.notify.service.NotifyAdminSearchService;
+import com.randps.randomdefence.domain.notify.service.NotifyAdminService;
+import com.randps.randomdefence.domain.notify.service.NotifySearchService;
+import com.randps.randomdefence.domain.notify.service.NotifyService;
+import com.randps.randomdefence.domain.notify.service.port.NotifyRepository;
 import com.randps.randomdefence.domain.problem.mock.FakeProblemRepository;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.problem.service.port.ProblemRepository;
@@ -186,12 +195,28 @@ public class TestContainer {
 
   public final CrawlingLock crawlingLock;
 
-  /**
-   * Controller
-   **/
+  public final JWTProvider jwtProvider;
   public final ScrapingUserController scrapingUserController;
 
-  public final JWTProvider jwtProvider;
+  /**
+   * Notify
+   **/
+  public final NotifyRepository notifyRepository;
+
+  public final NotifyAdminService notifyAdminService;
+
+  public final NotifyService notifyService;
+
+  public final NotifyAdminSearchService notifyAdminSearchService;
+
+  public final NotifySearchService notifySearchService;
+
+  public final NotifyAdminController notifyAdminController;
+
+  public final NotifyAdminSearchController notifyAdminSearchController;
+
+  public final NotifySearchController notifySearchController;
+
 
   @Builder
   public TestContainer(Parser parser, SolvedacParser solvedacParser,
@@ -429,6 +454,39 @@ public class TestContainer {
         .build();
     jwtProvider = new JWTProvider(userRepository);
     jwtProvider.setSecretKey(jwtSecret);
+
+    /* notify */
+    notifyRepository = new FakeNotifyRepository();
+
+    notifyService = NotifyService.builder()
+        .notifyRepository(notifyRepository)
+        .build();
+    notifyAdminService = NotifyAdminService.builder()
+        .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
+        .build();
+    notifyAdminSearchService = NotifyAdminSearchService.builder()
+        .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
+        .build();
+    notifySearchService = NotifySearchService.builder()
+        .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
+        .build();
+
+    notifyAdminController = NotifyAdminController.builder()
+        .notifyAdminService(notifyAdminService)
+        .notifyService(notifyService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
+    notifyAdminSearchController = NotifyAdminSearchController.builder()
+        .notifyAdminSearchService(notifyAdminSearchService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
+    notifySearchController = NotifySearchController.builder()
+        .notifySearchService(notifySearchService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
   }
 
 }

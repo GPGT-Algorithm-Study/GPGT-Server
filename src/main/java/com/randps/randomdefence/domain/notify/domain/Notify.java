@@ -45,6 +45,10 @@ public class Notify extends BaseTimeEntity {
     this.message = message;
   }
 
+  public void updateType(NotifyType type) {
+    this.type = type;
+  }
+
   public void read() {
     this.isRead = true;
   }

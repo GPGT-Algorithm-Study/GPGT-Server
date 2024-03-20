@@ -1,9 +1,13 @@
 package com.randps.randomdefence.domain.notify.service;
 
 import com.randps.randomdefence.domain.notify.domain.Notify;
-import com.randps.randomdefence.domain.notify.enums.NotifyType;
+import com.randps.randomdefence.domain.notify.dto.NotifyDeleteRequest;
+import com.randps.randomdefence.domain.notify.dto.NotifyPublishRequest;
+import com.randps.randomdefence.domain.notify.dto.NotifyPublishToUsersRequest;
+import com.randps.randomdefence.domain.notify.dto.NotifyUpdateRequest;
 import com.randps.randomdefence.domain.notify.service.port.NotifyRepository;
 import com.randps.randomdefence.domain.user.domain.User;
+import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -18,15 +22,25 @@ public class NotifyService {
 
   private final NotifyRepository notifyRepository;
 
+  private final UserRepository userRepository;
+
   /*
    * 알림을 발행한다.
    */
   @Transactional
-  public Notify publish(String receiver, String message, NotifyType type) {
+  public Notify publish(NotifyPublishRequest request, String sender) {
+    if (!userRepository.findByBojHandle(sender)
+        .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다.")).getManager()) {
+      throw new IllegalArgumentException("권한이 없습니다.");
+    }
+    if (userRepository.findByBojHandle(request.getReceiver()).isEmpty()) {
+      throw new IllegalArgumentException("수신자가 존재하지 않습니다.");
+    }
+
     Notify notify = Notify.builder()
-        .receiver(receiver)
-        .message(message)
-        .type(type)
+        .receiver(request.getReceiver())
+        .message(request.getMessage())
+        .type(request.getType())
         .build();
     return notifyRepository.save(notify);
   }
@@ -35,9 +49,16 @@ public class NotifyService {
    * 특정 알림의 내용을 수정한다.
    */
   @Transactional
-  public void update(Long id, String message) {
-    Notify notify = notifyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("알림이 존재하지 않습니다."));
-    notify.updateMessage(message);
+  public void update(NotifyUpdateRequest request, String bojHandle) {
+    User requestor = userRepository.findByBojHandle(bojHandle)
+        .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+    Notify notify = notifyRepository.findById(request.getId())
+        .orElseThrow(() -> new IllegalArgumentException("알림이 존재하지 않습니다."));
+    if (!requestor.getManager()) {
+      throw new IllegalArgumentException("권한이 없습니다.");
+    }
+    notify.updateMessage(request.getMessage());
+    notify.updateType(request.getType());
     notifyRepository.save(notify);
   }
 
@@ -45,22 +66,35 @@ public class NotifyService {
    * 알림을 삭제한다.
    */
   @Transactional
-  public void delete(Long id) {
-    notifyRepository.deleteById(id);
+  public void delete(NotifyDeleteRequest request, String bojHandle) {
+    if (!userRepository.findByBojHandle(bojHandle)
+        .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다.")).getManager()) {
+      throw new IllegalArgumentException("권한이 없습니다.");
+    }
+
+    notifyRepository.deleteById(request.getId());
   }
 
   /*
    * 특정 알람을 특정 유저들에게 발행한다.
    */
   @Transactional
-  public void publishToUsers(List<User> receivers, String message, NotifyType type) {
+  public void publishToUsers(NotifyPublishToUsersRequest request, String bojHandle) {
+    if (!userRepository.findByBojHandle(bojHandle)
+        .orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다.")).getManager()) {
+      throw new IllegalArgumentException("권한이 없습니다.");
+    }
+
     List<Notify> notifies = new ArrayList<>();
 
-    for (User receiver : receivers) {
+    for (String receiver : request.getReceivers()) {
+      if (userRepository.findByBojHandle(receiver).isEmpty()) {
+        continue;
+      }
       Notify notify = Notify.builder()
-          .receiver(receiver.getBojHandle())
-          .message(message)
-          .type(type)
+          .receiver(receiver)
+          .message(request.getMessage())
+          .type(request.getType())
           .build();
       notifies.add(notify);
     }
