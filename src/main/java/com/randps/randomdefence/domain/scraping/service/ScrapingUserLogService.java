@@ -1,9 +1,8 @@
 package com.randps.randomdefence.domain.scraping.service;
 
-import static com.randps.randomdefence.global.component.util.TimeUtil.getToday;
-
 import com.randps.randomdefence.domain.scraping.domain.ScrapingUserLog;
 import com.randps.randomdefence.domain.scraping.service.mock.ScrapingUserLogRepository;
+import com.randps.randomdefence.global.component.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -17,6 +16,8 @@ import org.springframework.stereotype.Service;
 public class ScrapingUserLogService {
 
   private final ScrapingUserLogRepository scrapingUserLogRepository;
+
+  private final TimeUtil timeUtil;
 
   @Transactional
   public Boolean isPossible(String bojHandle) {
@@ -57,7 +58,8 @@ public class ScrapingUserLogService {
   public Boolean isTodayScraping(String bojHandle) {
     Optional<ScrapingUserLog> userLog = scrapingUserLogRepository.findByBojHandle(bojHandle);
 
-    return userLog.map(scrapingUserLog -> scrapingUserLog.getLastScrapingTime().isAfter(getToday()))
+    return userLog.map(
+            scrapingUserLog -> scrapingUserLog.getLastScrapingTime().isAfter(timeUtil.getToday()))
         .orElse(false);
 
   }

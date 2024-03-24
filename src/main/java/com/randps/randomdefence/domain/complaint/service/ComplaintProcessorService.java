@@ -30,10 +30,8 @@ public class ComplaintProcessorService {
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 민원입니다."));
     User user = userRepository.findByBojHandle(bojHandle)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-    userRepository.findByBojHandle(complaint.getProcessor())
-        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 처리자입니다."));
 
-    if (!complaint.getProcessor().equals(bojHandle) && !user.getManager()) {
+    if (!user.getManager()) {
       throw new IllegalArgumentException("이 민원을 수정할 권한이 없습니다.");
     }
     if (request.getProcessType() == null) {

@@ -1,9 +1,7 @@
 package com.randps.randomdefence.domain.user.service;
 
 import static com.randps.randomdefence.global.component.parser.ConvertDifficulty.convertDifficulty;
-import static com.randps.randomdefence.global.component.util.TimeUtil.getToday;
-import static com.randps.randomdefence.global.component.util.TimeUtil.getYesterdayEnd;
-import static com.randps.randomdefence.global.component.util.TimeUtil.getYesterdayStart;
+import static com.randps.randomdefence.global.component.util.TimeUtil.getSomedayStart;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.event.service.EventPointService;
@@ -23,6 +21,7 @@ import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.domain.user.service.port.UserSolvedProblemRepository;
 import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
 import com.randps.randomdefence.global.component.parser.Parser;
+import com.randps.randomdefence.global.component.util.TimeUtil;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +59,8 @@ public class UserSolvedProblemService {
 
   private final ScrapingUserLogService scrapingUserLogService;
 
+  private final TimeUtil timeUtil;
+
   /*
    * 유저가 그동안 푼 모든 문제의 정보를 가져온다.
    */
@@ -86,7 +87,7 @@ public class UserSolvedProblemService {
    */
   public List<SolvedProblemDto> findAllTodayUserSolvedProblem(String bojHandle) {
     // 오늘의 기준을 만든다.
-    LocalDateTime startOfDateTime = getToday();
+    LocalDateTime startOfDateTime = timeUtil.getToday();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -118,12 +119,51 @@ public class UserSolvedProblemService {
   }
 
   /*
+   * 특정 날에 유저가 푼 모든 문제의 정보를 가져온다.
+   */
+  public List<SolvedProblemDto> findAllSomedayUserSolvedProblem(String bojHandle,
+      LocalDateTime someday) {
+    // 요일 기준을 만든다.
+    LocalDateTime startOfDateTime = getSomedayStart(someday);
+    LocalDateTime endOfDateTime = startOfDateTime.plusDays(1);
+
+    // 데이터를 DB에서 가져온다.
+    List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
+        bojHandle);
+    List<SolvedProblemDto> solvedProblems = new ArrayList<>();
+
+    // DB문제의 푼 날짜를 비교해서 오늘 푼 문제만 넣는다.
+    for (UserSolvedProblem problem : userSolvedProblems) {
+      LocalDateTime target = LocalDateTime.of(
+          Integer.parseInt(problem.getDateTime().substring(0, 4)),
+          Integer.parseInt(problem.getDateTime().substring(5, 7)),
+          Integer.parseInt(problem.getDateTime().substring(8, 10)),
+          Integer.parseInt(problem.getDateTime().substring(11, 13)),
+          Integer.parseInt(problem.getDateTime().substring(14, 16)),
+          Integer.parseInt(problem.getDateTime().substring(18)), 0);
+
+      System.out.println("target : " + target);
+      if (target.isAfter(startOfDateTime) && target.isBefore(endOfDateTime)) {
+        SolvedProblemDto solvedProblemDto = problem.toDto();
+        ProblemDto problemDto = problemService.findProblem(solvedProblemDto.getProblemId());
+        solvedProblemDto.setTier(problemDto.getLevel());
+        solvedProblemDto.setTags(problemDto.getTags());
+        solvedProblemDto.setLanguage(problem.getLanguage());
+        solvedProblemDto.setPoint(problemDto.getLevel());
+        solvedProblems.add(solvedProblemDto);
+      }
+    }
+
+    return solvedProblems;
+  }
+
+  /*
    * 오늘 모든 유저가 푼 모든 문제의 정보를 가져온다.
    */
   @Transactional
   public List<UserSolvedProblemPairDto> findAllTodayUserSolvedProblemAll() {
     // 오늘의 기준을 만든다.
-    LocalDateTime startOfDateTime = getToday();
+    LocalDateTime startOfDateTime = timeUtil.getToday();
 
     // 모든 유저 조회
     List<User> users = userRepository.findAll();
@@ -169,7 +209,7 @@ public class UserSolvedProblemService {
    */
   @Transactional
   public void crawlTodaySolvedProblem(String bojHandle) throws JsonProcessingException {
-    LocalDateTime today = getToday();
+    LocalDateTime today = timeUtil.getToday();
     if (!scrapingUserLogService.isTodayScraping(bojHandle)) {
       today = today.minusDays(1);
     }
@@ -247,7 +287,7 @@ public class UserSolvedProblemService {
   @Transactional
   public Boolean isTodaySolved(String bojHandle) {
     // 오늘의 기준을 만든다.
-    LocalDateTime startOfDateTime = getToday();
+    LocalDateTime startOfDateTime = timeUtil.getToday();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -277,8 +317,8 @@ public class UserSolvedProblemService {
   @Transactional
   public Boolean isYesterdaySolved(String bojHandle) {
     // 어제의 기준을 만든다.
-    LocalDateTime startOfDateTime = getYesterdayStart();
-    LocalDateTime endOfDateTime = getYesterdayEnd();
+    LocalDateTime startOfDateTime = timeUtil.getYesterdayStart();
+    LocalDateTime endOfDateTime = timeUtil.getYesterdayEnd();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -306,7 +346,7 @@ public class UserSolvedProblemService {
   @Transactional
   public Integer getTodaySolvedProblemCount(String bojHandle) {
     // 오늘의 기준을 만든다.
-    LocalDateTime startOfDateTime = getToday();
+    LocalDateTime startOfDateTime = timeUtil.getToday();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(
@@ -337,8 +377,8 @@ public class UserSolvedProblemService {
   @Transactional
   public Integer getYesterdaySolvedProblemCount(String bojHandle) {
     // 어제의 기준을 만든다.
-    LocalDateTime startOfDateTime = getYesterdayStart();
-    LocalDateTime endOfDateTime = getYesterdayEnd();
+    LocalDateTime startOfDateTime = timeUtil.getYesterdayStart();
+    LocalDateTime endOfDateTime = timeUtil.getYesterdayEnd();
 
     // 데이터를 DB에서 가져온다.
     List<UserSolvedProblem> userSolvedProblems = userSolvedProblemRepository.findAllByBojHandle(

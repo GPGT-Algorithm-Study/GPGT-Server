@@ -1,4 +1,4 @@
-package com.randps.randomdefence.domain.complaint.dto;
+package com.randps.randomdefence.domain.notify.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ComplaintDeleteRequest {
+public class NotifyDeleteRequest {
 
   private Long id;
 
   @Builder
-  public ComplaintDeleteRequest(Long id) {
+  public NotifyDeleteRequest(Long id) {
     this.id = id;
   }
 
