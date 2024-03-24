@@ -1,10 +1,10 @@
 package com.randps.randomdefence.domain.notify.dto;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
+@NoArgsConstructor
 public class NotifyReadRequest {
 
   private Long id;

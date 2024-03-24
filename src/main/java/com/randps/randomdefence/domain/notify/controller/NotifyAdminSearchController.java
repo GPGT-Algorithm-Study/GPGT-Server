@@ -27,7 +27,7 @@ public class NotifyAdminSearchController {
   /*
    * 관리자가 모든 알림을 조회한다.
    */
-  @GetMapping("/admin/all")
+  @GetMapping("/all")
   public List<NotifyResponse> searchAll(@RequestHeader("Refresh_Token") String refresh)
       throws CertificateExpiredException, AccessDeniedException {
     return notifyAdminSearchService.findAll(jwtRefreshUtil.getBojHandle(refresh));
@@ -36,7 +36,7 @@ public class NotifyAdminSearchController {
   /*
    * 관리자가 특정 사용자에게 온 모든 알림을 조회한다.
    */
-  @GetMapping("/admin/receiver/all")
+  @GetMapping("/receiver/all")
   public List<NotifyResponse> searchByReceiver(@RequestHeader("Refresh_Token") String refresh, @Param("receiver") String receiver)
       throws CertificateExpiredException, AccessDeniedException {
     return notifyAdminSearchService.findAllByReceiver(receiver, jwtRefreshUtil.getBojHandle(refresh));
@@ -45,7 +45,7 @@ public class NotifyAdminSearchController {
   /*
    * 관리자가 아직 사람들이 읽지 않은 모든 알림을 조회한다.
    */
-  @GetMapping("/admin/notRead/all")
+  @GetMapping("/unread/all")
   public List<NotifyResponse> searchNotReadNotifiesAll(@RequestHeader("Refresh_Token") String refresh)
       throws CertificateExpiredException, AccessDeniedException {
     return notifyAdminSearchService.findNotReadNotifiesAll(jwtRefreshUtil.getBojHandle(refresh));

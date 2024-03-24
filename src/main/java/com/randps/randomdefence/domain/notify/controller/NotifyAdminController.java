@@ -35,7 +35,7 @@ public class NotifyAdminController {
   /*
    * 관리자가 특정 유저의 모든 알림을 삭제한다.
    */
-  @DeleteMapping("/admin/receiver/all")
+  @DeleteMapping("/receiver/all")
   public ResponseEntity<Map<String, String>> deleteAllByReceiver(
       @RequestHeader("Refresh_Token") String refresh, @Param("receiver") String receiver)
       throws CertificateExpiredException, AccessDeniedException {
@@ -47,7 +47,7 @@ public class NotifyAdminController {
   /*
    * 관리자가 특정 알림을 삭제한다.
    */
-  @DeleteMapping("/admin/id")
+  @DeleteMapping("/id")
   public ResponseEntity<Map<String, String>> deleteById(
       @RequestHeader("Refresh_Token") String refresh,
       @RequestBody NotifyDeleteRequest request)
