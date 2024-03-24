@@ -1,6 +1,5 @@
 package com.randps.randomdefence.domain.scraping.controller;
 
-import static com.randps.randomdefence.global.component.util.TimeUtil.getToday;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,6 +9,7 @@ import com.randps.randomdefence.domain.scraping.domain.ScrapingUserLog;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.global.component.crawler.dto.BojProblemPair;
 import com.randps.randomdefence.global.component.mock.FakeBojDelayedParserImpl;
+import com.randps.randomdefence.global.component.mock.FakeClock;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import java.time.LocalDateTime;
@@ -44,7 +44,9 @@ public class ScrapingUserControllerTest {
     testContainer = TestContainer.builder()
         .parser(fakeBojDelayedParserImpl)
         .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
-        .passwordEncoder(passwordEncoder).build();
+        .passwordEncoder(passwordEncoder)
+        .clock(new FakeClock())
+        .build();
     UserSave userSave = UserSave.builder().bojHandle("fin").password("q1w2e3r4!").notionId("성민")
         .manager(1L).emoji("🛠️").build();
     UserSave userSave2 = UserSave.builder().bojHandle("testUser").password("q1w2e3r4!2")
@@ -75,7 +77,7 @@ public class ScrapingUserControllerTest {
     // given
     List<Object> solvedProblems = List.of(
         BojProblemPair.builder().problemId(1000).title("A+B")
-            .dateTime((getToday().plusHours(2).plusSeconds(1)).toString())
+            .dateTime((testContainer.timeUtil.getToday().plusHours(2).plusSeconds(1)).toString())
             .language("C++").build()); // 유저가 해결한 문제
     fakeBojDelayedParserImpl.setSolvedProblems(solvedProblems); // 유저가 해결한 문제를 설정
     fakeBojDelayedParserImpl.delayOn(); // 크롤링 지연을 설정
@@ -126,7 +128,7 @@ public class ScrapingUserControllerTest {
     // given
     List<Object> solvedProblems = List.of(
         BojProblemPair.builder().problemId(1000).title("A+B")
-            .dateTime((getToday().plusHours(2).plusSeconds(1)).toString())
+            .dateTime((testContainer.timeUtil.getToday().plusHours(2).plusSeconds(1)).toString())
             .language("C++").build()); // 유저가 해결한 문제
     fakeBojDelayedParserImpl.setSolvedProblems(solvedProblems); // 유저가 해결한 문제를 설정
     fakeBojDelayedParserImpl.delayOn(); // 크롤링 지연을 설정

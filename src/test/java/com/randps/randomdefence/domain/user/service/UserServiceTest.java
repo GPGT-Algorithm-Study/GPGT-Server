@@ -9,6 +9,7 @@ import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.dto.UserSave;
+import com.randps.randomdefence.global.component.mock.FakeClock;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacDelayedParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
@@ -43,6 +44,7 @@ public class UserServiceTest {
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
+            .clock(new FakeClock())
                 .build();
         UserSave userSave = UserSave.builder()
             .bojHandle("fin1")
@@ -114,6 +116,7 @@ public class UserServiceTest {
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
+            .clock(new FakeClock())
                 .build();
         UserSave userSave = UserSave.builder()
             .bojHandle("testUser")
@@ -148,6 +151,7 @@ public class UserServiceTest {
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacDelayedParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
+            .clock(new FakeClock())
                 .build();
         UserSave userSave = UserSave.builder()
             .bojHandle("fin2")
@@ -202,6 +206,7 @@ public class UserServiceTest {
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
+            .clock(new FakeClock())
                 .build();
         UserSave userSave = UserSave.builder()
             .bojHandle("fin3")

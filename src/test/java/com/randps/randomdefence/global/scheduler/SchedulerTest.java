@@ -3,6 +3,7 @@ package com.randps.randomdefence.global.scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.user.dto.UserSave;
+import com.randps.randomdefence.global.component.mock.FakeClock;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
@@ -31,6 +32,7 @@ public class SchedulerTest {
         .parser(new FakeParserImpl())
         .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
         .passwordEncoder(passwordEncoder)
+        .clock(new FakeClock())
         .build();
     UserSave userSave = UserSave.builder()
         .bojHandle("fin")

@@ -387,6 +387,23 @@ public class UserRandomStreakService {
             User user = userRepository.findByBojHandle(bojHandle)
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
+            // 체크가 되지 않았다면 DB를 확인해서 확실히 확인한다.
+            List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllSomedayUserSolvedProblem(
+                user.getBojHandle(), yesterday.getCreatedDate());
+            boolean isSolved = false;
+            for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
+                if (solvedProblemDto.getProblemId().equals(yesterday.getProblemId())) {
+                    yesterday.infoCheckOk();
+                    userGrassRepository.save(yesterday);
+                    isSolved = true;
+                    break;
+                }
+            }
+            // 만약 문제를 해결했다면 지나간다.
+            if (isSolved) {
+                return true;
+            }
+
             // 스트릭 프리즈가 있다면 사용한다.
             if (randomStreakFreezeItemUseService.isExist(user)) {
                 randomStreakFreezeItemUseService.useItem(user, 3L);
@@ -423,6 +440,23 @@ public class UserRandomStreakService {
             if (!yesterday.getGrassInfo()) {
                 User user = userRepository.findByBojHandle(userCur.getBojHandle())
                         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+
+                // 체크가 되지 않았다면 DB를 확인해서 확실히 확인한다.
+                List<SolvedProblemDto> solvedProblemDtos = userSolvedProblemService.findAllSomedayUserSolvedProblem(
+                    user.getBojHandle(), yesterday.getCreatedDate());
+                boolean isSolved = false;
+                for (SolvedProblemDto solvedProblemDto : solvedProblemDtos) {
+                    if (solvedProblemDto.getProblemId().equals(yesterday.getProblemId())) {
+                        yesterday.infoCheckOk();
+                        userGrassRepository.save(yesterday);
+                        isSolved = true;
+                        break;
+                    }
+                }
+                // 만약 문제를 해결했다면 지나간다.
+                if (isSolved) {
+                    continue;
+                }
 
                 // 스트릭 프리즈가 있다면 사용한다.
                 if (randomStreakFreezeItemUseService.isExist(user)) {
