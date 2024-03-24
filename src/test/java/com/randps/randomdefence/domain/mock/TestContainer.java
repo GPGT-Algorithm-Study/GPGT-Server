@@ -37,6 +37,16 @@ import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.log.service.port.PointLogRepository;
 import com.randps.randomdefence.domain.log.service.port.WarningLogRepository;
+import com.randps.randomdefence.domain.notify.controller.NotifyAdminController;
+import com.randps.randomdefence.domain.notify.controller.NotifyAdminSearchController;
+import com.randps.randomdefence.domain.notify.controller.NotifyController;
+import com.randps.randomdefence.domain.notify.controller.NotifySearchController;
+import com.randps.randomdefence.domain.notify.mock.FakeNotifyRepository;
+import com.randps.randomdefence.domain.notify.service.NotifyAdminSearchService;
+import com.randps.randomdefence.domain.notify.service.NotifyAdminService;
+import com.randps.randomdefence.domain.notify.service.NotifySearchService;
+import com.randps.randomdefence.domain.notify.service.NotifyService;
+import com.randps.randomdefence.domain.notify.service.port.NotifyRepository;
 import com.randps.randomdefence.domain.problem.mock.FakeProblemRepository;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.problem.service.port.ProblemRepository;
@@ -81,6 +91,8 @@ import com.randps.randomdefence.global.aws.s3.service.port.AmazonS3ClientPort;
 import com.randps.randomdefence.global.component.parser.Parser;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
 import com.randps.randomdefence.global.component.util.CrawlingLock;
+import com.randps.randomdefence.global.component.util.TimeUtil;
+import com.randps.randomdefence.global.component.util.port.Clock;
 import com.randps.randomdefence.global.jwt.component.JWTProvider;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import com.randps.randomdefence.global.jwt.component.port.RefreshTokenRepository;
@@ -186,16 +198,36 @@ public class TestContainer {
 
   public final CrawlingLock crawlingLock;
 
-  /**
-   * Controller
-   **/
+  public final JWTProvider jwtProvider;
   public final ScrapingUserController scrapingUserController;
 
-  public final JWTProvider jwtProvider;
+  /**
+   * Notify
+   **/
+  public final NotifyRepository notifyRepository;
+
+  public final NotifyAdminService notifyAdminService;
+
+  public final NotifyService notifyService;
+
+  public final NotifyAdminSearchService notifyAdminSearchService;
+
+  public final NotifySearchService notifySearchService;
+
+  public final NotifyAdminController notifyAdminController;
+
+  public final NotifyAdminSearchController notifyAdminSearchController;
+
+  public final NotifySearchController notifySearchController;
+
+  public final NotifyController notifyController;
+
+  public final TimeUtil timeUtil;
 
   @Builder
   public TestContainer(Parser parser, SolvedacParser solvedacParser,
-      BCryptPasswordEncoder passwordEncoder) {
+      BCryptPasswordEncoder passwordEncoder, Clock clock) {
+    timeUtil = new TimeUtil(clock);
     crawlingLock = new CrawlingLock();
     userRepository = new FakeUserRepository();
     userRandomStreakRepository = new FakeUserRandomStreakRepository();
@@ -272,6 +304,7 @@ public class TestContainer {
         .build();
     scrapingUserLogService = ScrapingUserLogService.builder()
         .scrapingUserLogRepository(scrapingUserLogRepository)
+        .timeUtil(timeUtil)
         .build();
     userSolvedProblemService = UserSolvedProblemService.builder()
         .userRandomStreakRepository(userRandomStreakRepository)
@@ -285,6 +318,7 @@ public class TestContainer {
         .userAlreadySolvedService(userAlreadySolvedService)
         .eventPointService(eventPointService)
         .scrapingUserLogService(scrapingUserLogService)
+        .timeUtil(timeUtil)
         .build();
     randomStreakFreezeItemUseService = RandomStreakFreezeItemUseServiceImpl.builder()
         .userRepository(userRepository)
@@ -429,6 +463,44 @@ public class TestContainer {
         .build();
     jwtProvider = new JWTProvider(userRepository);
     jwtProvider.setSecretKey(jwtSecret);
+
+    /* notify */
+    notifyRepository = new FakeNotifyRepository();
+
+    notifyService = NotifyService.builder()
+        .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
+        .build();
+    notifyAdminService = NotifyAdminService.builder()
+        .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
+        .build();
+    notifyAdminSearchService = NotifyAdminSearchService.builder()
+        .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
+        .build();
+    notifySearchService = NotifySearchService.builder()
+        .notifyRepository(notifyRepository)
+        .userRepository(userRepository)
+        .build();
+
+    notifyAdminController = NotifyAdminController.builder()
+        .notifyAdminService(notifyAdminService)
+        .notifyService(notifyService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
+    notifyAdminSearchController = NotifyAdminSearchController.builder()
+        .notifyAdminSearchService(notifyAdminSearchService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
+    notifySearchController = NotifySearchController.builder()
+        .notifySearchService(notifySearchService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
+    notifyController = NotifyController.builder()
+        .notifyService(notifyService)
+        .jwtRefreshUtil(jwtUtil)
+        .build();
   }
 
 }

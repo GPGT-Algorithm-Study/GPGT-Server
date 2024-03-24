@@ -11,6 +11,7 @@ import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.dto.SolvedProblemDto;
 import com.randps.randomdefence.domain.user.dto.UserSave;
 import com.randps.randomdefence.domain.user.dto.authDto.LoginRequest;
+import com.randps.randomdefence.global.component.mock.FakeClock;
 import com.randps.randomdefence.global.component.mock.FakeParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
@@ -41,6 +42,7 @@ public class UserDeleteServiceTest {
                 .parser(new FakeParserImpl())
                 .solvedacParser(new FakeSolvedacParserImpl(userScrapingInfoDto))
                 .passwordEncoder(passwordEncoder)
+            .clock(new FakeClock())
                 .build();
         UserSave userSave = UserSave.builder()
                 .bojHandle("fin")

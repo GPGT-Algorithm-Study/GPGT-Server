@@ -11,6 +11,7 @@ import com.randps.randomdefence.domain.complaint.enums.ProcessType;
 import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.global.component.mock.FakeBojParserImpl;
+import com.randps.randomdefence.global.component.mock.FakeClock;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class ComplaintProcessorControllerTest {
         .passwordEncoder(passwordEncoder)
         .parser(new FakeBojParserImpl(List.of()))
         .solvedacParser(new FakeSolvedacParserImpl(null))
+        .clock(new FakeClock())
         .build();
 
     // 테스트 관리자 유저 생성

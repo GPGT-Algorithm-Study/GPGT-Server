@@ -65,7 +65,6 @@ public class Scheduler {
     @Transactional
     @Scheduled(cron = "0 25 6 * * *")
     public void everyDayTermJob() throws JsonProcessingException {
-
         userGrassService.makeTodayGrassAll(); // 모든 유저의 오늘 잔디를 생성한다.
         userRandomStreakService.makeUpUserRandomProblemAll(); // 모든 유저의 랜덤 문제를 1문제를 뽑아 저장한다.
         userRandomStreakService.streakCheckAll(); // 모든 유저에 대해 유저의 전일 문제가 풀리지 않았다면 랜덤 스트릭을 끊는다.
