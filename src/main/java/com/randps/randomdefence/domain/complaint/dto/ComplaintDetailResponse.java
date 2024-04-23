@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.complaint.dto;
 import com.randps.randomdefence.domain.complaint.domain.Complaint;
 import com.randps.randomdefence.domain.complaint.enums.ComplaintType;
 import com.randps.randomdefence.domain.complaint.enums.ProcessType;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
@@ -26,6 +27,8 @@ public class ComplaintDetailResponse {
 
   private String reply;
 
+  private LocalDateTime createdDate;
+
   public static ComplaintDetailResponse from(Complaint complaint) {
     return ComplaintDetailResponse.builder()
         .id(complaint.getId())
@@ -35,6 +38,7 @@ public class ComplaintDetailResponse {
         .processType(complaint.getProcessType())
         .processor(complaint.getProcessor())
         .reply(complaint.getReply())
+        .createdDate(complaint.getCreatedDate())
         .build();
   }
 
