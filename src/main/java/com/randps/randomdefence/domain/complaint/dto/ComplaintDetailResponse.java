@@ -24,6 +24,8 @@ public class ComplaintDetailResponse {
 
   private String processor;
 
+  private String reply;
+
   public static ComplaintDetailResponse from(Complaint complaint) {
     return ComplaintDetailResponse.builder()
         .id(complaint.getId())
@@ -32,6 +34,7 @@ public class ComplaintDetailResponse {
         .complaintType(complaint.getComplaintType())
         .processType(complaint.getProcessType())
         .processor(complaint.getProcessor())
+        .reply(complaint.getReply())
         .build();
   }
 
