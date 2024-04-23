@@ -76,8 +76,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Long id = principalDetails.getUser().getId();
         String bojHandle = principalDetails.getUser().getBojHandle();
         String notionId = principalDetails.getUser().getNotionId();
+        String roles = principalDetails.getUser().getRoles();
 
-        String jwtToken = jwtProvider.generateJwtToken(id, bojHandle, notionId);
+        String jwtToken = jwtProvider.generateJwtToken(id, bojHandle, notionId, roles);
 
         response.addHeader("Authorization", "Bearer " + jwtToken);
 

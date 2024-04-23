@@ -1,7 +1,6 @@
 package com.randps.randomdefence.domain.notify.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.randps.randomdefence.domain.mock.TestContainer;
 import com.randps.randomdefence.domain.notify.domain.Notify;
@@ -12,7 +11,6 @@ import com.randps.randomdefence.global.component.mock.FakeBojParserImpl;
 import com.randps.randomdefence.global.component.mock.FakeClock;
 import com.randps.randomdefence.global.component.mock.FakeSolvedacParserImpl;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
-import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class NotifyAdminControllerTest {
 
   private TestContainer testContainer;
+
   @BeforeEach
   void setUp() {
     /* 크롤링 데이터 세팅 */
@@ -56,7 +55,8 @@ public class NotifyAdminControllerTest {
   @DisplayName("관리자는 특정 유저의 모든 알림을 삭제할 수 있다.")
   void deleteAllByReceiver() {
     // given
-    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh");
+    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh",
+        "ROLE_USER, ROLE_ADMIN");
     testContainer.notifyRepository.save(Notify.builder()
         .receiver("normal")
         .message("테스트 알림")
@@ -66,7 +66,7 @@ public class NotifyAdminControllerTest {
     // when
     ResponseEntity<Map<String, String>> response = null;
     try {
-      response = testContainer.notifyAdminController.deleteAllByReceiver(adminUserToken, "normal");
+      response = testContainer.notifyAdminController.deleteAllByReceiver("normal");
     } catch (Exception e) {
       e.printStackTrace();
       Assertions.fail();
@@ -82,7 +82,8 @@ public class NotifyAdminControllerTest {
   @DisplayName("관리자는 특정 알림을 삭제할 수 있다.")
   void deleteById() {
     // given
-    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh");
+    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh",
+        "ROLE_USER, ROLE_ADMIN");
     testContainer.notifyRepository.save(Notify.builder()
         .receiver("normal")
         .message("테스트 알림")
@@ -95,7 +96,7 @@ public class NotifyAdminControllerTest {
     // when
     ResponseEntity<Map<String, String>> response = null;
     try {
-      response = testContainer.notifyAdminController.deleteById(adminUserToken, request);
+      response = testContainer.notifyAdminController.deleteById(request);
     } catch (Exception e) {
       e.printStackTrace();
       Assertions.fail();
@@ -107,11 +108,14 @@ public class NotifyAdminControllerTest {
     assertThat(testContainer.notifyRepository.findByReceiver("normal").size()).isEqualTo(0);
   }
 
+  // TODO: replace to WebTestClient test
+  /*
   @Test
   @DisplayName("일반 유저가 알림을 삭제하면 예외가 발생한다.")
-  void invalidDelete() {
+  void invalidDelete() throws CertificateExpiredException {
     // given
-    String normalUserToken = testContainer.jwtUtil.createToken("normal", "refresh");
+    String normalUserToken = testContainer.jwtUtil.createToken("normal", "refresh", "ROLE_USER");
+    System.out.println(testContainer.jwtUtil.getRoles(normalUserToken));
     testContainer.notifyRepository.save(Notify.builder()
         .receiver("normal")
         .message("테스트 알림")
@@ -129,5 +133,5 @@ public class NotifyAdminControllerTest {
         () -> testContainer.notifyAdminController.deleteAllByReceiver(normalUserToken, "normal"))
         .isInstanceOf(AccessDeniedException.class);
   }
-
+   */
 }

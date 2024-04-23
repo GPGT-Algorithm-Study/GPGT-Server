@@ -69,5 +69,8 @@ public class NotifySearchService {
     notifyRepository.save(existNotify);
   }
 
-
+  // TODO: 안 읽은 알림 몇개인지만 알려주는 API
+  // 백준 아이디 리스트, 발행인, 게시글번호/ 로 알림 발행하는 API
+  // 전원에게 알림 발행하는 API
+  // 페이징 조회
 }

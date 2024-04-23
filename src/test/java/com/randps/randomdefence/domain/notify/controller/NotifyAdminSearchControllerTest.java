@@ -55,7 +55,8 @@ public class NotifyAdminSearchControllerTest {
   @DisplayName("관리자는 존재하는 모든 알림을 조회할 수 있다.")
   void searchAll() {
     // given
-    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh");
+    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh",
+        "ROLE_USER, ROLE_ADMIN");
     testContainer.notifyRepository.save(Notify.builder()
         .receiver("normal")
         .message("테스트 알림1")
@@ -88,7 +89,8 @@ public class NotifyAdminSearchControllerTest {
   @DisplayName("관리자는 특정 사용자에게 온 모든 알림을 조회할 수 있다.")
   void searchByReceiver() {
     // given
-    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh");
+    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh",
+        "ROLE_USER, ROLE_ADMIN");
     testContainer.notifyRepository.save(Notify.builder()
         .receiver("normal")
         .message("테스트 알림1")
@@ -127,8 +129,9 @@ public class NotifyAdminSearchControllerTest {
   @DisplayName("관리자는 아직 사람들이 읽지 않은 모든 알림을 조회할 수 있다.")
   void searchNotReadNotifiesAll() {
     // given
-    String normalUserToken = testContainer.jwtUtil.createToken("normal", "refresh");
-    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh");
+    String normalUserToken = testContainer.jwtUtil.createToken("normal", "refresh", "ROLE_USER");
+    String adminUserToken = testContainer.jwtUtil.createToken("admin", "refresh",
+        "ROLE_USER, ROLE_ADMIN");
     testContainer.notifyRepository.save(Notify.builder()
         .receiver("normal")
         .message("테스트 알림1")

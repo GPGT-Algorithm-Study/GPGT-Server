@@ -18,81 +18,80 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @RequiredArgsConstructor
 public class JWTProvider {
 
-    private final UserRepository userRepository;
-    static Long EXPIRE_TIME = 60L * 60L * 1000L; // 만료 시간 1시간
+  private final UserRepository userRepository;
+  static Long EXPIRE_TIME = 60L * 60L * 1000L; // 만료 시간 1시간
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+  @Value("${jwt.secret}")
+  private String secretKey;
 
-    private Algorithm getSign(){
-        return Algorithm.HMAC512(secretKey);
-    }
-    //객체 초기화, secretKey를 Base64로 인코딩한다.
-    @PostConstruct
-    protected void init() {
-        this.secretKey = Base64.getEncoder().encodeToString(this.secretKey.getBytes());
-    }
+  private Algorithm getSign() {
+    return Algorithm.HMAC512(secretKey);
+  }
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-    }
+  //객체 초기화, secretKey를 Base64로 인코딩한다.
+  @PostConstruct
+  protected void init() {
+    this.secretKey = Base64.getEncoder().encodeToString(this.secretKey.getBytes());
+  }
 
-    // Jwt 토큰 생성
-    public String generateJwtToken(Long id, String bojHandle, String notionId){
+  public void setSecretKey(String secretKey) {
+    this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+  }
 
-        Date tokenExpiration = new Date(System.currentTimeMillis() + (EXPIRE_TIME));
+  // Jwt 토큰 생성
+  public String generateJwtToken(Long id, String bojHandle, String notionId, String roles) {
 
-        return JWT.create()
-                .withSubject(bojHandle) //토큰 이름
-                .withExpiresAt(tokenExpiration)
-                .withClaim("id", id)
-                .withClaim("bojHandle", bojHandle)
-                .withClaim("notionId", notionId)
-                .sign(this.getSign());
-    }
+    Date tokenExpiration = new Date(System.currentTimeMillis() + (EXPIRE_TIME));
 
-    /**
-     * 토큰 검증
-     *  - 토큰에서 가져온 email 정보와 DB의 유저 정보 일치하는지 확인
-     *  - 토큰 만료 시간이 지났는지 확인
-     * @param token
-     * @return 유저 객체 반환
-     */
-    public User validToken(String token){
-        try {
+    return JWT.create().withSubject(bojHandle) //토큰 이름
+        .withExpiresAt(tokenExpiration).withClaim("id", id).withClaim("bojHandle", bojHandle)
+        .withClaim("notionId", notionId).withClaim("roles", roles).sign(this.getSign());
+  }
 
-            String bojHandle = JWT.require(this.getSign())
-                    .build().verify(token).getClaim("bojHandle").asString();
+  /**
+   * 토큰 검증 - 토큰에서 가져온 email 정보와 DB의 유저 정보 일치하는지 확인 - 토큰 만료 시간이 지났는지 확인
+   *
+   * @param token
+   * @return 유저 객체 반환
+   */
+  public User validToken(String token) {
+    try {
 
-            // 비어있는 값이다.
-            if (bojHandle == null){
-                return null;
-            }
+      String bojHandle = JWT.require(this.getSign()).build().verify(token).getClaim("bojHandle")
+          .asString();
 
-            // EXPIRE_TIME이 지나지 않았는지 확인
-            Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build().verify(token).getExpiresAt();
-            if (!this.validExpiredTime(expiresAt)) {
-                // 만료시간이 지났다.
-                return null;
-            }
+      // 비어있는 값이다.
+      if (bojHandle == null) {
+        return null;
+      }
 
-            return userRepository.findByBojHandle(bojHandle).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저의 토큰입니다."));
+      // EXPIRE_TIME이 지나지 않았는지 확인
+      Date expiresAt = JWT.require(this.getSign()).acceptExpiresAt(EXPIRE_TIME).build()
+          .verify(token).getExpiresAt();
+      if (!this.validExpiredTime(expiresAt)) {
+        // 만료시간이 지났다.
+        return null;
+      }
 
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
+      return userRepository.findByBojHandle(bojHandle)
+          .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저의 토큰입니다."));
 
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
     }
 
-    // 만료 시간 검증
-    private boolean validExpiredTime(Date expiresAt){
-        // LocalDateTime으로 만료시간 변경
-        LocalDateTime localTimeExpired = expiresAt.toInstant().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+  }
 
-        // 현재 시간이 만료시간의 이전이다
-        return LocalDateTime.now().isBefore(localTimeExpired);
+  // 만료 시간 검증
+  private boolean validExpiredTime(Date expiresAt) {
+    // LocalDateTime으로 만료시간 변경
+    LocalDateTime localTimeExpired = expiresAt.toInstant().atZone(ZoneId.of("Asia/Seoul"))
+        .toLocalDateTime();
 
-    }
+    // 현재 시간이 만료시간의 이전이다
+    return LocalDateTime.now().isBefore(localTimeExpired);
+
+  }
 
 }

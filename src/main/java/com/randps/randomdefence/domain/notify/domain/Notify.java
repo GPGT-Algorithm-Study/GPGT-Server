@@ -27,22 +27,29 @@ public class Notify extends BaseTimeEntity {
   @Column(length = 2000)
   private String message;
 
+  private Long linkedBoardId;
+
   private NotifyType type;
 
   private Boolean isRead;
 
 
   @Builder
-  public Notify(Long id, String receiver, String message, NotifyType type) {
+  public Notify(Long id, String receiver, Long linkedBoardId, String message, NotifyType type) {
     this.id = id;
     this.receiver = receiver;
     this.message = message;
+    this.linkedBoardId = linkedBoardId;
     this.type = type;
     this.isRead = false;
   }
 
   public void updateMessage(String message) {
     this.message = message;
+  }
+
+  public void linking(Long linkedBoardId) {
+    this.linkedBoardId = linkedBoardId;
   }
 
   public void updateType(NotifyType type) {

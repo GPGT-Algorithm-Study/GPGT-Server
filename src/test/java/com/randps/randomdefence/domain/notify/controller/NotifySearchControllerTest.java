@@ -54,7 +54,7 @@ public class NotifySearchControllerTest {
   @DisplayName("사용자는 자신에게 온 모든 알림을 조회할 수 있다.")
   void searchByReceiver() {
     // given
-    String normalUserToken = testContainer.jwtUtil.createToken("normal", "refresh");
+    String normalUserToken = testContainer.jwtUtil.createToken("normal", "refresh", "ROLE_USER");
     testContainer.notifyRepository.save(Notify.builder()
         .receiver("normal")
         .message("테스트 알림1")

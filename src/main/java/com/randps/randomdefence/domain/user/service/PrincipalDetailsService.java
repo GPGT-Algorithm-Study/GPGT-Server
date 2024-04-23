@@ -23,4 +23,10 @@ public class PrincipalDetailsService implements UserDetailsService {
 
         return new PrincipalDetails(userEntity);
     }
+
+    public String loadRolesByUsername(String bojHandle) {
+        User userEntity = userRepository.findByBojHandle(bojHandle)
+            .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저입니다."));
+        return userEntity.getRoles();
+    }
 }

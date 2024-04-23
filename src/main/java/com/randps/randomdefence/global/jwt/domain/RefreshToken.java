@@ -2,6 +2,7 @@ package com.randps.randomdefence.global.jwt.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
 import com.sun.istack.NotNull;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,8 +21,11 @@ public class RefreshToken extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotNull
+    @Column(length = 50000)
     private String refreshToken;
+    
     @NotNull
     private String bojHandle;
 

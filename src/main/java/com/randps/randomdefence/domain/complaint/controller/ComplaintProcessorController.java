@@ -1,11 +1,14 @@
 package com.randps.randomdefence.domain.complaint.controller;
 
+import static com.randps.randomdefence.global.aop.Auth.Role.ADMIN;
+
 import com.randps.randomdefence.domain.complaint.dto.ComplaintDetailResponse;
 import com.randps.randomdefence.domain.complaint.dto.ComplaintProcessorUpdateRequest;
 import com.randps.randomdefence.domain.complaint.enums.ComplaintType;
 import com.randps.randomdefence.domain.complaint.enums.ProcessType;
 import com.randps.randomdefence.domain.complaint.service.ComplaintProcessorService;
 import com.randps.randomdefence.domain.complaint.service.ComplaintSearchService;
+import com.randps.randomdefence.global.aop.Auth;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import java.security.cert.CertificateExpiredException;
 import java.util.HashMap;
@@ -75,6 +78,7 @@ public class ComplaintProcessorController {
   /*
    * 관리자가 민원 유형으로 민원을 조회한다.
    */
+  @Auth(role = ADMIN)
   @GetMapping("/complaint-type")
   public List<ComplaintDetailResponse> searchType(@Param("complaintType") ComplaintType complaintType, @RequestHeader("Refresh_Token") String refresh)
       throws CertificateExpiredException {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.randps.randomdefence.global.jwt.component.JWTRefreshUtil;
 import com.randps.randomdefence.global.jwt.dto.GlobalJwtResDto;
 import java.io.IOException;
+import java.security.cert.CertificateExpiredException;
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,9 +48,15 @@ public class JwtRefreshAuthFilter extends OncePerRequestFilter {
                 if (isRefreshToken) {
                     // 리프레시 토큰으로 아이디 정보 가져오기
                     String loginId = jwtUtil.getBojHandleFromToken(refreshToken);
-                    // 새로운 어세스 토큰 발급
-                    String newAccessToken = jwtUtil.createToken(loginId, "Access");
-                    // 헤더에 어세스 토큰 추가
+                    // 새로운 엑세스 토큰 발급
+                    String newAccessToken = null;
+                    try {
+                        newAccessToken = jwtUtil.createToken(loginId, "Access",
+                            jwtUtil.getRoles(refreshToken));
+                    } catch (CertificateExpiredException e) {
+                        throw new AuthenticationException(e.getMessage());
+                    }
+                    // 헤더에 엑세스 토큰 추가
                     jwtUtil.setHeaderAccessToken(response, newAccessToken);
                     // Security context에 인증 정보 넣기
                     setAuthentication(jwtUtil.getBojHandleFromToken(newAccessToken));

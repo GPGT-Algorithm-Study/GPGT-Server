@@ -154,7 +154,8 @@ public class UserAuthService {
         // 아이디 정보로 Token생성
 
         return RefreshDto.builder()
-                .accessToken(jwtUtil.createToken(getBojHandleByJWT(token).getClaim(), "Access")).build();
+            .accessToken(jwtUtil.createToken(getBojHandleByJWT(token).getClaim(), "Access",
+                jwtUtil.getRoles(token))).build();
     }
 
     /*
