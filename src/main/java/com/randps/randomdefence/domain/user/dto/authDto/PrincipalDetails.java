@@ -1,13 +1,12 @@
 package com.randps.randomdefence.domain.user.dto.authDto;
 
 import com.randps.randomdefence.domain.user.domain.User;
+import java.util.ArrayList;
+import java.util.Collection;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 @Data
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getNotionId();
+        return user.getBojHandle();
     }
 
     @Override
