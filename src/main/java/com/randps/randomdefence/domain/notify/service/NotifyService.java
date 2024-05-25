@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.notify.dto.NotifyPublishRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyPublishToUsersRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyReadRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyUpdateRequest;
+import com.randps.randomdefence.domain.notify.enums.NotifyType;
 import com.randps.randomdefence.domain.notify.service.port.NotifyRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
@@ -43,6 +44,23 @@ public class NotifyService {
         .receiver(request.getReceiver())
         .message(request.getMessage())
         .type(request.getType())
+        .build();
+    return notifyRepository.save(notify);
+  }
+
+  /*
+   * 알림을 발행한다.
+   */
+  @Transactional
+  public Notify systemPublish(String receiver, String message, NotifyType type) {
+    if (userRepository.findByBojHandle(receiver).isEmpty()) {
+      return null;
+    }
+
+    Notify notify = Notify.builder()
+        .receiver(receiver)
+        .message(message)
+        .type(type)
         .build();
     return notifyRepository.save(notify);
   }
