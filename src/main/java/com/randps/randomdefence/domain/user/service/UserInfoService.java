@@ -64,6 +64,12 @@ public class UserInfoService {
   public void updateUserInfo(String bojHandle) {
     User user = userRepository.findByBojHandle(bojHandle)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    
+    // 오늘 문제 푼 것을 축하하는 알림을 발행한다.
+    if (user.getIsTodaySolved() == false) {
+      notifyService.systemPublish(user.getBojHandle(), "오늘도 문제를 해결하셨네요☺️ 정말 정말 잘 했어요!",
+          NotifyType.SYSTEM);
+    }
 
     user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
     user.setTodaySolvedProblemCount(
@@ -80,6 +86,12 @@ public class UserInfoService {
 
     for (int i = 0; i < users.size(); i++) {
       User user = users.get(i);
+
+      // 오늘 문제 푼 것을 축하하는 알림을 발행한다.
+      if (user.getIsTodaySolved() == false) {
+        notifyService.systemPublish(user.getBojHandle(), "오늘도 문제를 해결하셨네요☺️ 정말 정말 잘 했어요!",
+            NotifyType.SYSTEM);
+      }
 
       user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
       user.setTodaySolvedProblemCount(
