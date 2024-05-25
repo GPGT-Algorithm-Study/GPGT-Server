@@ -58,7 +58,7 @@ public class TeamService {
     Team secondTeam = teamRepository.findByTeamNumber(1)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 팀입니다."));
     List<User> winingTeamUsers, loosingTeamUsers;
-    String teamName;
+    String teamName, lossingTeamName;
     Integer winingPoint;
 
     // 승리한 팀의 유저들을 뽑는다.
@@ -66,6 +66,7 @@ public class TeamService {
       winingTeamUsers = userRepository.findAllByTeam(0);
       loosingTeamUsers = userRepository.findAllByTeam(1);
       teamName = firstTeam.getTeamName();
+      lossingTeamName = secondTeam.getTeamName();
 
       // 승리한 팀의 포인트를 유저들이 나눠가진다.
       winingPoint = (5 + (firstTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
@@ -73,6 +74,7 @@ public class TeamService {
       winingTeamUsers = userRepository.findAllByTeam(1);
       loosingTeamUsers = userRepository.findAllByTeam(0);
       teamName = secondTeam.getTeamName();
+      lossingTeamName = firstTeam.getTeamName();
 
       // 승리한 팀의 포인트를 유저들이 나눠가진다.
       winingPoint = (5 + (secondTeam.getTeamPoint() / winingTeamUsers.size())) / 3;
@@ -99,7 +101,7 @@ public class TeamService {
     // 패배 알림을 발행한다.
     for (User loosingUser : loosingTeamUsers) {
       notifyService.systemPublish(loosingUser.getBojHandle(),
-          "😢 이번 주 팀 경쟁에서 [" + teamName + "] 팀으로 패배했습니다. 😢",
+          "😢 이번 주 팀 경쟁에서 [" + lossingTeamName + "] 팀으로 패배했습니다. 😢",
           NotifyType.SYSTEM);
     }
   }
