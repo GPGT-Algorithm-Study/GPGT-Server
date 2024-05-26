@@ -61,7 +61,7 @@ public class CommentService {
         notifyService.systemPublish(parentCommenter.getBojHandle(),
             "[" + board.getTitle() + "] 에 작성한 댓글에 [" + commenter.getNotionId()
                 + "] 님이 댓글을 작성했습니다." + " - \"" + commentPublishRequest.getContent() + "\"",
-            NotifyType.SYSTEM, null);
+            NotifyType.SYSTEM, commentPublishRequest.getBoardId());
         return comment;
       }
     }
@@ -70,7 +70,7 @@ public class CommentService {
       notifyService.systemPublish(board.getBojHandle(),
           "작성한 글 [" + board.getTitle() + "] 에 [" + commenter.getNotionId()
               + "] 님이 댓글을 작성했습니다." + " - \"" + commentPublishRequest.getContent() + "\"",
-          NotifyType.SYSTEM, null);
+          NotifyType.SYSTEM, commentPublishRequest.getBoardId());
     }
 
     return comment;
