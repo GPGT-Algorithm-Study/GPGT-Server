@@ -57,12 +57,12 @@ public class CommentService {
       User parentCommenter = userRepository.findByBojHandle(parentComment.getBojHandle())
           .orElseThrow(
               () -> new NotFoundException("존재하지 않는 유저입니다."));
-      if (!parentCommenter.getBojHandle().equals(commenter.getBojHandle())) {
+      if (!parentCommenter.getBojHandle().equals(commenter.getBojHandle())
+          && !parentComment.getBojHandle().equals(board.getBojHandle())) {
         notifyService.systemPublish(parentCommenter.getBojHandle(),
             "[" + board.getTitle() + "] 에 작성한 댓글에 [" + commenter.getNotionId()
                 + "] 님이 댓글을 작성했습니다." + " - \"" + commentPublishRequest.getContent() + "\"",
             NotifyType.SYSTEM, commentPublishRequest.getBoardId());
-        return comment;
       }
     }
     if (!commenter.getBojHandle().equals(board.getBojHandle())) {
