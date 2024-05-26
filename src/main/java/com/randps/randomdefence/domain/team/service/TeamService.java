@@ -94,7 +94,7 @@ public class TeamService {
       // 승리 축하 알림을 발행한다.
       notifyService.systemPublish(user.getBojHandle(),
           "🎉 이번 주 팀 경쟁에서 [" + teamName + "] 팀으로 승리했습니다! 🎉",
-          NotifyType.SYSTEM);
+          NotifyType.SYSTEM, null);
 
     }
 
@@ -102,7 +102,7 @@ public class TeamService {
     for (User loosingUser : loosingTeamUsers) {
       notifyService.systemPublish(loosingUser.getBojHandle(),
           "😢 이번 주 팀 경쟁에서 [" + lossingTeamName + "] 팀으로 패배했습니다. 😢",
-          NotifyType.SYSTEM);
+          NotifyType.SYSTEM, null);
     }
   }
 }

@@ -17,14 +17,18 @@ public class NotifyResponse {
 
   private NotifyType type;
 
+  private Long relatedBoardId;
+
   private Boolean isRead;
 
-  public static NotifyResponse of(Long id, String receiver, String message, NotifyType type, Boolean isRead) {
+  public static NotifyResponse of(Long id, String receiver, String message, NotifyType type,
+      Long relatedBoardId, Boolean isRead) {
     return NotifyResponse.builder()
         .id(id)
         .receiver(receiver)
         .message(message)
         .type(type)
+        .relatedBoardId(relatedBoardId)
         .isRead(isRead)
         .build();
   }
@@ -35,6 +39,7 @@ public class NotifyResponse {
         .receiver(notify.getReceiver())
         .message(notify.getMessage())
         .type(notify.getType())
+        .relatedBoardId(notify.getRelatedBoardId())
         .isRead(notify.getIsRead())
         .build();
   }

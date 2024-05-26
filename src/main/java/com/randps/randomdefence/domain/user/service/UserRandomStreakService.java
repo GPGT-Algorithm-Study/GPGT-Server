@@ -298,7 +298,8 @@ public class UserRandomStreakService {
 
         // 오늘의 랜덤 문제 해결 알림을 발행한다.
         notifyService.systemPublish(bojHandle,
-            "🎉 오늘의 랜덤 문제를 해결했습니다. (문제 : " + randomProblem.getProblemId() + ")", NotifyType.SYSTEM);
+            "🎉 오늘의 랜덤 문제를 해결했습니다. (문제 : " + randomProblem.getProblemId() + ")", NotifyType.SYSTEM,
+            null);
 
         // 유저의 정보 갱신
         user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
@@ -362,8 +363,8 @@ public class UserRandomStreakService {
 
           // 오늘의 랜덤 문제 해결 알림을 발행한다.
           notifyService.systemPublish(userCur.getBojHandle(),
-              "🎉 오늘의 랜덤 문제를 해결했습니다. (문제 : " + randomProblem.getProblemId() + ")",
-              NotifyType.SYSTEM);
+              "🎉 오늘의 랜덤 문제를 해결했습니다. (문제 : " + randomProblem.getProblemId() + ")", NotifyType.SYSTEM,
+              null);
 
           // 유저의 정보 갱신
           userCur.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
@@ -433,7 +434,7 @@ public class UserRandomStreakService {
         randomStreakFreezeItemUseService.useItem(user, 3L);
         // 아이템 사용 알림을 생성한다.
         notifyService.systemPublish(user.getBojHandle(), "자동으로 랜덤 스트릭 프리즈 아이템을 사용했습니다.",
-            NotifyType.SYSTEM);
+            NotifyType.SYSTEM, null);
 
         // 스트릭 프리즈를 사용했으므로 넘어간다.
         return true;
@@ -442,7 +443,8 @@ public class UserRandomStreakService {
       // 랜덤 스트릭이 끊어진 경우, 알림을 발행한다.
       if (user.getCurrentRandomStreak() > 1) {
         notifyService.systemPublish(user.getBojHandle(),
-            "🥲 랜덤 스트릭이 끊어졌습니다. (스트릭 : " + user.getCurrentRandomStreak() + ")", NotifyType.SYSTEM);
+            "🥲 랜덤 스트릭이 끊어졌습니다. (스트릭 : " + user.getCurrentRandomStreak() + ")", NotifyType.SYSTEM,
+            null);
       }
 
       // 유저 정보 갱신
@@ -499,7 +501,7 @@ public class UserRandomStreakService {
 
           // 아이템 사용 알림을 생성한다.
           notifyService.systemPublish(user.getBojHandle(), "자동으로 랜덤 스트릭 프리즈 아이템을 사용했습니다.",
-              NotifyType.SYSTEM);
+              NotifyType.SYSTEM, null);
 
           // 스트릭 프리즈를 사용했으므로 넘어간다.
           continue;
@@ -508,7 +510,8 @@ public class UserRandomStreakService {
         // 랜덤 스트릭이 끊어진 경우, 알림을 발행한다.
         if (user.getCurrentRandomStreak() > 1) {
           notifyService.systemPublish(user.getBojHandle(),
-              "🥲 랜덤 스트릭이 끊어졌습니다. (스트릭 : " + user.getCurrentRandomStreak() + ")", NotifyType.SYSTEM);
+              "🥲 랜덤 스트릭이 끊어졌습니다. (스트릭 : " + user.getCurrentRandomStreak() + ")", NotifyType.SYSTEM,
+              null);
         }
 
         // 유저 정보 갱신

@@ -27,16 +27,19 @@ public class Notify extends BaseTimeEntity {
   @Column(length = 2000)
   private String message;
 
+  private Long relatedBoardId;
+
   private NotifyType type;
 
   private Boolean isRead;
 
 
   @Builder
-  public Notify(Long id, String receiver, String message, NotifyType type) {
+  public Notify(Long id, String receiver, String message, Long relatedBoardId, NotifyType type) {
     this.id = id;
     this.receiver = receiver;
     this.message = message;
+    this.relatedBoardId = relatedBoardId;
     this.type = type;
     this.isRead = false;
   }

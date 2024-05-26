@@ -67,8 +67,8 @@ public class UserInfoService {
     
     // 오늘 문제 푼 것을 축하하는 알림을 발행한다.
     if (user.getIsTodaySolved() == false) {
-      notifyService.systemPublish(user.getBojHandle(), "오늘도 문제를 해결하셨네요☺️ 정말 정말 잘 했어요!",
-          NotifyType.SYSTEM);
+      notifyService.systemPublish(user.getBojHandle(), "😊🥳 오늘도 문제를 해결하셨네요! 정말 정말 잘 했어요!",
+          NotifyType.SYSTEM, null);
     }
 
     user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
@@ -89,8 +89,8 @@ public class UserInfoService {
 
       // 오늘 문제 푼 것을 축하하는 알림을 발행한다.
       if (user.getIsTodaySolved() == false) {
-        notifyService.systemPublish(user.getBojHandle(), "오늘도 문제를 해결하셨네요☺️ 정말 정말 잘 했어요!",
-            NotifyType.SYSTEM);
+        notifyService.systemPublish(user.getBojHandle(), "😊🥳 오늘도 문제를 해결하셨네요! 정말 정말 잘 했어요!",
+            NotifyType.SYSTEM, null);
       }
 
       user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
@@ -160,7 +160,7 @@ public class UserInfoService {
         }
         // 스트릭 끊김을 알리는 알림을 발행한다.
         notifyService.systemPublish(user.getBojHandle(), "문제를 풀지 않아, 경고가 부여됐습니다.",
-            NotifyType.SYSTEM);
+            NotifyType.SYSTEM, null);
 
         userRepository.save(user);
       } else {

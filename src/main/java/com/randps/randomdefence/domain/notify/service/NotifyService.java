@@ -52,7 +52,8 @@ public class NotifyService {
    * 알림을 발행한다.
    */
   @Transactional
-  public Notify systemPublish(String receiver, String message, NotifyType type) {
+  public Notify systemPublish(String receiver, String message, NotifyType type,
+      Long relatedBoardId) {
     if (userRepository.findByBojHandle(receiver).isEmpty()) {
       return null;
     }
@@ -61,6 +62,7 @@ public class NotifyService {
         .receiver(receiver)
         .message(message)
         .type(type)
+        .relatedBoardId(relatedBoardId)
         .build();
     return notifyRepository.save(notify);
   }
