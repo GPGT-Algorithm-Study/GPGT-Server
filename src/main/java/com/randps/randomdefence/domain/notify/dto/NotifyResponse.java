@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.notify.dto;
 
 import com.randps.randomdefence.domain.notify.domain.Notify;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 
@@ -21,8 +22,10 @@ public class NotifyResponse {
 
   private Boolean isRead;
 
+  private LocalDateTime createdDate;
+
   public static NotifyResponse of(Long id, String receiver, String message, NotifyType type,
-      Long relatedBoardId, Boolean isRead) {
+      Long relatedBoardId, Boolean isRead, LocalDateTime createdDate) {
     return NotifyResponse.builder()
         .id(id)
         .receiver(receiver)
@@ -30,6 +33,7 @@ public class NotifyResponse {
         .type(type)
         .relatedBoardId(relatedBoardId)
         .isRead(isRead)
+        .createdDate(createdDate)
         .build();
   }
 
@@ -41,6 +45,7 @@ public class NotifyResponse {
         .type(notify.getType())
         .relatedBoardId(notify.getRelatedBoardId())
         .isRead(notify.getIsRead())
+        .createdDate(notify.getCreatedDate())
         .build();
   }
 
