@@ -5,6 +5,8 @@ import com.randps.randomdefence.domain.complaint.dto.ComplaintDeleteRequest;
 import com.randps.randomdefence.domain.complaint.dto.ComplaintSaveRequest;
 import com.randps.randomdefence.domain.complaint.dto.ComplaintUpdateRequest;
 import com.randps.randomdefence.domain.complaint.service.port.ComplaintRepository;
+import com.randps.randomdefence.domain.notify.enums.NotifyType;
+import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import javax.transaction.Transactional;
@@ -22,6 +24,8 @@ public class ComplaintRequesterService {
 
   private final UserRepository userRepository;
 
+  private final NotifyService notifyService;
+
   /*
    * 민원인의 민원을 생성한다.
    * 여기에 파라미터로 들어오는 bojHandle은 JWT에서 가져온 본인의 식별자로, 이를 통해 요청자를 식별하고 민원을 생성할 수 있도록 한다.
@@ -35,6 +39,8 @@ public class ComplaintRequesterService {
     if (!request.getRequester().equals(bojHandle) && !user.getManager()) {
       throw new AccessDeniedException("이 민원을 생성할 권한이 없습니다.");
     }
+    notifyService.systemPublishToAdmins("[" + user.getNotionId() + "]님이 작성한 새로운 민원이 등록되었습니다.",
+        NotifyType.ADMIN, null);
     return complaintRepository.save(ComplaintSaveRequest.to(request));
   }
 
@@ -72,6 +78,8 @@ public class ComplaintRequesterService {
     if (!user.getBojHandle().equals(complaint.getRequester()) && !user.getManager()) {
       throw new AccessDeniedException("삭제 권한이 없습니다.");
     }
+    notifyService.systemPublishToAdmins("[" + user.getNotionId() + "]님이 작성한 기존의 민원이 삭제되었습니다.",
+        NotifyType.ADMIN, null);
 
     complaintRepository.delete(complaint);
   }

@@ -4,6 +4,8 @@ import com.randps.randomdefence.domain.complaint.domain.Complaint;
 import com.randps.randomdefence.domain.complaint.dto.ComplaintProcessorUpdateRequest;
 import com.randps.randomdefence.domain.complaint.enums.ProcessType;
 import com.randps.randomdefence.domain.complaint.service.port.ComplaintRepository;
+import com.randps.randomdefence.domain.notify.enums.NotifyType;
+import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import javax.transaction.Transactional;
@@ -19,6 +21,8 @@ public class ComplaintProcessorService {
   private final ComplaintRepository complaintRepository;
 
   private final UserRepository userRepository;
+
+  private final NotifyService notifyService;
 
   /*
    * 민원의 상태를 바꾼다.
@@ -39,17 +43,22 @@ public class ComplaintProcessorService {
     }
     if (request.getProcessType().equals(ProcessType.WAITING)) {
       complaint.setProcessWAITING();
+      notifyService.systemPublish(complaint.getRequester(), "😴 내 민원이 [대기] 상태로 변경되었습니다.",
+          NotifyType.ADMIN, null);
     }
     if (request.getProcessType().equals(ProcessType.PROCESSING)) {
       complaint.setProcessPROCESSING();
+      notifyService.systemPublish(complaint.getRequester(), "😎 내 민원이 [처리 중] 상태로 변경되었습니다.",
+          NotifyType.ADMIN, null);
     }
     if (request.getProcessType().equals(ProcessType.DONE)) {
       complaint.setProcessDONE();
+      notifyService.systemPublish(complaint.getRequester(), "🥳 내 민원이 [처리 완료] 상태로 변경되었습니다.",
+          NotifyType.ADMIN, null);
     }
     if (request.getReply() != null) {
       complaint.updateProcessorAndReply(request.getProcessor(), request.getReply());
-    }
-    else {
+    } else {
       complaint.updateProcessorAndReply(request.getProcessor(), complaint.getReply());
     }
 

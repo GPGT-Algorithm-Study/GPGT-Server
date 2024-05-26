@@ -32,6 +32,11 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
+    public List<User> findAllByManager(Boolean manager) {
+        return userJpaRepository.findAllByManager(manager);
+    }
+
+    @Override
     public List<User> findAll() {
         return userJpaRepository.findAll();
     }

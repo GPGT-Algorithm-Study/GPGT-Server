@@ -10,12 +10,12 @@ public interface ComplaintJPARepository extends JpaRepository<Complaint, Long> {
 
   List<Complaint> findAllByOrderByIdDesc();
 
-  List<Complaint> findAllByRequester(String requester);
+  List<Complaint> findAllByRequesterOrderByIdDesc(String requester);
 
-  List<Complaint> findAllByProcessor(String processor);
+  List<Complaint> findAllByProcessorOrderByIdDesc(String processor);
 
-  List<Complaint> findAllByComplaintType(ComplaintType complaintType);
+  List<Complaint> findAllByComplaintTypeOrderByIdDesc(ComplaintType complaintType);
 
-  List<Complaint> findAllByProcessType(ProcessType processType);
+  List<Complaint> findAllByProcessTypeOrderByIdDesc(ProcessType processType);
 
 }
