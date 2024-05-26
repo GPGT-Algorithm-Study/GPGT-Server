@@ -27,7 +27,7 @@ public class ComplaintJPARepositoryAdapter implements ComplaintRepository {
 
   @Override
   public List<Complaint> findAll() {
-    return complaintJPARepository.findAll();
+    return complaintJPARepository.findAllByOrderByIdDesc();
   }
 
   @Override
@@ -37,22 +37,22 @@ public class ComplaintJPARepositoryAdapter implements ComplaintRepository {
 
   @Override
   public List<Complaint> findAllByRequester(String requester) {
-    return complaintJPARepository.findAllByRequester(requester);
+    return complaintJPARepository.findAllByRequesterOrderByIdDesc(requester);
   }
 
   @Override
   public List<Complaint> findAllByProcessor(String processor) {
-    return complaintJPARepository.findAllByProcessor(processor);
+    return complaintJPARepository.findAllByProcessorOrderByIdDesc(processor);
   }
 
   @Override
   public List<Complaint> findAllByComplaintType(ComplaintType complaintType) {
-    return complaintJPARepository.findAllByComplaintType(complaintType);
+    return complaintJPARepository.findAllByComplaintTypeOrderByIdDesc(complaintType);
   }
 
   @Override
   public List<Complaint> findAllByProcessType(ProcessType processType) {
-    return complaintJPARepository.findAllByProcessType(processType);
+    return complaintJPARepository.findAllByProcessTypeOrderByIdDesc(processType);
   }
 
   @Override

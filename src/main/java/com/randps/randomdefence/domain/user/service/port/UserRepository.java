@@ -16,6 +16,8 @@ public interface UserRepository {
 
     List<User> findAllByTeam(Integer team);
 
+    List<User> findAllByManager(Boolean manager);
+
     List<User> findAll();
 
     User save(User user);
