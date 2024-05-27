@@ -80,8 +80,8 @@ public class ComplaintRequesterService {
     if (!user.getBojHandle().equals(complaint.getRequester()) && !user.getManager()) {
       throw new AccessDeniedException("삭제 권한이 없습니다.");
     }
-    notifyService.systemPublish(requester.getBojHandle(),
-        "[" + requester.getNotionId() + "]님이 작성한 기존의 민원이 삭제되었습니다.",
+
+    notifyService.systemPublish(complaint.getRequester(), "😈 내 민원이 삭제되었습니다.",
         NotifyType.ADMIN, null);
     notifyService.systemPublishToAdmins(
         "[" + requester.getNotionId() + "]님이 작성한 기존의 민원을 " + user.getNotionId() + "님이 삭제했습니다.",
