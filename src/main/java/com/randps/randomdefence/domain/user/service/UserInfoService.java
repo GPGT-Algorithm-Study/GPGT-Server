@@ -161,8 +161,10 @@ public class UserInfoService {
                   + "[" + (user.getWarning() - 1) + "->" + user.getWarning() + "]", true);
         }
         // 스트릭 끊김을 알리는 알림을 발행한다.
-        notifyService.systemPublish(user.getBojHandle(), "문제를 풀지 않아, 경고가 부여됐습니다.",
-            NotifyType.SYSTEM, null);
+        if (user.getWarning() < 4) {
+          notifyService.systemPublish(user.getBojHandle(), "문제를 풀지 않아, 경고가 부여됐습니다.",
+              NotifyType.SYSTEM, null);
+        }
 
         userRepository.save(user);
       } else {
