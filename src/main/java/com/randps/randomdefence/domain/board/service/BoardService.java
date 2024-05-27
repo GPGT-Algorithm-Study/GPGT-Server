@@ -60,7 +60,7 @@ public class BoardService {
 
     // 만약 공지라면 전체 유저에게 알림을 발행한다.
     if (type.equals("notice")) {
-      notifyService.systemPublishToAll("📣 새로운 공지가 등록되었습니다. 확인해 보세요! [" + board.getTitle() + "]",
+      notifyService.systemPublishToAll("📣 새로운 공지가 등록되었습니다. 확인해보세요! [" + board.getTitle() + "]",
           NotifyType.NOTICE, board.getId());
     }
 
