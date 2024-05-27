@@ -74,11 +74,17 @@ public class ComplaintRequesterService {
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 민원입니다."));
     User user = userRepository.findByBojHandle(bojHandle)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+    User requester = userRepository.findByBojHandle(complaint.getRequester())
+        .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
 
     if (!user.getBojHandle().equals(complaint.getRequester()) && !user.getManager()) {
       throw new AccessDeniedException("삭제 권한이 없습니다.");
     }
-    notifyService.systemPublishToAdmins("[" + user.getNotionId() + "]님이 작성한 기존의 민원이 삭제되었습니다.",
+
+    notifyService.systemPublish(complaint.getRequester(), "😈 내 민원이 삭제되었습니다.",
+        NotifyType.ADMIN, null);
+    notifyService.systemPublishToAdmins(
+        "[" + requester.getNotionId() + "]님이 작성한 기존의 민원을 " + user.getNotionId() + "님이 삭제했습니다.",
         NotifyType.ADMIN, null);
 
     complaintRepository.delete(complaint);
