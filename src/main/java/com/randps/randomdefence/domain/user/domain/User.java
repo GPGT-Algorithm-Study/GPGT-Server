@@ -206,6 +206,9 @@ public class User extends BaseTimeEntity {
     }
 
     public void setScrapingUserInfo(UserScrapingInfoDto userInfo) {
+        if (userInfo == null) {
+            return;
+        }
         this.profileImg = userInfo.getProfileImg();
         this.tier = userInfo.getTier();
         this.totalSolved = userInfo.getTotalSolved();

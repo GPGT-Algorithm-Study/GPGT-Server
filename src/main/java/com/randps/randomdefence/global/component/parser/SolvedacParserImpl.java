@@ -45,6 +45,9 @@ public class SolvedacParserImpl implements SolvedacParser {
 
         webCrawler.setUrl(uri.toUriString());
         List<Object> elements = webCrawler.process();
+        if (elements.isEmpty()) {
+            return null;
+        }
         String jsonString = ((Element)elements.get(0)).unwrap().toString();
 
         ObjectMapper om = new ObjectMapper();
@@ -90,6 +93,9 @@ public class SolvedacParserImpl implements SolvedacParser {
     public UserScrapingInfoDto getSolvedUserInfo(String bojHandle) throws JsonProcessingException {
         JsonNode userInfo = crawlingUserInfo(bojHandle);
 
+        if (userInfo == null) {
+            return null;
+        }
 
         UserScrapingInfoDto userscrapingInfoDto = UserScrapingInfoDto.builder()
                 .tier(userInfo.path("props").path("pageProps").path("user").path("tier").asInt())

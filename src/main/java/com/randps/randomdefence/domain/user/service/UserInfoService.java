@@ -125,9 +125,7 @@ public class UserInfoService {
   public void crawlUserInfoAll() throws JsonProcessingException {
     List<User> users = userRepository.findAll();
 
-    for (int i = 0; i < users.size(); i++) {
-      User user = users.get(i);
-
+    for (User user : users) {
       user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
       user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
       user.setTodaySolvedProblemCount(
