@@ -2,16 +2,17 @@ package com.randps.randomdefence.domain.team.service;
 
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
-import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.team.domain.Team;
 import com.randps.randomdefence.domain.team.service.port.TeamRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToUserBySystemEvent;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class TeamService {
 
   private final PointLogSaveService pointLogSaveService;
 
-  private final NotifyService notifyService;
+  private final ApplicationContext applicationContext;
 
   /*
    * 팀의 점수를 올린다.
@@ -92,17 +93,18 @@ public class TeamService {
           true);
 
       // 승리 축하 알림을 발행한다.
-      notifyService.systemPublish(user.getBojHandle(),
+      applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, user.getBojHandle(),
           "🎉 이번 주 팀 경쟁에서 [" + teamName + "] 팀으로 승리했습니다! 🎉",
-          NotifyType.SYSTEM, null);
+          NotifyType.SYSTEM, null));
 
     }
 
     // 패배 알림을 발행한다.
     for (User loosingUser : loosingTeamUsers) {
-      notifyService.systemPublish(loosingUser.getBojHandle(),
-          "😢 이번 주 팀 경쟁에서 [" + lossingTeamName + "] 팀으로 패배했습니다. 😢",
-          NotifyType.SYSTEM, null);
+      applicationContext.publishEvent(
+          new NotifyToUserBySystemEvent(this, loosingUser.getBojHandle(),
+              "😢 이번 주 팀 경쟁에서 [" + lossingTeamName + "] 팀으로 패배했습니다. 😢",
+              NotifyType.SYSTEM, null));
     }
   }
 }

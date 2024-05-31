@@ -4,18 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
-import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.global.component.parser.Parser;
 import com.randps.randomdefence.global.component.parser.SolvedacParser;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToUserBySystemEvent;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class UserInfoService {
 
   private final SolvedacParser solvedacParser;
 
-  private final NotifyService notifyService;
+  private final ApplicationContext applicationContext;
 
   @Qualifier("bojParserToUse")
   private final Parser bojParser;
@@ -64,12 +65,13 @@ public class UserInfoService {
   public void updateUserInfo(String bojHandle) {
     User user = userRepository.findByBojHandle(bojHandle)
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-    
+
     // 오늘 문제 푼 것을 축하하는 알림을 발행한다.
     Boolean isTodaySolved = userSolvedProblemService.isTodaySolved(user.getBojHandle());
     if (!user.getIsTodaySolved() && isTodaySolved) {
-      notifyService.systemPublish(user.getBojHandle(), "😊🥳 오늘도 문제를 해결하셨네요! 정말 정말 잘 했어요!",
-          NotifyType.SYSTEM, null);
+      applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, user.getBojHandle(),
+          "😊🥳 오늘도 문제를 해결하셨네요! 정말 정말 잘 했어요!",
+          NotifyType.SYSTEM, null));
     }
 
     user.setIsTodaySolved(isTodaySolved);
@@ -91,8 +93,9 @@ public class UserInfoService {
       // 오늘 문제 푼 것을 축하하는 알림을 발행한다.
       Boolean isTodaySolved = userSolvedProblemService.isTodaySolved(user.getBojHandle());
       if (!user.getIsTodaySolved() && isTodaySolved) {
-        notifyService.systemPublish(user.getBojHandle(), "😊🥳 오늘도 문제를 해결하셨네요! 정말 정말 잘 했어요!",
-            NotifyType.SYSTEM, null);
+        applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, user.getBojHandle(),
+            "😊🥳 오늘도 문제를 해결하셨네요! 정말 정말 잘 했어요!",
+            NotifyType.SYSTEM, null));
       }
 
       user.setIsTodaySolved(isTodaySolved);
@@ -160,8 +163,9 @@ public class UserInfoService {
         }
         // 스트릭 끊김을 알리는 알림을 발행한다.
         if (user.getWarning() < 4) {
-          notifyService.systemPublish(user.getBojHandle(), "문제를 풀지 않아, 경고가 부여됐습니다.",
-              NotifyType.SYSTEM, null);
+          applicationContext.publishEvent(
+              new NotifyToUserBySystemEvent(this, user.getBojHandle(), "문제를 풀지 않아, 경고가 부여됐습니다.",
+                  NotifyType.SYSTEM, null));
         }
 
         userRepository.save(user);

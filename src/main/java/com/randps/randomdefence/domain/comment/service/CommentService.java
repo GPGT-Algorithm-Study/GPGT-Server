@@ -9,13 +9,14 @@ import com.randps.randomdefence.domain.comment.dto.CommentPublishRequest;
 import com.randps.randomdefence.domain.comment.dto.CommentUpdateRequest;
 import com.randps.randomdefence.domain.comment.service.port.CommentRepository;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
-import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToUserBySystemEvent;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class CommentService {
 
   private final CommentRepository commentRepository;
 
-  private final NotifyService notifyService;
+  private final ApplicationContext applicationContext;
 
   /**
    * 코멘트 저장
@@ -59,18 +60,20 @@ public class CommentService {
               () -> new NotFoundException("존재하지 않는 유저입니다."));
       if (!parentCommenter.getBojHandle().equals(commenter.getBojHandle())
           && !parentComment.getBojHandle().equals(board.getBojHandle())) {
-        notifyService.systemPublish(parentCommenter.getBojHandle(),
-            "[" + board.getTitle() + "] 에 작성한 댓글에 [" + commenter.getNotionId()
-                + "] 님이 댓글을 작성했습니다." + " - \"" + commentPublishRequest.getContent() + "\"",
-            NotifyType.SYSTEM, commentPublishRequest.getBoardId());
+        applicationContext.publishEvent(
+            new NotifyToUserBySystemEvent(this, parentCommenter.getBojHandle(),
+                "[" + board.getTitle() + "] 에 작성한 댓글에 [" + commenter.getNotionId()
+                    + "] 님이 댓글을 작성했습니다." + " - \"" + commentPublishRequest.getContent() + "\"",
+                NotifyType.SYSTEM, commentPublishRequest.getBoardId()));
       }
     }
     if (!commenter.getBojHandle().equals(board.getBojHandle())) {
       // 글쓴이에게 보내는 알림을 발행한다.
-      notifyService.systemPublish(board.getBojHandle(),
-          "작성한 글 [" + board.getTitle() + "] 에 [" + commenter.getNotionId()
-              + "] 님이 댓글을 작성했습니다." + " - \"" + commentPublishRequest.getContent() + "\"",
-          NotifyType.SYSTEM, commentPublishRequest.getBoardId());
+      applicationContext.publishEvent(
+          new NotifyToUserBySystemEvent(this, board.getBojHandle(),
+              "작성한 글 [" + board.getTitle() + "] 에 [" + commenter.getNotionId()
+                  + "] 님이 댓글을 작성했습니다." + " - \"" + commentPublishRequest.getContent() + "\"",
+              NotifyType.SYSTEM, commentPublishRequest.getBoardId()));
     }
 
     return comment;

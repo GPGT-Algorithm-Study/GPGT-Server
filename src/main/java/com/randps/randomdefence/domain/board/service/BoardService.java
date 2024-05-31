@@ -13,13 +13,14 @@ import com.randps.randomdefence.domain.image.service.ImageService;
 import com.randps.randomdefence.domain.image.service.port.BoardImageRepository;
 import com.randps.randomdefence.domain.image.service.port.ImageRepository;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
-import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.global.aws.s3.service.S3Service;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToAllEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class BoardService {
 
   private final BoardImageRepository boardImageRepository;
 
-  private final NotifyService notifyService;
+  private final ApplicationContext applicationContext;
 
   /*
    * 게시글 저장
@@ -60,8 +61,9 @@ public class BoardService {
 
     // 만약 공지라면 전체 유저에게 알림을 발행한다.
     if (type.equals("notice")) {
-      notifyService.systemPublishToAll("📣 새로운 공지가 등록되었습니다. 확인해보세요! [" + board.getTitle() + "]",
-          NotifyType.NOTICE, board.getId());
+      applicationContext.publishEvent(
+          new NotifyToAllEvent(this, "📣 새로운 공지가 등록되었습니다. 확인해보세요! [" + board.getTitle() + "]",
+              NotifyType.NOTICE, board.getId()));
     }
 
     if (images.isBlank() || images.isEmpty()) {
@@ -105,8 +107,9 @@ public class BoardService {
 
     // 만약 공지라면 전체 유저에게 알림을 발행한다.
     if (type.equals("notice")) {
-      notifyService.systemPublishToAll("📣 공지에 변화가 있습니다. 확인해보세요! [" + board.getTitle() + "]",
-          NotifyType.NOTICE, board.getId());
+      applicationContext.publishEvent(
+          new NotifyToAllEvent(this, "📣 공지에 변화가 있습니다. 확인해보세요! [" + board.getTitle() + "]",
+              NotifyType.NOTICE, board.getId()));
     }
 
     if (images.isBlank() || images.isEmpty()) {

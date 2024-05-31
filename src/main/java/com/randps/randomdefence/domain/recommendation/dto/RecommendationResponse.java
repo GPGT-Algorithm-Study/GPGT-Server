@@ -1,9 +1,8 @@
 package com.randps.randomdefence.domain.recommendation.dto;
 
+import java.util.ArrayList;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.ArrayList;
 
 @Data
 public class RecommendationResponse {

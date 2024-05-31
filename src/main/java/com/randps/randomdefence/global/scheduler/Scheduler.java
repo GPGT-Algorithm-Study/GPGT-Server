@@ -83,4 +83,5 @@ public class Scheduler {
     teamSettingService.initWeekly(); // 팀 포인트 주간 초기화
     teamSettingService.setUsers(); // 모든 유저 팀 할당
   }
+  
 }

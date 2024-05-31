@@ -4,17 +4,21 @@ import com.randps.randomdefence.domain.image.domain.Image;
 import com.randps.randomdefence.domain.image.dto.ImageUploadResponse;
 import com.randps.randomdefence.domain.image.service.ImageService;
 import com.randps.randomdefence.global.aws.s3.service.S3Service;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController

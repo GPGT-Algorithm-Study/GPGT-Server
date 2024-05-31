@@ -1,11 +1,9 @@
 package com.randps.randomdefence.domain.statistics.dto;
 
 import com.randps.randomdefence.domain.team.domain.Team;
-import com.randps.randomdefence.domain.user.domain.User;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class TeamStatisticsDto {

@@ -1,11 +1,14 @@
 package com.randps.randomdefence.domain.scraping.domain;
 
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter

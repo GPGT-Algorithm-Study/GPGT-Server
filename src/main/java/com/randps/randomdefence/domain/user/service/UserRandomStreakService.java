@@ -6,7 +6,6 @@ import com.randps.randomdefence.domain.event.service.EventPointService;
 import com.randps.randomdefence.domain.item.service.RandomStreakFreezeItemUseServiceImpl;
 import com.randps.randomdefence.domain.log.service.PointLogSaveService;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
-import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.problem.dto.ProblemDto;
 import com.randps.randomdefence.domain.problem.service.ProblemService;
 import com.randps.randomdefence.domain.recommendation.dto.RecommendationResponse;
@@ -21,11 +20,13 @@ import com.randps.randomdefence.domain.user.dto.UserRandomStreakResponse;
 import com.randps.randomdefence.domain.user.service.port.UserGrassRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRandomStreakRepository;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToUserBySystemEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -57,7 +58,7 @@ public class UserRandomStreakService {
 
   private final EventPointService eventPointService;
 
-  private final NotifyService notifyService;
+  private final ApplicationContext applicationContext;
 
   /*
    * 유저 랜덤 스트릭 생성하기 (유저 생성 시 사용)
@@ -297,9 +298,9 @@ public class UserRandomStreakService {
       if (solvedProblemDto.getProblemId().equals(randomProblem.getProblemId())) {
 
         // 오늘의 랜덤 문제 해결 알림을 발행한다.
-        notifyService.systemPublish(bojHandle,
+        applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, bojHandle,
             "🎉 오늘의 랜덤 문제를 해결했습니다. (문제 : " + randomProblem.getProblemId() + ")", NotifyType.SYSTEM,
-            null);
+            null));
 
         // 유저의 정보 갱신
         user.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
@@ -362,9 +363,11 @@ public class UserRandomStreakService {
           UserGrass todayUserGrass = userGrassService.findTodayUserGrass(userRandomStreak);
 
           // 오늘의 랜덤 문제 해결 알림을 발행한다.
-          notifyService.systemPublish(userCur.getBojHandle(),
-              "🎉 오늘의 랜덤 문제를 해결했습니다. (문제 : " + randomProblem.getProblemId() + ")", NotifyType.SYSTEM,
-              null);
+          applicationContext.publishEvent(
+              new NotifyToUserBySystemEvent(this, userCur.getBojHandle(),
+                  "🎉 오늘의 랜덤 문제를 해결했습니다. (문제 : " + randomProblem.getProblemId() + ")",
+                  NotifyType.SYSTEM,
+                  null));
 
           // 유저의 정보 갱신
           userCur.increasePoint(randomProblem.getLevel() * 2); // 문제의 레벨 * 2만큼의 포인트를 지급한다.
@@ -433,8 +436,9 @@ public class UserRandomStreakService {
       if (randomStreakFreezeItemUseService.isExist(user)) {
         randomStreakFreezeItemUseService.useItem(user, 3L);
         // 아이템 사용 알림을 생성한다.
-        notifyService.systemPublish(user.getBojHandle(), "자동으로 랜덤 스트릭 프리즈 아이템을 사용했습니다.",
-            NotifyType.SYSTEM, null);
+        applicationContext.publishEvent(
+            new NotifyToUserBySystemEvent(this, user.getBojHandle(), "자동으로 랜덤 스트릭 프리즈 아이템을 사용했습니다.",
+                NotifyType.SYSTEM, null));
 
         // 스트릭 프리즈를 사용했으므로 넘어간다.
         return true;
@@ -442,9 +446,9 @@ public class UserRandomStreakService {
 
       // 랜덤 스트릭이 끊어진 경우, 알림을 발행한다.
       if (user.getCurrentRandomStreak() > 1) {
-        notifyService.systemPublish(user.getBojHandle(),
+        applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, user.getBojHandle(),
             "🥲 랜덤 스트릭이 끊어졌습니다. (스트릭 : " + user.getCurrentRandomStreak() + ")", NotifyType.SYSTEM,
-            null);
+            null));
       }
 
       // 유저 정보 갱신
@@ -500,8 +504,9 @@ public class UserRandomStreakService {
           randomStreakFreezeItemUseService.useItem(user, 3L);
 
           // 아이템 사용 알림을 생성한다.
-          notifyService.systemPublish(user.getBojHandle(), "자동으로 랜덤 스트릭 프리즈 아이템을 사용했습니다.",
-              NotifyType.SYSTEM, null);
+          applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, user.getBojHandle(),
+              "자동으로 랜덤 스트릭 프리즈 아이템을 사용했습니다.",
+              NotifyType.SYSTEM, null));
 
           // 스트릭 프리즈를 사용했으므로 넘어간다.
           continue;
@@ -509,9 +514,9 @@ public class UserRandomStreakService {
 
         // 랜덤 스트릭이 끊어진 경우, 알림을 발행한다.
         if (user.getCurrentRandomStreak() > 1) {
-          notifyService.systemPublish(user.getBojHandle(),
+          applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, user.getBojHandle(),
               "🥲 랜덤 스트릭이 끊어졌습니다. (스트릭 : " + user.getCurrentRandomStreak() + ")", NotifyType.SYSTEM,
-              null);
+              null));
         }
 
         // 유저 정보 갱신

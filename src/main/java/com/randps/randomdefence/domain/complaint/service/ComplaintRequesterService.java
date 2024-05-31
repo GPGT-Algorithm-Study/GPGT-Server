@@ -6,12 +6,14 @@ import com.randps.randomdefence.domain.complaint.dto.ComplaintSaveRequest;
 import com.randps.randomdefence.domain.complaint.dto.ComplaintUpdateRequest;
 import com.randps.randomdefence.domain.complaint.service.port.ComplaintRepository;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
-import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToAdminEvent;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToUserBySystemEvent;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ public class ComplaintRequesterService {
 
   private final UserRepository userRepository;
 
-  private final NotifyService notifyService;
+  private final ApplicationContext applicationContext;
 
   /*
    * 민원인의 민원을 생성한다.
@@ -39,8 +41,9 @@ public class ComplaintRequesterService {
     if (!request.getRequester().equals(bojHandle) && !user.getManager()) {
       throw new AccessDeniedException("이 민원을 생성할 권한이 없습니다.");
     }
-    notifyService.systemPublishToAdmins("[" + user.getNotionId() + "]님이 작성한 새로운 민원이 등록되었습니다.",
-        NotifyType.ADMIN, null);
+    applicationContext.publishEvent(
+        new NotifyToAdminEvent(this, "[" + user.getNotionId() + "]님이 작성한 새로운 민원이 등록되었습니다.",
+            NotifyType.ADMIN, null));
     return complaintRepository.save(ComplaintSaveRequest.to(request));
   }
 
@@ -81,11 +84,12 @@ public class ComplaintRequesterService {
       throw new AccessDeniedException("삭제 권한이 없습니다.");
     }
 
-    notifyService.systemPublish(complaint.getRequester(), "😈 내 민원이 삭제되었습니다.",
-        NotifyType.ADMIN, null);
-    notifyService.systemPublishToAdmins(
+    applicationContext.publishEvent(new NotifyToUserBySystemEvent(this,
+        complaint.getRequester(), "😈 내 민원이 삭제되었습니다.",
+        NotifyType.ADMIN, null));
+    applicationContext.publishEvent(new NotifyToAdminEvent(this,
         "[" + requester.getNotionId() + "]님이 작성한 기존의 민원을 " + user.getNotionId() + "님이 삭제했습니다.",
-        NotifyType.ADMIN, null);
+        NotifyType.ADMIN, null));
 
     complaintRepository.delete(complaint);
   }

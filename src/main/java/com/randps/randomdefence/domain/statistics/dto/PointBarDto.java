@@ -1,6 +1,5 @@
 package com.randps.randomdefence.domain.statistics.dto;
 
-import com.randps.randomdefence.domain.statistics.domain.UserProblemStatistics;
 import com.randps.randomdefence.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
