@@ -1,6 +1,7 @@
 package com.randps.randomdefence.global.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.notify.service.AutoNotifyService;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsService;
 import com.randps.randomdefence.domain.team.service.TeamService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
@@ -22,6 +23,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 @SpringBootApplication
 @EnableScheduling
 public class Scheduler {
+
+  private final AutoNotifyService autoNotifyService;
 
   private final UserInfoService userInfoService;
 
@@ -83,5 +86,14 @@ public class Scheduler {
     teamSettingService.initWeekly(); // 팀 포인트 주간 초기화
     teamSettingService.setUsers(); // 모든 유저 팀 할당
   }
-  
+
+  /*
+   * 매 주, 주말에 경고 알림 발행 메서드 (매 주 토, 일요일 새벽 6시 30분)
+   */
+  @Transactional
+  @Scheduled(cron = "0 30 6 ? * SAT,SUN *")
+  public void weekendWarningJob() {
+    autoNotifyService.weekendWarningNotify(); // 경고가 3회인 유저에게 경고 알림을 발행한다.
+  }
+
 }
