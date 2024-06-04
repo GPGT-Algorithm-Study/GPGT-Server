@@ -91,7 +91,7 @@ public class Scheduler {
    * 매 주, 주말에 경고 알림 발행 메서드 (매 주 토, 일요일 새벽 6시 30분)
    */
   @Transactional
-  @Scheduled(cron = "0 30 6 ? * SAT,SUN *")
+  @Scheduled(cron = "0 30 6 * * SAT,SUN")
   public void weekendWarningJob() {
     autoNotifyService.weekendWarningNotify(); // 경고가 3회인 유저에게 경고 알림을 발행한다.
   }
