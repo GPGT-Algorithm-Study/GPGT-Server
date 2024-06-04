@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -24,7 +25,8 @@ public class UserSettingSearchController {
   }
 
   @GetMapping
-  public UserSettingResponse findByBojHandleSafe(@NotBlank String bojHandle) {
+  public UserSettingResponse findByBojHandleSafe(
+      @RequestParam("bojHandle") @NotBlank String bojHandle) {
     return UserSettingResponse.from(userSettingSearchService.findByBojHandleSafe(bojHandle));
   }
 

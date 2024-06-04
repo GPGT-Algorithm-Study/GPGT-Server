@@ -12,11 +12,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Getter
 @RequiredArgsConstructor
 @Component
@@ -46,6 +48,7 @@ public class SolvedacParserImpl implements SolvedacParser {
     public JsonNode crawlingUserInfo(String bojHandle) throws JsonProcessingException {
         UserSetting setting = userSettingSearchService.findByBojHandleSafe(bojHandle);
         if (!setting.getScrapingOn()) {
+            log.info("Scraping is off for user: {}", bojHandle);
             return null;
         }
 

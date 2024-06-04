@@ -8,11 +8,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 @Qualifier("bojProfileParserToUse")
@@ -31,6 +33,7 @@ public class BojProfileParserImpl implements Parser {
     public List<Object> getSolvedProblemList(String bojHandle) throws JsonProcessingException {
         UserSetting setting = userSettingSearchService.findByBojHandleSafe(bojHandle);
         if (!setting.getScrapingOn()) {
+            log.info("Scraping is off for user: {}", bojHandle);
             return new ArrayList<>();
         }
 

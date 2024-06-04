@@ -16,10 +16,12 @@ import java.util.List;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @RequiredArgsConstructor
 @Builder
 @Service
@@ -151,6 +153,7 @@ public class UserInfoService {
     for (User user : users) {
       UserSetting userSetting = userSettingSearchService.findByBojHandleSafe(user.getBojHandle());
       if (!userSetting.getWarningOn()) {
+        log.info("Warning is off for user: {}", user.getBojHandle());
         continue;
       }
 
