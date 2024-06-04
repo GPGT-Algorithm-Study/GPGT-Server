@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.log.service.WarningLogSaveService;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.domain.UserRandomStreak;
+import com.randps.randomdefence.domain.user.domain.UserSetting;
 import com.randps.randomdefence.domain.user.dto.UserInfoResponse;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
 import com.randps.randomdefence.global.component.parser.Parser;
@@ -35,6 +36,8 @@ public class UserInfoService {
   private final SolvedacParser solvedacParser;
 
   private final ApplicationContext applicationContext;
+
+  private final UserSettingSearchService userSettingSearchService;
 
   @Qualifier("bojParserToUse")
   private final Parser bojParser;
@@ -146,6 +149,11 @@ public class UserInfoService {
     List<User> users = userRepository.findAll();
 
     for (User user : users) {
+      UserSetting userSetting = userSettingSearchService.findByBojHandleSafe(user.getBojHandle());
+      if (!userSetting.getWarningOn()) {
+        continue;
+      }
+
       user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
       user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
       user.setTodaySolvedProblemCount(
