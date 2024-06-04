@@ -3,6 +3,8 @@ package com.randps.randomdefence.global.component.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.randps.randomdefence.domain.user.domain.UserSetting;
+import com.randps.randomdefence.domain.user.service.UserSettingSearchService;
 import com.randps.randomdefence.global.component.crawler.SolvedacWebCrawler;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import java.time.LocalDate;
@@ -28,6 +30,8 @@ public class SolvedacParserImpl implements SolvedacParser {
 
     private final SolvedacWebCrawler webCrawler;
 
+    private final UserSettingSearchService userSettingSearchService;
+
     @Override
     public List<Object> getSolvedProblemList(String userName) {
         return null;
@@ -40,6 +44,11 @@ public class SolvedacParserImpl implements SolvedacParser {
 
     @Override
     public JsonNode crawlingUserInfo(String bojHandle) throws JsonProcessingException {
+        UserSetting setting = userSettingSearchService.findByBojHandleSafe(bojHandle);
+        if (!setting.getScrapingOn()) {
+            return null;
+        }
+
         UriComponents uri = UriComponentsBuilder.newInstance()
                 .scheme("https").host("solved.ac").path("/profile/" + bojHandle).build();
 

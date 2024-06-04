@@ -1,6 +1,8 @@
 package com.randps.randomdefence.global.component.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.randps.randomdefence.domain.user.domain.UserSetting;
+import com.randps.randomdefence.domain.user.service.UserSettingSearchService;
 import com.randps.randomdefence.global.component.crawler.BojProfileWebCrawler;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Qualifier("bojProfileParserToUse")
 public class BojProfileParserImpl implements Parser {
 
+    private final UserSettingSearchService userSettingSearchService;
+
     private LocalDateTime startOfActiveDay;
 
     private final BojProfileWebCrawler bojProfileWebCrawler;
@@ -25,6 +29,11 @@ public class BojProfileParserImpl implements Parser {
      */
     @Override
     public List<Object> getSolvedProblemList(String bojHandle) throws JsonProcessingException {
+        UserSetting setting = userSettingSearchService.findByBojHandleSafe(bojHandle);
+        if (!setting.getScrapingOn()) {
+            return new ArrayList<>();
+        }
+
         List<Object> solvedProblems = new ArrayList<>();
         UriComponents uri = UriComponentsBuilder.newInstance()
                 .scheme("https").host("www.acmicpc.net").path("/user").path("/" + bojHandle)
