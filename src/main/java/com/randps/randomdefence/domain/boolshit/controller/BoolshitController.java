@@ -1,15 +1,12 @@
 package com.randps.randomdefence.domain.boolshit.controller;
 
-import com.randps.randomdefence.domain.boolshit.domain.Boolshit;
-import com.randps.randomdefence.domain.boolshit.dto.BoolshitLastResponse;
 import com.randps.randomdefence.domain.boolshit.dto.BoolshitResponse;
 import com.randps.randomdefence.domain.boolshit.service.BoolshitService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

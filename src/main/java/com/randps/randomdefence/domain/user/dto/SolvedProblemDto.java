@@ -1,10 +1,8 @@
 package com.randps.randomdefence.domain.user.dto;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class SolvedProblemDto {

@@ -5,6 +5,7 @@ import java.security.cert.CertificateExpiredException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityExistsException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class randpsExceptionHandler {
 
@@ -25,6 +27,7 @@ public class randpsExceptionHandler {
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "400");
         map.put("message", e.getMessage());
+        log.error("특정되지 않은 예외 발생 : " + e.getMessage());
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }
@@ -115,6 +118,7 @@ public class randpsExceptionHandler {
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "500");
         map.put("message", "크롤링 데이터의 HTML을 파싱하는데 실패했습니다.");
+        log.error("크롤링 데이터의 HTML을 파싱하는데 실패했습니다 : " + e.getMessage());
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }

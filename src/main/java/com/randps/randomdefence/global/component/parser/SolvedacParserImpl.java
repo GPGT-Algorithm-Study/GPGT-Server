@@ -3,6 +3,8 @@ package com.randps.randomdefence.global.component.parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.randps.randomdefence.domain.user.domain.UserSetting;
+import com.randps.randomdefence.domain.user.service.UserSettingSearchService;
 import com.randps.randomdefence.global.component.crawler.SolvedacWebCrawler;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
 import java.time.LocalDate;
@@ -10,11 +12,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Getter
 @RequiredArgsConstructor
 @Component
@@ -28,6 +32,8 @@ public class SolvedacParserImpl implements SolvedacParser {
 
     private final SolvedacWebCrawler webCrawler;
 
+    private final UserSettingSearchService userSettingSearchService;
+
     @Override
     public List<Object> getSolvedProblemList(String userName) {
         return null;
@@ -40,6 +46,12 @@ public class SolvedacParserImpl implements SolvedacParser {
 
     @Override
     public JsonNode crawlingUserInfo(String bojHandle) throws JsonProcessingException {
+        UserSetting setting = userSettingSearchService.findByBojHandleSafe(bojHandle);
+        if (!setting.getScrapingOn()) {
+            log.info("Scraping is off for user: {}", bojHandle);
+            return null;
+        }
+
         UriComponents uri = UriComponentsBuilder.newInstance()
                 .scheme("https").host("solved.ac").path("/profile/" + bojHandle).build();
 

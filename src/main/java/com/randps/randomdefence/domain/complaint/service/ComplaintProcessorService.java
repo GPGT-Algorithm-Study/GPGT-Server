@@ -5,12 +5,13 @@ import com.randps.randomdefence.domain.complaint.dto.ComplaintProcessorUpdateReq
 import com.randps.randomdefence.domain.complaint.enums.ProcessType;
 import com.randps.randomdefence.domain.complaint.service.port.ComplaintRepository;
 import com.randps.randomdefence.domain.notify.enums.NotifyType;
-import com.randps.randomdefence.domain.notify.service.NotifyService;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
+import com.randps.randomdefence.global.event.notify.entity.NotifyToUserBySystemEvent;
 import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +23,7 @@ public class ComplaintProcessorService {
 
   private final UserRepository userRepository;
 
-  private final NotifyService notifyService;
+  private final ApplicationContext applicationContext;
 
   /*
    * 민원의 상태를 바꾼다.
@@ -43,18 +44,20 @@ public class ComplaintProcessorService {
     }
     if (request.getProcessType().equals(ProcessType.WAITING)) {
       complaint.setProcessWAITING();
-      notifyService.systemPublish(complaint.getRequester(), "😴 내 민원이 [대기] 상태로 변경되었습니다.",
-          NotifyType.ADMIN, null);
+      applicationContext.publishEvent(
+          new NotifyToUserBySystemEvent(this, complaint.getRequester(), "😴 내 민원이 [대기] 상태로 변경되었습니다.",
+              NotifyType.ADMIN, null));
     }
     if (request.getProcessType().equals(ProcessType.PROCESSING)) {
       complaint.setProcessPROCESSING();
-      notifyService.systemPublish(complaint.getRequester(), "😎 내 민원이 [처리 중] 상태로 변경되었습니다.",
-          NotifyType.ADMIN, null);
+      applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, complaint.getRequester(),
+          "😎 내 민원이 [처리 중] 상태로 변경되었습니다.", NotifyType.ADMIN, null));
     }
     if (request.getProcessType().equals(ProcessType.DONE)) {
       complaint.setProcessDONE();
-      notifyService.systemPublish(complaint.getRequester(), "🥳 내 민원이 [처리 완료] 상태로 변경되었습니다.",
-          NotifyType.ADMIN, null);
+
+      applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, complaint.getRequester(),
+          "🥳 내 민원이 [처리 완료] 상태로 변경되었습니다.", NotifyType.ADMIN, null));
     }
     if (request.getReply() != null) {
       complaint.updateProcessorAndReply(request.getProcessor(), request.getReply());

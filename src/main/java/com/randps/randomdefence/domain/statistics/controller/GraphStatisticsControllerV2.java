@@ -1,17 +1,18 @@
 package com.randps.randomdefence.domain.statistics.controller;
 
-import com.randps.randomdefence.domain.statistics.dto.*;
+import com.randps.randomdefence.domain.statistics.dto.PointBarPair;
+import com.randps.randomdefence.domain.statistics.dto.SolvedBarPair;
+import com.randps.randomdefence.domain.statistics.dto.UserIsTodaySolvedDto;
+import com.randps.randomdefence.domain.statistics.dto.UserWarningBarDto;
 import com.randps.randomdefence.domain.statistics.service.PointBarGraphStatisticsServiceV2;
 import com.randps.randomdefence.domain.statistics.service.SolvedBarGraphStatisticsServiceV2;
 import com.randps.randomdefence.domain.statistics.service.UserStatisticsServiceV2;
 import com.randps.randomdefence.domain.statistics.service.WarningBarGraphStatisticsServiceV2;
-import com.randps.randomdefence.domain.user.service.UserInfoService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

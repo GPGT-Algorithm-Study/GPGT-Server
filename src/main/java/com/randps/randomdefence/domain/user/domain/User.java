@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "RD_USER")
 @Entity
 public class User extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,19 +61,23 @@ public class User extends BaseTimeEntity {
 
     private Integer todaySolvedProblemCount; // by Solved
 
-
     /*
      * 유저 Role Parser
      */
-    public List<String> getRolesList(){
-        if(this.roles.length() > 0){
+    public List<String> getRolesList() {
+        if (this.roles.length() > 0) {
             return Arrays.asList(this.roles.split(","));
         }
         return new ArrayList<>();
     }
 
     @Builder
-    public User(Long id, String bojHandle, String password, String roles, String notionId, Boolean manager, Integer warning, String profileImg, String emoji, Integer tier, Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team, Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved, Boolean isYesterdaySolved, Integer todaySolvedProblemCount) {
+    public User(Long id, String bojHandle, String password, String roles, String notionId,
+        Boolean manager, Integer warning, String profileImg, String emoji, Integer tier,
+        Integer totalSolved, Integer currentStreak, Integer currentRandomStreak, Integer team,
+        Integer point, Boolean isTodaySolved, Boolean isTodayRandomSolved,
+        Boolean isYesterdaySolved,
+        Integer todaySolvedProblemCount) {
         this.id = id;
         this.bojHandle = bojHandle;
         this.password = password;
@@ -132,7 +137,9 @@ public class User extends BaseTimeEntity {
     }
 
     public Boolean decreasePoint(Integer value) {
-        if (this.point < value) return false;
+        if (this.point < value) {
+            return false;
+        }
         this.point -= value;
         return true;
     }
@@ -163,46 +170,46 @@ public class User extends BaseTimeEntity {
 
     public UserInfoResponse toUserInfoResponse() {
         return UserInfoResponse.builder()
-                .bojHandle(this.getBojHandle())
-                .notionId(this.getNotionId())
-                .manager(this.getManager())
-                .warning(this.getWarning())
-                .profileImg(this.getProfileImg())
-                .emoji(this.getEmoji())
-                .tier(this.getTier())
-                .totalSolved(this.getTotalSolved())
-                .currentStreak(this.getCurrentStreak())
-                .currentRandomStreak(this.getCurrentRandomStreak())
-                .team(this.getTeam())
-                .point(this.getPoint())
-                .isTodaySolved(this.getIsTodaySolved())
-                .isYesterdaySolved(this.getIsYesterdaySolved())
-                .isTodayRandomSolved(this.getIsTodayRandomSolved())
-                .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
-                .maxRandomStreak(0)
-                .build();
+            .bojHandle(this.getBojHandle())
+            .notionId(this.getNotionId())
+            .manager(this.getManager())
+            .warning(this.getWarning())
+            .profileImg(this.getProfileImg())
+            .emoji(this.getEmoji())
+            .tier(this.getTier())
+            .totalSolved(this.getTotalSolved())
+            .currentStreak(this.getCurrentStreak())
+            .currentRandomStreak(this.getCurrentRandomStreak())
+            .team(this.getTeam())
+            .point(this.getPoint())
+            .isTodaySolved(this.getIsTodaySolved())
+            .isYesterdaySolved(this.getIsYesterdaySolved())
+            .isTodayRandomSolved(this.getIsTodayRandomSolved())
+            .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
+            .maxRandomStreak(0)
+            .build();
     }
 
     public UserInfoResponse toUserInfoResponse(Integer maxRandomStreak) {
         return UserInfoResponse.builder()
-                .bojHandle(this.getBojHandle())
-                .notionId(this.getNotionId())
-                .manager(this.getManager())
-                .warning(this.getWarning())
-                .profileImg(this.getProfileImg())
-                .emoji(this.getEmoji())
-                .tier(this.getTier())
-                .totalSolved(this.getTotalSolved())
-                .currentStreak(this.getCurrentStreak())
-                .currentRandomStreak(this.getCurrentRandomStreak())
-                .team(this.getTeam())
-                .point(this.getPoint())
-                .isTodaySolved(this.getIsTodaySolved())
-                .isYesterdaySolved(this.getIsYesterdaySolved())
-                .isTodayRandomSolved(this.getIsTodayRandomSolved())
-                .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
-                .maxRandomStreak(maxRandomStreak)
-                .build();
+            .bojHandle(this.getBojHandle())
+            .notionId(this.getNotionId())
+            .manager(this.getManager())
+            .warning(this.getWarning())
+            .profileImg(this.getProfileImg())
+            .emoji(this.getEmoji())
+            .tier(this.getTier())
+            .totalSolved(this.getTotalSolved())
+            .currentStreak(this.getCurrentStreak())
+            .currentRandomStreak(this.getCurrentRandomStreak())
+            .team(this.getTeam())
+            .point(this.getPoint())
+            .isTodaySolved(this.getIsTodaySolved())
+            .isYesterdaySolved(this.getIsYesterdaySolved())
+            .isTodayRandomSolved(this.getIsTodayRandomSolved())
+            .todaySolvedProblemCount(this.getTodaySolvedProblemCount())
+            .maxRandomStreak(maxRandomStreak)
+            .build();
     }
 
     public void setScrapingUserInfo(UserScrapingInfoDto userInfo) {
@@ -225,7 +232,9 @@ public class User extends BaseTimeEntity {
         this.password = password;
     }
 
-    public void setIsTodaySolved(Boolean isTodaySolved) {this.isTodaySolved = isTodaySolved;}
+    public void setIsTodaySolved(Boolean isTodaySolved) {
+        this.isTodaySolved = isTodaySolved;
+    }
 
     public void setTodaySolvedProblemCount(Integer todaySolvedProblemCount) {
         this.todaySolvedProblemCount = todaySolvedProblemCount;
