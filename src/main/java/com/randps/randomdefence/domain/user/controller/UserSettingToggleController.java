@@ -25,7 +25,7 @@ public class UserSettingToggleController {
     return toResponse(HttpStatus.OK, "200", "유저의 경고 설정을 성공적으로 변경했습니다.");
   }
 
-  @PutMapping("/warning")
+  @PutMapping("/scraping")
   public ResponseEntity<Map<String, String>> toggleScrapingSetting(@NotBlank String bojHandle) {
     userSettingToggleService.toggleScrapingSetting(bojHandle);
     return toResponse(HttpStatus.OK, "200", "유저의 크롤링 설정을 성공적으로 변경했습니다.");
