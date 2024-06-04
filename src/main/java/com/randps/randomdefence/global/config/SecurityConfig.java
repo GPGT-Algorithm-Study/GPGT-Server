@@ -56,7 +56,8 @@ public class SecurityConfig {
             "/api/v1/user/admin/init", "/api/v1/recommend").permitAll()
         .antMatchers("/api/v1/user/sejong/register/**").permitAll()
         .antMatchers("/api/v1/user/add", "/api/v1/user/del", "/api/v1/scraping/*",
-            "api/v1/admin/*", "/api/v1/complaint/processor/*").hasRole("ADMIN")
+            "api/v1/admin/*", "/api/v1/complaint/processor/*", "/api/v1/user/setting/*")
+        .hasRole("ADMIN")
         .anyRequest().authenticated()
         .and()
         .cors().disable()
