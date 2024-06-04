@@ -120,7 +120,14 @@ public class UserInfoService {
         .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
 
     user.setScrapingUserInfo(solvedacParser.getSolvedUserInfo(user.getBojHandle()));
-    user.setIsTodaySolved(userSolvedProblemService.isTodaySolved(user.getBojHandle()));
+    // 오늘 문제 푼 것을 축하하는 알림을 발행한다.
+    Boolean isTodaySolved = userSolvedProblemService.isTodaySolved(user.getBojHandle());
+    if (!user.getIsTodaySolved() && isTodaySolved) {
+      applicationContext.publishEvent(new NotifyToUserBySystemEvent(this, user.getBojHandle(),
+          "😊🥳 오늘도 문제를 해결하셨네요! 정말 정말 잘 했어요!",
+          NotifyType.SYSTEM, null));
+    }
+    user.setIsTodaySolved(isTodaySolved);
     user.setTodaySolvedProblemCount(
         userSolvedProblemService.getTodaySolvedProblemCount(user.getBojHandle()));
     userRepository.save(user);
