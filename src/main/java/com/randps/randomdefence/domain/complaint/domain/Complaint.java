@@ -3,6 +3,7 @@ package com.randps.randomdefence.domain.complaint.domain;
 import com.randps.randomdefence.domain.complaint.enums.ComplaintType;
 import com.randps.randomdefence.domain.complaint.enums.ProcessType;
 import com.randps.randomdefence.global.auditing.BaseTimeEntity;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +32,7 @@ public class Complaint extends BaseTimeEntity {
 
   private String processor; // 처리자의 bojHandle
 
+  @Column(columnDefinition = "LONGTEXT")
   private String reply;
 
   @Builder
