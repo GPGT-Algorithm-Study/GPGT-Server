@@ -31,7 +31,6 @@ public abstract class WebCrawler {
         Document document = null;
         try {
             document = conn.get();
-            System.out.println(document);
             //url의 내용을 HTML Document 객체로 가져온다.
             //https://jsoup.org/apidocs/org/jsoup/nodes/Document.html 참고
         } catch (IOException e) {
