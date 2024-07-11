@@ -7,9 +7,6 @@ import com.randps.randomdefence.domain.user.domain.UserSetting;
 import com.randps.randomdefence.domain.user.service.UserSettingSearchService;
 import com.randps.randomdefence.global.component.crawler.SolvedacWebCrawler;
 import com.randps.randomdefence.global.component.parser.dto.UserScrapingInfoDto;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +14,10 @@ import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Getter
@@ -58,6 +59,7 @@ public class SolvedacParserImpl implements SolvedacParser {
         webCrawler.setUrl(uri.toUriString());
         List<Object> elements = webCrawler.process();
         if (elements.isEmpty()) {
+            log.error("Failed to get user info from solved.ac");
             return null;
         }
         String jsonString = ((Element)elements.get(0)).unwrap().toString();
