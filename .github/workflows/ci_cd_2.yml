@@ -1,0 +1,71 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Spring Boot & Gradle CI/CD 2
+
+on:
+ push:
+  branches:
+   - deploy
+
+jobs:
+ build:
+  # 실행 환경 지정
+  runs-on: ubuntu-latest
+
+  steps:
+   - uses: actions/checkout@v2
+
+   - name: Set up JDK 11
+     uses: actions/setup-java@v1
+     with:
+      java-version: 11
+
+   - name: Grant execute permission for gradlew
+     run: chmod +x gradlew
+
+     # 스프링부트 코드 Build
+   - name: Build with Gradle
+     run: ./gradlew clean build -x test
+
+     # 도커 로그인하고 도커 이미지 빌드 후 푸시한다.
+   - name: web docker build and push
+     run: |
+      docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      docker build --platform linux/amd64 -t ${{ secrets.DOCKER_USERNAME }}/randps-back .
+      docker push ${{ secrets.DOCKER_USERNAME }}/randps-back
+
+     # Github Actions IP 가져온다.
+   - name: Get Github Actions IP
+     id: ip
+     uses: haythem/public-ip@v1.2
+
+   - name: Configure AWS Credentials
+     uses: aws-actions/configure-aws-credentials@v1
+     with:
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID2 }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY2 }}
+      aws-region: ap-northeast-2
+
+     # Github Actions IP를 AWS 보안그룹에 추가한다.
+   - name: Add Github Actions IP to Security group
+     run: |
+      aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID2 }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
+     # ssh로 EC2 접속해서 도커 컨테이너를 모두 멈춘 후, 도커 파일을 새로 받아 다시 docker-compose로 이미지를 실행시킨다.
+   - name: executing remote ssh commands using password
+     uses: appleboy/ssh-action@master
+     with:
+      host: ${{ secrets.HOST_IP2 }}
+      username: ubuntu
+      key: ${{ secrets.PRIVATE_KEY2 }}
+      script: |
+       sudo docker rm -f $(sudo docker ps -qa)
+       sudo docker pull ${{ secrets.DOCKER_USERNAME }}/randps-back
+       sudo docker-compose up -d
+       sudo docker image prune -f
+
+     # AWS 보안그룹에서 Github Actions IP를 삭제한다.
+   - name: Remove Github Actions IP From Security Group
+     run: |
+      aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID2 }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
