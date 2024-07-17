@@ -6,6 +6,7 @@ import com.randps.randomdefence.domain.notify.dto.NotifyPublishRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyPublishToUsersRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyReadRequest;
 import com.randps.randomdefence.domain.notify.dto.NotifyUpdateRequest;
+import com.randps.randomdefence.domain.notify.enums.NotifyType;
 import com.randps.randomdefence.domain.notify.service.port.NotifyRepository;
 import com.randps.randomdefence.domain.user.domain.User;
 import com.randps.randomdefence.domain.user.service.port.UserRepository;
@@ -45,6 +46,63 @@ public class NotifyService {
         .type(request.getType())
         .build();
     return notifyRepository.save(notify);
+  }
+
+  /*
+   * 알림을 발행한다.
+   */
+  @Transactional
+  public Notify systemPublish(String receiver, String message, NotifyType type,
+      Long relatedBoardId) {
+    if (userRepository.findByBojHandle(receiver).isEmpty()) {
+      return null;
+    }
+
+    Notify notify = Notify.builder()
+        .receiver(receiver)
+        .message(message)
+        .type(type)
+        .relatedBoardId(relatedBoardId)
+        .build();
+    return notifyRepository.save(notify);
+  }
+
+  /*
+   * 관리자들에게만 알림을 발행한다.
+   */
+  @Transactional
+  public void systemPublishToAdmins(String message, NotifyType type,
+      Long relatedBoardId) {
+    List<User> users = userRepository.findAllByManager(true);
+
+    for (User user : users) {
+      Notify notify = Notify.builder()
+          .receiver(user.getBojHandle())
+          .message(message)
+          .type(type)
+          .relatedBoardId(relatedBoardId)
+          .build();
+      notifyRepository.save(notify);
+    }
+  }
+
+  /*
+   * 전체 유저에게 알림을 발행한다.
+   */
+  @Transactional
+  public void systemPublishToAll(String message, NotifyType type,
+      Long relatedBoardId) {
+    List<User> users = userRepository.findAll();
+
+    for (User user : users) {
+      Notify notify = Notify.builder()
+          .receiver(user.getBojHandle())
+          .message(message)
+          .type(type)
+          .relatedBoardId(relatedBoardId)
+          .build();
+      notifyRepository.save(notify);
+    }
   }
 
   /*

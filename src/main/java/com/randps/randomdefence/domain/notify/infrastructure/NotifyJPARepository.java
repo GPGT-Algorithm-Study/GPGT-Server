@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NotifyJPARepository extends JpaRepository<Notify, Long> {
 
-  List<Notify> findByReceiver(String receiver);
+  List<Notify> findByReceiverOrderByIdDesc(String receiver);
 
-  List<Notify> findAllByIsReadIsFalseAndReceiver(String receiver);
+  List<Notify> findAllByIsReadIsFalseAndReceiverOrderByIdDesc(String receiver);
 
-  List<Notify> findAllByIsReadIsFalse();
+  List<Notify> findAllByIsReadIsFalseOrderByIdDesc();
 
   void deleteAllByReceiver(String receiver);
 

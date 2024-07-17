@@ -30,6 +30,11 @@ public class FakeUserRepository implements UserRepository {
     }
 
     @Override
+    public List<User> findAllByManager(Boolean manager) {
+        return null;
+    }
+
+    @Override
     public List<User> findAll() {
         return data;
     }

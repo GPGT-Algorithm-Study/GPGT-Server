@@ -1,12 +1,10 @@
 package com.randps.randomdefence.domain.statistics.controller;
 
-import com.randps.randomdefence.domain.statistics.domain.UserStatistics;
 import com.randps.randomdefence.domain.statistics.dto.PointBarGraphStatisticsResponse;
 import com.randps.randomdefence.domain.statistics.dto.SolvedBarGraphStatisticsResponse;
 import com.randps.randomdefence.domain.statistics.service.PointBarGraphStatisticsService;
 import com.randps.randomdefence.domain.statistics.service.SolvedBarGraphStatisticsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

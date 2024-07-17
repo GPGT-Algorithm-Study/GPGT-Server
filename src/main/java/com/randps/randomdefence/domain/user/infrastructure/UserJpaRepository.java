@@ -10,4 +10,6 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByTeam(Integer team);
 
+    List<User> findAllByManager(Boolean manager);
+
 }

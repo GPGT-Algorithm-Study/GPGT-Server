@@ -36,17 +36,17 @@ public class NotifyJPARepositoryAdapter implements NotifyRepository {
 
   @Override
   public List<Notify> findByReceiver(String receiver) {
-    return notifyJPARepository.findByReceiver(receiver);
+    return notifyJPARepository.findByReceiverOrderByIdDesc(receiver);
   }
 
   @Override
   public List<Notify> findAllByIsReadIsFalseAndReceiver(String receiver) {
-    return notifyJPARepository.findAllByIsReadIsFalseAndReceiver(receiver);
+    return notifyJPARepository.findAllByIsReadIsFalseAndReceiverOrderByIdDesc(receiver);
   }
 
   @Override
   public List<Notify> findAllByIsReadIsFalse() {
-    return notifyJPARepository.findAllByIsReadIsFalse();
+    return notifyJPARepository.findAllByIsReadIsFalseOrderByIdDesc();
   }
 
   @Override

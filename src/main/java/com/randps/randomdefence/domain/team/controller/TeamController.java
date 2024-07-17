@@ -4,14 +4,13 @@ import com.randps.randomdefence.domain.team.dto.TeamInfoResponse;
 import com.randps.randomdefence.domain.team.service.TeamSearchService;
 import com.randps.randomdefence.domain.team.service.TeamSettingService;
 import com.randps.randomdefence.domain.user.domain.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

@@ -1,11 +1,9 @@
 package com.randps.randomdefence.domain.problem.dto;
 
-import lombok.Builder;
-import lombok.Data;
-
-import javax.persistence.ElementCollection;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
+import lombok.Data;
 
 @Data
 public class ProblemDto {

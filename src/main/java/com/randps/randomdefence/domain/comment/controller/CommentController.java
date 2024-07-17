@@ -5,11 +5,16 @@ import com.randps.randomdefence.domain.comment.dto.CommentDto;
 import com.randps.randomdefence.domain.comment.dto.CommentPublishRequest;
 import com.randps.randomdefence.domain.comment.dto.CommentUpdateRequest;
 import com.randps.randomdefence.domain.comment.service.CommentService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController

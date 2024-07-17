@@ -3,16 +3,10 @@ package com.randps.randomdefence.global.component.crawler;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public abstract class WebCrawler {
@@ -25,11 +19,10 @@ public abstract class WebCrawler {
     public List<Object> process() {
         System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
         Connection conn = Jsoup.connect(url)
-                .header("Content-Type","application/x-www-form-urlencoded")
+                .header("Content-Type", "application/x-www-form-urlencoded")
                 .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36")
                 .referrer("https://solved.ac")
                 .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
-                .header("Accept-Encoding", "gzip, deflate, br")
                 .header("Accept-Language", "en-US,en;q=0.9,ko-KR;q=0.8,ko;q=0.7,ja-JP;q=0.6,ja;q=0.5,ru-RU;q=0.4,ru;q=0.3")
                 .method(Connection.Method.GET)
                 .ignoreContentType(true);
