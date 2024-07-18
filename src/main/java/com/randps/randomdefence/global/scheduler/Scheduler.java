@@ -11,13 +11,16 @@ import com.randps.randomdefence.domain.user.service.UserRandomStreakService;
 import com.randps.randomdefence.domain.user.service.UserSolvedProblemService;
 import com.randps.randomdefence.global.aws.s3.service.S3BatchService;
 import com.randps.randomdefence.global.component.util.CrawlingLock;
-import javax.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+
+import javax.transaction.Transactional;
 
 @Slf4j
 @Builder
@@ -79,6 +82,11 @@ public class Scheduler {
   /*
    * 정해진 시간마다 실행되는 스크래핑 메서드 (하루 간격, 매일 새벽 6시 25분)
    */
+  @Retryable(
+          include = {Exception.class}, // 모든 Exception에 대해 재시도
+          maxAttempts = 3, // 최대 3번 재시도
+          backoff = @Backoff(delay = 300000) // 5분 뒤 재시도
+  )
   @Transactional
   @Scheduled(cron = "0 25 6 * * *")
   public void everyDayTermJob() throws JsonProcessingException {
@@ -104,6 +112,11 @@ public class Scheduler {
   /*
    * 주간 초기화 메서드 (매 주 월요일 새벽 6시 26분)
    */
+  @Retryable(
+          include = {Exception.class}, // 모든 Exception에 대해 재시도
+          maxAttempts = 5, // 최대 5번 재시도
+          backoff = @Backoff(delay = 300000) // 5분 뒤 재시도
+  )
   @Transactional
   @Scheduled(cron = "0 26 6 * * 1")
   public void weekInitJob() {
