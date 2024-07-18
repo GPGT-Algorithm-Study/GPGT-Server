@@ -47,6 +47,7 @@ dependencies {
 
     // spring-retry 설정
     implementation 'org.springframework.retry:spring-retry'
+    implementation 'org.springframework:spring-aspects'
 
     // aws s3 설정
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
