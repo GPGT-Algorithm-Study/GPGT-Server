@@ -2,6 +2,7 @@ package com.randps.randomdefence.domain.user.mock;
 
 import com.randps.randomdefence.domain.user.domain.UserSolvedProblem;
 import com.randps.randomdefence.domain.user.service.port.UserSolvedProblemRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +60,11 @@ public class FakeUserSolvedProblemRepository implements UserSolvedProblemReposit
             }
         }
         return result;
+    }
+
+    @Override
+    public List<UserSolvedProblem> findAllTodaySolvedProblem() {
+        return List.of();
     }
 
     @Override
