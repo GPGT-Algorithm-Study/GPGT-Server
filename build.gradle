@@ -45,6 +45,9 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.mockito:mockito-inline:3.6.0'
 
+    // spring-retry 설정
+    implementation 'org.springframework.retry:spring-retry'
+
     // aws s3 설정
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
